@@ -1,4 +1,5 @@
 import "../globals.css";
+import Sidebar from "@/components/Sidebar";
 
 export default function RootLayout({
   children,
@@ -6,8 +7,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main>
-        SIDEBAR
+    <main className="flex flex-row">
+        <Sidebar/>
         {children}
     </main>
   );
