@@ -20,7 +20,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "FinApp",
+  title: "Fin",
   description: "A Personal Banking App aimed at helping students manage their finances",
 };
 

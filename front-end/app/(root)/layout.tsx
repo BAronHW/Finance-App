@@ -7,9 +7,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="flex flex-row">
-        <Sidebar/>
-        {children}
-    </main>
+    <div className="flex h-screen overflow-hidden">
+      <Sidebar />
+      <main className="flex-1">
+        <div className="container mx-auto px-4 py-8">
+          {children}
+        </div>
+      </main>
+    </div>
   );
 }
