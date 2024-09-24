@@ -17,17 +17,17 @@ function Header({ name, appMoto, accBal, avatarUrl }: Props) {
   const initials = name.split(' ').map(n => n[0]).join('').toUpperCase()
 
   return (
-    <Card className="w-full bg-white">
+    <Card className="w-full bg-white z-10">
       <CardContent className="p-6">
-        <div className="flex justify-between items-center gap-5">
-          <div className="flex items-center space-x-4">
+        <div className="flex justify-between items-center gap-5 bg-white">
+          <div className="flex items-center space-x-4 bg-white">
             <Avatar>
               <AvatarImage src={avatarUrl} alt={name} />
               <AvatarFallback>{initials}</AvatarFallback>
             </Avatar>
             <div>
-              <div className="text-xl font-semibold">
-                Welcome, <BlurIn word={name} />
+              <div className="text-xl font-semibold z-10">
+                Welcome, <BlurIn word={name} className='text-sm font-bold text-black' duration={0.5}/>
               </div>
               <p className="text-sm text-muted-foreground">{appMoto}</p>
             </div>

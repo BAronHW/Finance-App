@@ -14,7 +14,7 @@ const menuItems = [
 function Sidebar() {
 
   return (
-    <div className="flex flex-col h-screen w-64 text-slate-600 bg-white shadow-lg z-10 border-r border-slate-200">
+    <div className="flex flex-col h-screen w-64 text-slate-600 bg-white shadow-lg z-10 border-r border-slate-200 sticky">
       <div className="flex items-center justify-center h-20 border-b ">
         <h1 className="text-3xl font-bold">Fin</h1>
       </div>
