@@ -1,4 +1,5 @@
 import "../globals.css";
+import Sidebar from "@/components/Sidebar";
 
 export default function RootLayout({
   children,
@@ -6,9 +7,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main>
-        SIDEBAR
-        {children}
-    </main>
+    <div className="flex h-screen overflow-hidden">
+      <Sidebar />
+      <main className="flex-1">
+        <div className="container mx-auto px-4 py-8">
+          {children}
+        </div>
+      </main>
+    </div>
   );
 }

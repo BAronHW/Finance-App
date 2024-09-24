@@ -4,7 +4,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import ApolloWrapper from "@/components/Wrappers/ApolloWrapper";
-
+import DotPattern from "@/components/magicui/dot-pattern";
+import { cn } from "@/lib/utils";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -19,7 +20,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "FinApp",
+  title: "Fin",
   description: "A Personal Banking App aimed at helping students manage their finances",
 };
 
@@ -31,7 +32,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} bg-white`}>
-        <ApolloWrapper>{children}</ApolloWrapper>
+        <ApolloWrapper>{children}
+          <DotPattern
+          width={40}
+          height={40}
+          cx={1}
+          cy={1}
+          cr={1}
+          />
+        
+        </ApolloWrapper>
       </body>
     </html>
   );
