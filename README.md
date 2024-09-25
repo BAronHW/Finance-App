@@ -33,3 +33,35 @@ FinApp is a personal banking application designed to help students manage their 
 ### Installation
 
 1. Clone the repository:
+
+2. Run npm install
+
+3. npm run dev
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+5. Move to the backend folder
+
+6. npm install
+
+7. npm run dev
+
+## Project Structure
+
+- `/app`: Next.js app directory containing pages and layouts
+- `/components`: Reusable React components
+- `/lib`: Utility functions and custom hooks
+- `/styles`: Global styles and Tailwind CSS configuration
+- `/public`: Static assets
+
+## Contributing
+
+We welcome contributions to FinApp! Please read our contributing guidelines before submitting pull requests.
+
+## License
+
+[MIT License]
+
+Project Link: [https://github.com/yourusername/finapp](https://github.com/yourusername/finapp)
+
+
