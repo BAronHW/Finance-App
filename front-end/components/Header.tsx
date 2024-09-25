@@ -1,28 +1,52 @@
-// components/Header.tsx
 'use client'
-import React from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Bell, Settings } from 'lucide-react'
-import BlurIn from './magicui/blur-in'
+import React from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Bell, Settings } from 'lucide-react';
+import BlurIn from './magicui/blur-in';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
+import { Doughnut } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip as ChartTooltip, Legend } from 'chart.js';
+
+ChartJS.register(ArcElement, ChartTooltip, Legend);
 
 interface Props {
-  name: string,
-  appMoto: string,
-  accBal: number,
-  avatarUrl?: string
+  name: string;
+  appMoto: string;
+  accBal: number;
+  avatarUrl?: string;
 }
 
 function Header({ name, appMoto, accBal, avatarUrl }: Props) {
-  const initials = name.split(' ').map(n => n[0]).join('').toUpperCase()
-  
+  const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+
+  const chartData = {
+    labels: ['Savings', 'Checking', 'Investments'],
+    datasets: [
+      {
+        data: [1250, 2500, 3750],
+        backgroundColor: ['#1d1d7d', '#4242ed', '#6d6df2'],
+        hoverBackgroundColor: ['#1d1d7d', '#4242ed', '#6d6df2'],
+      }
+    ]
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+  };
+
   return (
     <Card className="w-full bg-white/80 backdrop-blur-sm z-50 shadow-lg">
       <CardContent className="p-6">
@@ -44,7 +68,10 @@ function Header({ name, appMoto, accBal, avatarUrl }: Props) {
               <p className="text-sm text-muted-foreground">Account Balance</p>
               <p className="text-lg font-semibold">${accBal.toFixed(2)}</p>
             </div>
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 items-center">
+              <div style={{ width: '60px', height: '60px' }}>
+                <Doughnut data={chartData} options={chartOptions} />
+              </div>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -72,7 +99,7 @@ function Header({ name, appMoto, accBal, avatarUrl }: Props) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
-export default Header
+export default Header;
