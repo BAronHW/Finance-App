@@ -10,6 +10,7 @@ export default function Home() {
       </div>
       <main className="flex-grow flex items-center justify-center">
         <h1 className="text-2xl font-bold">Welcome to Your Finance App</h1>
+        
       </main>
     </div>
   );
