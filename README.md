@@ -20,8 +20,8 @@ FinApp is a personal banking application designed to help students manage their 
 - **Styling**: Tailwind CSS, shadcn/ui components
 - **State Management**: React Hooks
 - **API**: GraphQL with Apollo Client
-- **Authentication**: [Specify your auth method, e.g., JWT, Firebase]
-- **Database**: [Specify your database, e.g., PostgreSQL, MongoDB]
+- **Authentication**: JWT and Firebase
+- **Database**: PostgreSQL
 
 ## Getting Started
 
@@ -29,7 +29,6 @@ FinApp is a personal banking application designed to help students manage their 
 
 - Node.js (v14 or later)
 - npm or yarn
-- [Any other specific requirements]
 
 ### Installation
 
