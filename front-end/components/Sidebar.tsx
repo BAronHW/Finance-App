@@ -14,7 +14,7 @@ const menuItems = [
 function Sidebar() {
 
   return (
-    <div className="flex flex-col h-screen w-64 text-slate-600 bg-white shadow-lg z-10 border-r border-slate-200 sticky">
+    <div className="flex flex-col h-screen w-64 text-black bg-white shadow-lg z-10 border-r border-slate-200 sticky">
       <div className="flex items-center justify-center h-20 border-b ">
         <h1 className="text-3xl font-bold">Fin</h1>
       </div>
@@ -24,7 +24,7 @@ function Sidebar() {
             <Link href={item.link}
               className={`flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200`}
             >
-              <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-slate-500">
+              <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-black">
                 <item.icon size={20} />
               </span>
               <span className="text-sm font-medium">{item.label}</span>
