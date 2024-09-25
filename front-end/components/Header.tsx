@@ -1,3 +1,4 @@
+// components/Header.tsx
 'use client'
 import React from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -6,12 +7,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Bell, Settings } from 'lucide-react'
 import BlurIn from './magicui/blur-in'
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-  } from "@/components/ui/tooltip"
-  
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 interface Props {
   name: string,
@@ -22,12 +22,12 @@ interface Props {
 
 function Header({ name, appMoto, accBal, avatarUrl }: Props) {
   const initials = name.split(' ').map(n => n[0]).join('').toUpperCase()
-
+  
   return (
-    <Card className="w-full bg-white z-10 shadow-lg">
-      <CardContent className="p-6 bg">
-        <div className="flex justify-between items-center gap-5 bg-white">
-          <div className="flex items-center space-x-4 bg-white">
+    <Card className="w-full bg-white/80 backdrop-blur-sm z-50 shadow-lg">
+      <CardContent className="p-6">
+        <div className="flex justify-between items-center gap-5">
+          <div className="flex items-center space-x-4">
             <Avatar>
               <AvatarImage src={avatarUrl} alt={name} />
               <AvatarFallback>{initials}</AvatarFallback>
@@ -45,28 +45,28 @@ function Header({ name, appMoto, accBal, avatarUrl }: Props) {
               <p className="text-lg font-semibold">${accBal.toFixed(2)}</p>
             </div>
             <div className="flex space-x-2">
-            <TooltipProvider>
+              <TooltipProvider>
                 <Tooltip>
-                    <TooltipTrigger asChild>
+                  <TooltipTrigger asChild>
                     <Button variant="ghost" size="icon">
-                        <Bell className="h-4 w-4" />
+                      <Bell className="h-4 w-4" />
                     </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>Notifications</p>
-                    </TooltipContent>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Notifications</p>
+                  </TooltipContent>
                 </Tooltip>
                 <Tooltip>
-                <TooltipTrigger asChild>
+                  <TooltipTrigger asChild>
                     <Button variant="ghost" size="icon">
-                        <Settings className="h-4 w-4" />
+                      <Settings className="h-4 w-4" />
                     </Button>
-                </TooltipTrigger>
-                    <TooltipContent>
-                        <p>Settings</p>
-                    </TooltipContent>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Settings</p>
+                  </TooltipContent>
                 </Tooltip>
-            </TooltipProvider>
+              </TooltipProvider>
             </div>
           </div>
         </div>

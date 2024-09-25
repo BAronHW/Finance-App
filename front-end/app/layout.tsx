@@ -32,16 +32,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} bg-white`}>
-        <ApolloWrapper>{children}
-          <DotPattern
-          width={40}
-          height={40}
+      <DotPattern
+          width={30}
+          height={30}
           cx={1}
           cy={1}
           cr={1}
           />
-        
-        </ApolloWrapper>
+        <ApolloWrapper>{children} </ApolloWrapper>
       </body>
     </html>
   );
