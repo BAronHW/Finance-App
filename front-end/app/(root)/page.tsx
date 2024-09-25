@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
+import { AnimatedBeamDemo } from '@/components/AnimatedBeamDemo';
+import { BentoDemo } from '@/components/BentoDemo';
 
 export default function Home() {
   return (
@@ -10,7 +12,7 @@ export default function Home() {
       </div>
       <main className="flex-grow flex items-center justify-center">
         <h1 className="text-2xl font-bold">Welcome to Your Finance App</h1>
-        
+        <BentoDemo/>
       </main>
     </div>
   );
