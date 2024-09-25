@@ -10,8 +10,7 @@ export default function Home() {
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Header name='Aaron' appMoto='Manage your student funds' accBal={10} />
       </div>
-      <main className="flex-grow flex items-center justify-center">
-        <h1 className="text-2xl font-bold">Welcome to Your Finance App</h1>
+      <main className="flex-grow flex items-center justify-center flex-col gap-10">
         <BentoDemo/>
       </main>
     </div>

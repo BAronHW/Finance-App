@@ -5,6 +5,13 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Bell, Settings } from 'lucide-react'
 import BlurIn from './magicui/blur-in'
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+  } from "@/components/ui/tooltip"
+  
 
 interface Props {
   name: string,
@@ -17,8 +24,8 @@ function Header({ name, appMoto, accBal, avatarUrl }: Props) {
   const initials = name.split(' ').map(n => n[0]).join('').toUpperCase()
 
   return (
-    <Card className="w-full bg-white z-10">
-      <CardContent className="p-6">
+    <Card className="w-full bg-white z-10 shadow-lg">
+      <CardContent className="p-6 bg">
         <div className="flex justify-between items-center gap-5 bg-white">
           <div className="flex items-center space-x-4 bg-white">
             <Avatar>
@@ -38,12 +45,28 @@ function Header({ name, appMoto, accBal, avatarUrl }: Props) {
               <p className="text-lg font-semibold">${accBal.toFixed(2)}</p>
             </div>
             <div className="flex space-x-2">
-              <Button variant="ghost" size="icon">
-                <Bell className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon">
-                <Settings className="h-4 w-4" />
-              </Button>
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                        <Bell className="h-4 w-4" />
+                    </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Notifications</p>
+                    </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                        <Settings className="h-4 w-4" />
+                    </Button>
+                </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Settings</p>
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
             </div>
           </div>
         </div>
