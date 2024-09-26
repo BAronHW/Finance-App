@@ -45,6 +45,7 @@ function Header({ name, appMoto, accBal, avatarUrl }: Props) {
         display: false,
       },
     },
+    borderRadius: 20,
   };
 
   return (
