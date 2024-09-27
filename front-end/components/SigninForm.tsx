@@ -7,13 +7,13 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -25,6 +25,8 @@ const formSchema = z.object({
 })
 
 export function ProfileForm() {
+  const router = useRouter();
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -33,13 +35,13 @@ export function ProfileForm() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+  async function onSubmit() {
+    router.push("/")
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-col">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="username"
@@ -50,9 +52,17 @@ export function ProfileForm() {
                 <Input placeholder="Username" {...field} />
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input placeholder="Password" {...field} />
+                <Input type="password" placeholder="Password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
