@@ -44,7 +44,9 @@ FinApp is a personal banking application designed to help students manage their 
 
 6. npm install
 
-7. npm run dev
+7. prisma migrate dev --name init
+
+8. npm run dev
 
 ## Project Structure
 
