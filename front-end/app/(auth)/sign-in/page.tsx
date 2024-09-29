@@ -11,6 +11,12 @@ import { useRouter } from 'next/navigation';
 import { firebaseGmailSignin } from '../firebase-auth';
 
 const SigninPage = () => {
+  const router = useRouter();
+
+  const gmailSignIn = async () => {
+    await firebaseGmailSignin(router);
+  }
+
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       <MeteorDemo />
@@ -26,7 +32,7 @@ const SigninPage = () => {
             <div className="mt-4 text-center">
               <p className="text-sm text-black mb-2">Or sign in with</p>
               <Button 
-                onClick={firebaseGmailSignin}
+                onClick={gmailSignIn}
                 variant="outline"
                 className="w-full bg-white text-gray-800 hover:bg-gray-100"
               >

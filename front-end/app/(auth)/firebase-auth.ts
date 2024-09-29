@@ -1,10 +1,9 @@
 import { auth, provider } from "@/lib/Firebase";
 import { GoogleAuthProvider, signInWithPopup, UserCredential } from "firebase/auth";
-import { useRouter } from "next/navigation";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 
-export const firebaseGmailSignin = async (): Promise<void> => {
-    const router = useRouter();
+export const firebaseGmailSignin = async (router: AppRouterInstance): Promise<void> => {
     if (typeof window === 'undefined' || !auth) {
       console.error('Auth is not available');
       return;
