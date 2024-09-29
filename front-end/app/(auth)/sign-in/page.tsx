@@ -8,37 +8,9 @@ import { signInWithPopup, GoogleAuthProvider, UserCredential } from "firebase/au
 import { auth, provider } from '@/lib/Firebase';
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
+import { firebaseGmailSignin } from '../firebase-auth';
 
 const SigninPage = () => {
-  const router = useRouter();
-  const firebaseGmailSignin = async (): Promise<void> => {
-    if (typeof window === 'undefined' || !auth) {
-      console.error('Auth is not available');
-      return;
-    }
-
-    try {
-      const result: UserCredential = await signInWithPopup(auth, provider);
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      if (!credential) {
-        throw new Error("Firebase credential does not exist or can't be fetched");
-      }
-      const token = credential.accessToken;
-      console.log(token);
-      const user = result.user;
-      console.log(user);
-      router.push('/');
-    } catch (error) {
-      if (error instanceof Error) {
-        const errorCode = (error as any).code;
-        const errorMessage = error.message;
-        const email = (error as any).customData?.email;
-        const credential = GoogleAuthProvider.credentialFromError(error as any);
-        console.error("Sign-in error:", { errorCode, errorMessage, email, credential });
-      }
-    }
-  };
-
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       <MeteorDemo />

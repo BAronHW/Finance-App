@@ -20,6 +20,10 @@ export default function Home() {
           <Link href="/sign-in" passHref>
             <Button>Go to Sign In</Button>
           </Link>
+          <p className="text-lg">New user?</p>
+          <Link href="/sign-up" passHref>
+            <Button>Go to Sign Up</Button>
+          </Link>
         </div>
       </main>
     </div>
