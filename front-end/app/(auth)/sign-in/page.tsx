@@ -8,7 +8,7 @@ import { signInWithPopup, GoogleAuthProvider, UserCredential } from "firebase/au
 import { auth, provider } from '@/lib/Firebase';
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
-import { firebaseGmailSignin } from '../firebase-auth';
+import { firebaseGmailSignin } from '@/lib/firebase-auth';
 
 const SigninPage = () => {
   const router = useRouter();

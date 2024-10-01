@@ -10,10 +10,17 @@ import React from 'react'
 import { auth, provider } from '@/lib/Firebase';
 import { Button } from '@/components/ui/button';
 import styles from './sign-up.module.css'
-import { firebaseGmailSignin } from '../firebase-auth'
+import { firebaseGmailSignin } from '@/lib/firebase-auth';
 import '@/app/globals.css'
+import { Router } from 'next/router'
 
 const SignUpPage = () => {
+
+  const gmailSignIn = async () =>{
+    const router = useRouter()
+    await firebaseGmailSignin(router)
+  }
+
   return (
     <div className="relative min-h-screen w-full overflow-y-scroll">
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -31,7 +38,7 @@ const SignUpPage = () => {
             <div className="mt-4 text-center">
               <p className="text-sm text-black mb-2">Or sign in with</p>
               <Button
-                onClick={firebaseGmailSignin}
+                onClick={gmailSignIn}
                 variant="outline"
                 className={`${styles.paddedButton} w-full bg-white text-gray-800 hover:bg-gray-100`}
               >
