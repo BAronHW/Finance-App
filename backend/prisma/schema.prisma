@@ -13,10 +13,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
+model User {
   id        Int     @id @default(autoincrement())
-  title     String
-  body      String
-  published Boolean
+  first_name     String
+  last_name      String
+  uuid           String?
 
 }
