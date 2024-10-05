@@ -1,9 +1,7 @@
-// app/layout.tsx
-
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import ApolloWrapper from "@/components/Wrappers/ApolloWrapper";
+import { ApolloWrapper } from "@/components/Wrappers/ApolloWrapper";
 import DotPattern from "@/components/magicui/dot-pattern";
 import { cn } from "@/lib/utils";
 
@@ -31,15 +29,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} bg-white`}>
-      <DotPattern
+      <body className={cn(geistSans.variable, geistMono.variable, "bg-white")}>
+        <DotPattern
           width={30}
           height={30}
           cx={1}
           cy={1}
           cr={1}
-          />
-        <ApolloWrapper>{children} </ApolloWrapper>
+        />
+        <ApolloWrapper>{children}</ApolloWrapper>
       </body>
     </html>
   );
