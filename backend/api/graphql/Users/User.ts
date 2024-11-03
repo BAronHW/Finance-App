@@ -7,6 +7,11 @@ export const User = objectType({
     t.nonNull.string('first_name')
     t.nonNull.string('last_name')
     t.string('uuid')
+
+    // t.nonNull.list.field("accounts",{
+    //   type:'Account',
+
+    // })
   },
 })
 
@@ -57,9 +62,9 @@ export const UserMutation = extendType({
       type: 'User',
       args: {
         id: nonNull(intArg()),
-        first_name: stringArg(),
-        last_name: stringArg(),
-        uuid: stringArg(),
+        first_name: nonNull(stringArg()),
+        last_name: nonNull(stringArg()),
+        uuid: nonNull(stringArg()),
       },
       resolve(_root, args, ctx) {
         return ctx.db.user.update({

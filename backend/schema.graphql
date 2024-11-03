@@ -2,13 +2,29 @@
 ### Do not make changes to this file directly
 
 
+type Account {
+  balance: Float!
+  createdAt: String!
+  id: Int!
+  name: String!
+  type: String!
+  updatedAt: String!
+  user: User!
+}
+
+"""Date and time custom scalar type"""
+scalar DateTime
+
 type Mutation {
+  createAccount(balance: Float!, name: String!, type: String!, userId: Int!): Account!
   createUser(first_name: String!, last_name: String!, uuid: String): User!
   deleteUser(id: Int!): User!
-  updateUser(first_name: String, id: Int!, last_name: String, uuid: String): User!
+  updateUser(first_name: String!, id: Int!, last_name: String!, uuid: String!): User!
 }
 
 type Query {
+  account(id: Int!): Account
+  getAccountsByUserId(userId: Int!): [Account!]!
   user(id: Int!): User
   users: [User!]!
 }
