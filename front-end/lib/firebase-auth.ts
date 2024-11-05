@@ -9,10 +9,11 @@ export const firebaseGmailSignin = async (
 ): Promise<void> => {
     try {
         const result = await signInWithPopup(auth, provider);
-        const idToken = await result.user.getIdToken(true);
+        const idToken = await result.user.getIdToken(true); // Force token refresh
         
         await login(idToken);
-
+        
+        // Only redirect after successful login
         if (auth.currentUser) {
             router.push('/');
         }
