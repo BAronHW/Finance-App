@@ -1,13 +1,33 @@
 'use client'
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import { BentoDemo } from '@/components/BentoDemo';
 import { Button } from '@/components/ui/button';
 import TestComp from '@/components/testComp';
+import { useAuth } from '../context/authContext';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  const router = useRouter();
+  const { isAuthenticated } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
+
+
+  useEffect(()=>{
+    if(!isAuthenticated){
+      router.push('/sign-in')
+    } else{
+      setIsLoading(false);
+    }
+
+  }, [isAuthenticated, router])
+
+  if (isLoading || !isAuthenticated) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
