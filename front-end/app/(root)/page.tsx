@@ -14,15 +14,14 @@ export default function Home() {
   const { isAuthenticated } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
-
   useEffect(()=>{
+    console.log(isAuthenticated)
     if(!isAuthenticated){
       router.push('/sign-in')
     } else{
       setIsLoading(false);
     }
-
-  }, [isAuthenticated, router])
+  }, [isAuthenticated])
 
   if (isLoading || !isAuthenticated) {
     return null;

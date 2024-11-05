@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MeteorDemo } from '@/components/MeteorsDemo';
 import { ProfileForm } from '@/components/SigninForm';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,13 +9,30 @@ import { auth, provider } from '@/lib/Firebase';
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
 import { firebaseGmailSignin } from '@/lib/firebase-auth';
+import { useAuth } from '@/app/context/authContext';
 
 const SigninPage = () => {
   const router = useRouter();
+  const { login, isAuthenticated, user } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+      if (isAuthenticated && user) {
+          console.log('User authenticated, redirecting...');
+          router.push('/');
+      }
+  }, [isAuthenticated, user, router]);
 
   const gmailSignIn = async () => {
-    await firebaseGmailSignin(router);
-  }
+      setIsLoading(true);
+      try {
+          await firebaseGmailSignin(router, login);
+      } catch (error) {
+          console.error('Failed to sign in:', error);
+      } finally {
+          setIsLoading(false);
+      }
+  };
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
