@@ -27,6 +27,7 @@ const SigninPage = () => {
       setIsLoading(true);
       try {
           await firebaseGmailSignin(router, login);
+          setIsLoading(false);
       } catch (error) {
           console.error('Failed to sign in:', error);
       } finally {

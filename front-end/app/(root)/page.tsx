@@ -23,6 +23,8 @@ export default function Home() {
     }
   }, [isAuthenticated])
 
+  console.log(isAuthenticated)
+
   if (isLoading || !isAuthenticated) {
     return null;
   }
