@@ -1,25 +1,39 @@
 "use client"
 
-import { AnimatedListDemo } from '@/components/AnimatedListDemo'
 import WordPullUp from '@/components/magicui/word-pull-up'
 import { MeteorDemo } from '@/components/MeteorsDemo'
 import { SignUpForm } from '@/components/SignUpForm'
 import { Card, CardContent } from '@/components/ui/card'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useState } from 'react'
 import { auth, provider } from '@/lib/Firebase';
 import { Button } from '@/components/ui/button';
 import styles from './sign-up.module.css'
 import { firebaseGmailSignin } from '@/lib/firebase-auth';
 import '@/app/globals.css'
 import { Router } from 'next/router'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { signOut } from 'firebase/auth'
 
 const SignUpPage = () => {
 
-  const gmailSignIn = async () =>{
-    const router = useRouter()
-    await firebaseGmailSignin(router)
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false);
+
+
+  const [registeredUser] = useAuthState(auth)
+
+  if(!registeredUser) {
+    router.push('/')
   }
+
+  const gmailSignIn = () => {
+    setIsLoading(true);
+    firebaseGmailSignin(router)
+      .then(() => router.push('/'))
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
+  };
 
   return (
     <div className="relative min-h-screen w-full overflow-y-scroll">
@@ -43,6 +57,9 @@ const SignUpPage = () => {
                 className={`${styles.paddedButton} w-full bg-white text-gray-800 hover:bg-gray-100`}
               >
                 Google
+              </Button>
+              <Button onClick={() => signOut(auth)}>
+                log-out
               </Button>
             </div>
           </CardContent>

@@ -6,25 +6,20 @@ import Header from '@/components/Header';
 import { BentoDemo } from '@/components/BentoDemo';
 import { Button } from '@/components/ui/button';
 import TestComp from '@/components/testComp';
-import { useAuth } from '../context/authContext';
 import { useRouter } from 'next/navigation';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '@/lib/Firebase';
+
 
 export default function Home() {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(()=>{
-    console.log(isAuthenticated)
-    if(!isAuthenticated){
-      router.push('/sign-in')
-    } else{
-      setIsLoading(false);
-    }
-  }, [isAuthenticated])
+  const [registeredUser] = useAuthState(auth);
 
-  if (isLoading || !isAuthenticated) {
-    return null;
+  console.log(registeredUser)
+
+  if(!registeredUser){
+    router.push('/sign-in')
   }
 
   return (

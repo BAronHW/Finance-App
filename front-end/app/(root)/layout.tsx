@@ -8,7 +8,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <AuthProvider>
       <div className="flex h-screen">
         <Sidebar />
         <main className="flex-1 overflow-y-auto">
@@ -17,6 +16,5 @@ export default function RootLayout({
           </div>
         </main>
       </div>
-    </AuthProvider>
   );  
 }

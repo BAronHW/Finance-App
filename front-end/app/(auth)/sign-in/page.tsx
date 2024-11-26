@@ -1,37 +1,32 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { MeteorDemo } from '@/components/MeteorsDemo';
 import { ProfileForm } from '@/components/SigninForm';
 import { Card, CardContent } from '@/components/ui/card';
 import WordPullUp from "@/components/magicui/word-pull-up";
-import { signInWithPopup, GoogleAuthProvider, UserCredential } from "firebase/auth";
-import { auth, provider } from '@/lib/Firebase';
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
 import { firebaseGmailSignin } from '@/lib/firebase-auth';
 import { useAuth } from '@/app/context/authContext';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '@/lib/Firebase';
 
 const SigninPage = () => {
   const router = useRouter();
   const { login, isAuthenticated, user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [registeredUser] = useAuthState(auth);
 
-  useEffect(() => {
-      if (isAuthenticated && user) {
-          console.log('User authenticated, redirecting...');
-          router.push('/');
-      }
-  }, [isAuthenticated, user, router]);
+  if(registeredUser){
+    router.push('/')
+  }
 
-  const gmailSignIn = async () => {
-      setIsLoading(true);
-      try {
-          await firebaseGmailSignin(router, login);
-      } catch (error) {
-          console.error('Failed to sign in:', error);
-      } finally {
-          setIsLoading(false);
-      }
+  const gmailSignIn = () => {
+    setIsLoading(true);
+    firebaseGmailSignin(router)
+      .then(() => router.push('/'))
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
   };
 
   return (
