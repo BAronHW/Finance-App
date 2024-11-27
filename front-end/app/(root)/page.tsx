@@ -1,27 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import { BentoDemo } from '@/components/BentoDemo';
 import { Button } from '@/components/ui/button';
 import TestComp from '@/components/testComp';
-import { useRouter } from 'next/navigation';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '@/lib/Firebase';
-
 
 export default function Home() {
-  const router = useRouter();
-
-  const [registeredUser] = useAuthState(auth);
-
-  console.log(registeredUser)
-
-  if(!registeredUser){
-    router.push('/sign-in')
-  }
-
   return (
     <div className="flex flex-col min-h-screen">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

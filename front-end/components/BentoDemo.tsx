@@ -7,12 +7,12 @@ import {
   } from "@radix-ui/react-icons";
   
   import { BentoCard, BentoGrid } from "@/components/magicui/bento-grid";
-
+  
   const features = [
     {
       Icon: FileTextIcon,
       name: "Save your files",
-      description: "Save your financial documents for convinient usage",
+      description: "We automatically save your files as you type.",
       href: "/",
       cta: "Learn more",
       background: <img className="absolute -right-20 -top-20 opacity-60" />,
@@ -20,8 +20,8 @@ import {
     },
     {
       Icon: InputIcon,
-      name: "Spend Forecasting",
-      description: "Forecast your spending with graphs and other visualizations",
+      name: "Full text search",
+      description: "Search through all your files in one place.",
       href: "/",
       cta: "Learn more",
       background: <img className="absolute -right-20 -top-20 opacity-60" />,
@@ -29,8 +29,8 @@ import {
     },
     {
       Icon: GlobeIcon,
-      name: "Financial Goals",
-      description: "Note down your financial goals and recieve periodic reminders on them",
+      name: "Multilingual",
+      description: "Supports 100+ languages and counting.",
       href: "/",
       cta: "Learn more",
       background: <img className="absolute -right-20 -top-20 opacity-60" />,
@@ -49,7 +49,7 @@ import {
       Icon: BellIcon,
       name: "Notifications",
       description:
-        "Setup notifications for upcoming or periodic payments",
+        "Get notified when someone shares a file or mentions you in a comment.",
       href: "/",
       cta: "Learn more",
       background: <img className="absolute -right-20 -top-20 opacity-60" />,

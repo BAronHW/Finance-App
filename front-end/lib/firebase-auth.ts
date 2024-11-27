@@ -2,6 +2,7 @@ import { auth, provider } from "@/lib/Firebase";
 import { GoogleAuthProvider, signInWithPopup, UserCredential } from "firebase/auth";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
+
 export const firebaseGmailSignin = async (router: AppRouterInstance): Promise<void> => {
     if (typeof window === 'undefined' || !auth) {
       console.error('Auth is not available');
@@ -18,6 +19,7 @@ export const firebaseGmailSignin = async (router: AppRouterInstance): Promise<vo
       console.log(token);
       const user = result.user;
       console.log(user);
+      router.push('/');
     } catch (error) {
       if (error instanceof Error) {
         const errorCode = (error as any).code;

@@ -1,33 +1,21 @@
 "use client"
-import React, { useState } from 'react';
+import React from 'react';
 import { MeteorDemo } from '@/components/MeteorsDemo';
 import { ProfileForm } from '@/components/SigninForm';
 import { Card, CardContent } from '@/components/ui/card';
 import WordPullUp from "@/components/magicui/word-pull-up";
+import { signInWithPopup, GoogleAuthProvider, UserCredential } from "firebase/auth";
+import { auth, provider } from '@/lib/Firebase';
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
 import { firebaseGmailSignin } from '@/lib/firebase-auth';
-import { useAuth } from '@/app/context/authContext';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '@/lib/Firebase';
 
 const SigninPage = () => {
   const router = useRouter();
-  const { login, isAuthenticated, user } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
-  const [registeredUser] = useAuthState(auth);
 
-  if(registeredUser){
-    router.push('/')
+  const gmailSignIn = async () => {
+    await firebaseGmailSignin(router);
   }
-
-  const gmailSignIn = () => {
-    setIsLoading(true);
-    firebaseGmailSignin(router)
-      .then(() => router.push('/'))
-      .catch(console.error)
-      .finally(() => setIsLoading(false));
-  };
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
