@@ -9,12 +9,22 @@ import { auth, provider } from '@/lib/Firebase';
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
 import { firebaseGmailSignin } from '@/lib/firebase-auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
+
 
 const SigninPage = () => {
   const router = useRouter();
 
+  const [user, loading, error] = useAuthState(auth);
+
   const gmailSignIn = async () => {
     await firebaseGmailSignin(router);
+  }
+
+  if(loading){
+    <div className='flex justify-center items-center'>
+      Loading
+    </div>
   }
 
   return (

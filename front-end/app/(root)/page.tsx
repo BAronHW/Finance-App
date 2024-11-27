@@ -6,12 +6,20 @@ import Header from '@/components/Header';
 import { BentoDemo } from '@/components/BentoDemo';
 import { Button } from '@/components/ui/button';
 import TestComp from '@/components/testComp';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, app } from '@/lib/Firebase';  
+import { getAuth } from 'firebase/auth';
 
 export default function Home() {
+
+  const auth = getAuth(app);
+
+  console.log(auth.currentUser?.displayName)
+
   return (
     <div className="flex flex-col min-h-screen">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <Header name='Aaron' appMoto='Manage your student funds' accBal={10} />
+        <Header name={auth.currentUser?.displayName || ""} appMoto='Manage your student funds' accBal={10} />
       </div>
       <main className="flex-grow flex items-center justify-center flex-col gap-10 m-7">
         <BentoDemo />
