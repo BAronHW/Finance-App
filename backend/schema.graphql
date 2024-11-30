@@ -3,9 +3,10 @@
 
 
 type Mutation {
-  createUser(first_name: String!, last_name: String!, uuid: String): User!
+  createUser(email: String!, firstName: String!, lastName: String!, password: String!, phone: String, username: String!, uuid: String): User!
   deleteUser(id: Int!): User!
-  updateUser(first_name: String, id: Int!, last_name: String, uuid: String): User!
+  signIn(password: String!, username: String!): User!
+  updateUser(email: String!, firstName: String, id: Int!, lastName: String, password: String!, phone: String, username: String!, uuid: String): User!
 }
 
 type Query {
@@ -14,8 +15,12 @@ type Query {
 }
 
 type User {
-  first_name: String!
+  email: String!
+  firstName: String
   id: Int!
-  last_name: String!
+  lastName: String
+  password: String!
+  phone: String
+  username: String!
   uuid: String
 }

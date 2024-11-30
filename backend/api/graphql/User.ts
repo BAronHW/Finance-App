@@ -1,11 +1,16 @@
 import { objectType, extendType, stringArg, nonNull, intArg } from 'nexus'
+import bcrypt from 'bcrypt';
 
 export const User = objectType({
   name: 'User',
   definition(t) {
     t.nonNull.int('id')
-    t.nonNull.string('first_name')
-    t.nonNull.string('last_name')
+    t.string('firstName')
+    t.string('lastName')
+    t.nonNull.string('username')
+    t.nonNull.string('email')
+    t.nonNull.string('password')
+    t.string('phone')
     t.string('uuid')
   },
 })
@@ -27,6 +32,16 @@ export const UserQuery = extendType({
       resolve(_root, args, ctx) {
         return ctx.db.user.findUnique({
           where: { id: args.id },
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            username: true,
+            password: true,
+            uuid: true,
+            phone: true,
+          }
         })
       },
     })
@@ -39,16 +54,25 @@ export const UserMutation = extendType({
     t.nonNull.field('createUser', {
       type: 'User',
       args: {
-        first_name: nonNull(stringArg()),
-        last_name: nonNull(stringArg()),
+        firstName: nonNull(stringArg()),
+        lastName: nonNull(stringArg()),
+        username: nonNull(stringArg()),
+        password: nonNull(stringArg()),
+        email: nonNull(stringArg()),
         uuid: stringArg(),
+        phone: stringArg(),
       },
-      resolve(_root, args, ctx) {
+      resolve: async (_root, args, ctx) => {
+        const hash = await bcrypt.hash(args.password, 10);
         return ctx.db.user.create({
           data: {
-            first_name: args.first_name,
-            last_name: args.last_name,
+            firstName: args.firstName,
+            lastName: args.lastName,
+            username: args.username,
+            password: hash,
+            email: args.email,
             uuid: args.uuid,
+            phone: args.phone,
           },
         })
       },
@@ -57,16 +81,24 @@ export const UserMutation = extendType({
       type: 'User',
       args: {
         id: nonNull(intArg()),
-        first_name: stringArg(),
-        last_name: stringArg(),
+        firstName: stringArg(),
+        lastName: stringArg(),
+        username: nonNull(stringArg()),
+        password: nonNull(stringArg()),
+        email: nonNull(stringArg()),
         uuid: stringArg(),
+        phone: stringArg(),
       },
-      resolve(_root, args, ctx) {
+      resolve: async (_root, args, ctx) => {
+        const hash = await bcrypt.hash(args.password, 10);
         return ctx.db.user.update({
           where: { id: args.id },
           data: {
-            first_name: args.first_name,
-            last_name: args.last_name,
+            firstName: args.firstName,
+            lastName: args.lastName,
+            username: args.username,
+            password: hash,
+            email: args.email,
             uuid: args.uuid,
           },
         })
@@ -82,6 +114,39 @@ export const UserMutation = extendType({
           where: { id: args.id },
         })
       },
+    })
+    t.nonNull.field('signIn', {
+      type: 'User',
+      args: {
+        username: nonNull(stringArg()),
+        password: nonNull(stringArg()),
+      },
+      async resolve(_root, args, ctx) {
+        const user = await ctx.db.user.findUnique({
+          where: { username: args.username },
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            username: true,
+            password: true,
+            uuid: true,
+            phone: true,
+          }
+        });
+
+        if (!user) {
+          throw new Error('Invalid username or password');
+        }
+
+        const valid = await bcrypt.compare(args.password, user.password);
+        if (!valid) {
+          throw new Error('Invalid username or password');
+        }
+
+        return user;
+      }
     })
   },
 })

@@ -31,9 +31,13 @@ export interface NexusGenObjects {
   Mutation: {};
   Query: {};
   User: { // root type
-    first_name: string; // String!
+    email: string; // String!
+    firstName?: string | null; // String
     id: number; // Int!
-    last_name: string; // String!
+    lastName?: string | null; // String
+    password: string; // String!
+    phone?: string | null; // String
+    username: string; // String!
     uuid?: string | null; // String
   }
 }
@@ -52,6 +56,7 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     createUser: NexusGenRootTypes['User']; // User!
     deleteUser: NexusGenRootTypes['User']; // User!
+    signIn: NexusGenRootTypes['User']; // User!
     updateUser: NexusGenRootTypes['User']; // User!
   }
   Query: { // field return type
@@ -59,9 +64,13 @@ export interface NexusGenFieldTypes {
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
   User: { // field return type
-    first_name: string; // String!
+    email: string; // String!
+    firstName: string | null; // String
     id: number; // Int!
-    last_name: string; // String!
+    lastName: string | null; // String
+    password: string; // String!
+    phone: string | null; // String
+    username: string; // String!
     uuid: string | null; // String
   }
 }
@@ -70,6 +79,7 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     createUser: 'User'
     deleteUser: 'User'
+    signIn: 'User'
     updateUser: 'User'
   }
   Query: { // field return type name
@@ -77,9 +87,13 @@ export interface NexusGenFieldTypeNames {
     users: 'User'
   }
   User: { // field return type name
-    first_name: 'String'
+    email: 'String'
+    firstName: 'String'
     id: 'Int'
-    last_name: 'String'
+    lastName: 'String'
+    password: 'String'
+    phone: 'String'
+    username: 'String'
     uuid: 'String'
   }
 }
@@ -87,17 +101,29 @@ export interface NexusGenFieldTypeNames {
 export interface NexusGenArgTypes {
   Mutation: {
     createUser: { // args
-      first_name: string; // String!
-      last_name: string; // String!
+      email: string; // String!
+      firstName: string; // String!
+      lastName: string; // String!
+      password: string; // String!
+      phone?: string | null; // String
+      username: string; // String!
       uuid?: string | null; // String
     }
     deleteUser: { // args
       id: number; // Int!
     }
+    signIn: { // args
+      password: string; // String!
+      username: string; // String!
+    }
     updateUser: { // args
-      first_name?: string | null; // String
+      email: string; // String!
+      firstName?: string | null; // String
       id: number; // Int!
-      last_name?: string | null; // String
+      lastName?: string | null; // String
+      password: string; // String!
+      phone?: string | null; // String
+      username: string; // String!
       uuid?: string | null; // String
     }
   }
