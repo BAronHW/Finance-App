@@ -5,8 +5,23 @@
 
 
 import type { Context } from "./api/context"
-
-
+import type { core } from "nexus"
+declare global {
+  interface NexusGenCustomInputMethods<TypeName extends string> {
+    /**
+     * Date and time custom scalar type
+     */
+    dateTime<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "DateTime";
+  }
+}
+declare global {
+  interface NexusGenCustomOutputMethods<TypeName extends string> {
+    /**
+     * Date and time custom scalar type
+     */
+    dateTime<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "DateTime";
+  }
+}
 
 
 declare global {
@@ -25,9 +40,18 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
+  DateTime: any
 }
 
 export interface NexusGenObjects {
+  Account: { // root type
+    balance: number; // Float!
+    createdAt: string; // String!
+    id: number; // Int!
+    name: string; // String!
+    type: string; // String!
+    updatedAt: string; // String!
+  }
   Mutation: {};
   Query: {};
   User: { // root type
@@ -53,13 +77,25 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
+  Account: { // field return type
+    balance: number; // Float!
+    createdAt: string; // String!
+    id: number; // Int!
+    name: string; // String!
+    type: string; // String!
+    updatedAt: string; // String!
+    user: NexusGenRootTypes['User']; // User!
+  }
   Mutation: { // field return type
+    createAccount: NexusGenRootTypes['Account']; // Account!
     createUser: NexusGenRootTypes['User']; // User!
     deleteUser: NexusGenRootTypes['User']; // User!
     emailSignIn: NexusGenRootTypes['User']; // User!
     updateUser: NexusGenRootTypes['User']; // User!
   }
   Query: { // field return type
+    account: NexusGenRootTypes['Account'] | null; // Account
+    getAccountsByUserId: NexusGenRootTypes['Account'][]; // [Account!]!
     user: NexusGenRootTypes['User'] | null; // User
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
@@ -76,13 +112,25 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  Account: { // field return type name
+    balance: 'Float'
+    createdAt: 'String'
+    id: 'Int'
+    name: 'String'
+    type: 'String'
+    updatedAt: 'String'
+    user: 'User'
+  }
   Mutation: { // field return type name
+    createAccount: 'Account'
     createUser: 'User'
     deleteUser: 'User'
     emailSignIn: 'User'
     updateUser: 'User'
   }
   Query: { // field return type name
+    account: 'Account'
+    getAccountsByUserId: 'Account'
     user: 'User'
     users: 'User'
   }
@@ -100,6 +148,12 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    createAccount: { // args
+      balance: number; // Float!
+      name: string; // String!
+      type: string; // String!
+      userId: number; // Int!
+    }
     createUser: { // args
       email: string; // String!
       firstName?: string | null; // String
@@ -128,6 +182,12 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    account: { // args
+      id: number; // Int!
+    }
+    getAccountsByUserId: { // args
+      userId: number; // Int!
+    }
     user: { // args
       id: number; // Int!
     }
