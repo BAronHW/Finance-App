@@ -9,9 +9,9 @@ export const User = objectType({
     t.string('lastName')
     t.nonNull.string('username')
     t.nonNull.string('email')
-    t.nonNull.string('password')
+    t.string('password')  // Google users don't have a password
     t.string('phone')
-    t.string('uuid')
+    t.string('uid')
   },
 })
 
@@ -39,7 +39,7 @@ export const UserQuery = extendType({
             email: true,
             username: true,
             password: true,
-            uuid: true,
+            uid: true,
             phone: true,
           }
         })
@@ -54,16 +54,16 @@ export const UserMutation = extendType({
     t.nonNull.field('createUser', {
       type: 'User',
       args: {
-        firstName: nonNull(stringArg()),
-        lastName: nonNull(stringArg()),
+        firstName: stringArg(),
+        lastName: stringArg(),
         username: nonNull(stringArg()),
-        password: nonNull(stringArg()),
+        password: stringArg(),
         email: nonNull(stringArg()),
-        uuid: stringArg(),
+        uid: stringArg(),
         phone: stringArg(),
       },
       resolve: async (_root, args, ctx) => {
-        const hash = await bcrypt.hash(args.password, 10);
+        const hash = args.password ? await bcrypt.hash(args.password, 10) : null;
         return ctx.db.user.create({
           data: {
             firstName: args.firstName,
@@ -71,7 +71,7 @@ export const UserMutation = extendType({
             username: args.username,
             password: hash,
             email: args.email,
-            uuid: args.uuid,
+            uid: args.uid,
             phone: args.phone,
           },
         })
@@ -84,22 +84,22 @@ export const UserMutation = extendType({
         firstName: stringArg(),
         lastName: stringArg(),
         username: nonNull(stringArg()),
-        password: nonNull(stringArg()),
+        password: stringArg(),
         email: nonNull(stringArg()),
-        uuid: stringArg(),
+        uid: stringArg(),
         phone: stringArg(),
       },
       resolve: async (_root, args, ctx) => {
-        const hash = await bcrypt.hash(args.password, 10);
+        const hash = args.password ? await bcrypt.hash(args.password, 10) : null;
         return ctx.db.user.update({
           where: { id: args.id },
           data: {
             firstName: args.firstName,
             lastName: args.lastName,
             username: args.username,
-            password: hash,
+            password: hash ?? undefined,
             email: args.email,
-            uuid: args.uuid,
+            uid: args.uid,
           },
         })
       },
@@ -115,7 +115,7 @@ export const UserMutation = extendType({
         })
       },
     })
-    t.nonNull.field('signIn', {
+    t.nonNull.field('emailSignIn', {
       type: 'User',
       args: {
         username: nonNull(stringArg()),
@@ -131,13 +131,17 @@ export const UserMutation = extendType({
             email: true,
             username: true,
             password: true,
-            uuid: true,
+            uid: true,
             phone: true,
           }
         });
 
         if (!user) {
-          throw new Error('Invalid username or password');
+          throw new Error('Invalid username');
+        }
+
+        if (!user.password) {
+          throw new Error('User signed in with Google and does not have stored password.');
         }
 
         const valid = await bcrypt.compare(args.password, user.password);

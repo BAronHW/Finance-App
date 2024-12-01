@@ -35,10 +35,10 @@ export interface NexusGenObjects {
     firstName?: string | null; // String
     id: number; // Int!
     lastName?: string | null; // String
-    password: string; // String!
+    password?: string | null; // String
     phone?: string | null; // String
+    uid?: string | null; // String
     username: string; // String!
-    uuid?: string | null; // String
   }
 }
 
@@ -56,7 +56,7 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     createUser: NexusGenRootTypes['User']; // User!
     deleteUser: NexusGenRootTypes['User']; // User!
-    signIn: NexusGenRootTypes['User']; // User!
+    emailSignIn: NexusGenRootTypes['User']; // User!
     updateUser: NexusGenRootTypes['User']; // User!
   }
   Query: { // field return type
@@ -68,10 +68,10 @@ export interface NexusGenFieldTypes {
     firstName: string | null; // String
     id: number; // Int!
     lastName: string | null; // String
-    password: string; // String!
+    password: string | null; // String
     phone: string | null; // String
+    uid: string | null; // String
     username: string; // String!
-    uuid: string | null; // String
   }
 }
 
@@ -79,7 +79,7 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     createUser: 'User'
     deleteUser: 'User'
-    signIn: 'User'
+    emailSignIn: 'User'
     updateUser: 'User'
   }
   Query: { // field return type name
@@ -93,8 +93,8 @@ export interface NexusGenFieldTypeNames {
     lastName: 'String'
     password: 'String'
     phone: 'String'
+    uid: 'String'
     username: 'String'
-    uuid: 'String'
   }
 }
 
@@ -102,17 +102,17 @@ export interface NexusGenArgTypes {
   Mutation: {
     createUser: { // args
       email: string; // String!
-      firstName: string; // String!
-      lastName: string; // String!
-      password: string; // String!
+      firstName?: string | null; // String
+      lastName?: string | null; // String
+      password?: string | null; // String
       phone?: string | null; // String
+      uid?: string | null; // String
       username: string; // String!
-      uuid?: string | null; // String
     }
     deleteUser: { // args
       id: number; // Int!
     }
-    signIn: { // args
+    emailSignIn: { // args
       password: string; // String!
       username: string; // String!
     }
@@ -121,10 +121,10 @@ export interface NexusGenArgTypes {
       firstName?: string | null; // String
       id: number; // Int!
       lastName?: string | null; // String
-      password: string; // String!
+      password?: string | null; // String
       phone?: string | null; // String
+      uid?: string | null; // String
       username: string; // String!
-      uuid?: string | null; // String
     }
   }
   Query: {

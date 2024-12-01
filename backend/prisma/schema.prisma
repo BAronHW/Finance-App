@@ -19,7 +19,7 @@ model User {
   lastName      String?
   username       String     @unique
   email          String     @unique
-  password       String       
+  password       String?       
   uid           String?
   phone          String?
 }
