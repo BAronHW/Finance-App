@@ -27,12 +27,8 @@ exports.schema = void 0;
 const nexus_1 = require("nexus");
 const path_1 = require("path");
 const types = __importStar(require("./graphql"));
-const dateTime_1 = require("./graphql/Utils/dateTime");
 exports.schema = (0, nexus_1.makeSchema)({
-    types: {
-        types,
-        DateTime: dateTime_1.DateTime,
-    },
+    types,
     outputs: {
         typegen: (0, path_1.join)(__dirname, '../nexus-typegen.ts'),
         schema: (0, path_1.join)(__dirname, '../schema.graphql'),
