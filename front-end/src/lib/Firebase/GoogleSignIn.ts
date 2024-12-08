@@ -7,7 +7,7 @@ import { auth } from './Firebase';
 
 const provider = new GoogleAuthProvider();
 
-export const signInWithGoogle = async (): Promise<{
+export const googleSignIn = async (): Promise<{
     user?: NexusGenObjects["User"],
     errorCode?: string,
     errorMessage?: string,

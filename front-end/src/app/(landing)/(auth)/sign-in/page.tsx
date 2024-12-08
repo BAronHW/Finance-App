@@ -3,12 +3,10 @@ import React, { useState } from 'react';
 import { SignInForm } from '@/src/components/SigninForm';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/src/components/ui/button';
-import { signInWithGoogle } from '@/src/lib/Firebase/GoogleSignIn';
+import { googleSignIn } from '@/src/lib/Firebase/GoogleSignIn';
 import { useAuth } from '@/src/lib/Contexts/AuthContext';
 
 const SigninPage = () => {
-  const [errorMessage, setErrorMessage] = useState("");
-  const [errorCode, setErrorCode] = useState("");
 
   const router = useRouter();
 
@@ -16,7 +14,7 @@ const SigninPage = () => {
     <>
       <h2 className="text-3xl font-bold text-center mb-6">Sign In</h2>
       <SignInForm />
-      <div className="mt-4 text-center">
+      {/* <div className="mt-4 text-center">
         <p className="text-sm text-black mb-2">Or sign in with</p>
         <Button
           onClick={
@@ -25,7 +23,7 @@ const SigninPage = () => {
                 user,
                 errorCode,
                 errorMessage,
-              } = await signInWithGoogle();
+              } = await googleSignIn();
 
               if (errorCode && errorMessage) {
                 setErrorCode(errorCode)
@@ -49,7 +47,7 @@ const SigninPage = () => {
             <p>{errorMessage}</p>
           </div>
         }
-      </div>
+      </div> */}
     </>
   );
 };
