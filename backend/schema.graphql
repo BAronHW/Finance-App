@@ -10,7 +10,7 @@ type Mutation {
 }
 
 type Query {
-  user(id: Int!): User
+  user(uid: String!): User!
   users: [User!]!
 }
 
@@ -21,6 +21,6 @@ type User {
   lastName: String
   password: String
   phone: String
-  uid: String
+  uid: String!
   username: String!
 }

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { Button } from '@/src/components/ui/button';
 import '@/src/app/globals.css'
-import { signInWithGoogle } from '@/src/lib/Firebase/GoogleSignIn'
+import { googleSignIn } from '@/src/lib/Hooks/useGoogleSignIn'
 
 const SignUpPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -28,9 +28,9 @@ const SignUpPage = () => {
                 user,
                 errorCode,
                 errorMessage,
-              } = await signInWithGoogle();
+              } = await googleSignIn();
 
-              console.log("signInWithGoogle response object:");
+              console.log("googleSignIn response object:");
               console.log(user, errorCode, errorMessage)
 
               if (errorCode && errorMessage) {
