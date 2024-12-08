@@ -3,8 +3,8 @@ import { useQuery } from '@apollo/client'
 import { GET_SINGLE_USER_BY_UID } from '@/src/lib/GraphQL/Users'
 import { NexusGenObjects } from '@/../backend/nexus-typegen'
 import { useRouter } from 'next/router';
+import { auth } from './Firebase';
 
-const auth = getAuth();
 const provider = new GoogleAuthProvider();
 
 export const signInWithGoogle = async (): Promise<{

@@ -35,6 +35,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }, [])
 
     const initialiseUser = (user: User | null) => {
+        setLoading(true);
         if (user) {
             setCurrentUser(user);
             setUserLoggedIn(true);
