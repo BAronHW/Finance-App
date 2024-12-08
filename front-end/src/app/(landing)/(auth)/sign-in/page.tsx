@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { SignInForm } from '@/src/components/SigninForm';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/src/components/ui/button';
-import { googleSignIn } from '@/src/lib/Firebase/GoogleSignIn';
+import { googleSignIn } from '@/src/lib/Hooks/useGoogleSignIn';
 import { useAuth } from '@/src/lib/Contexts/AuthContext';
 
 const SigninPage = () => {

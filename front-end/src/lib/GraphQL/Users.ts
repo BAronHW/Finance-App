@@ -47,7 +47,7 @@ export const DELETE_USER = gql`
 
 export const GET_SINGLE_USER_BY_UID = gql`
   query User($uid: String!) {
-    user(uid: $uid) {
+    user (uid: $uid) {
       id
       firstName
       lastName

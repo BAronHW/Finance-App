@@ -18,9 +18,9 @@ export default function TestComp() {
     }
   };
 
-  console.log('Current data:', data);
-  console.log('Loading:', loading);
-  console.log('Error:', error);
+  // console.log('Current data:', data);
+  // console.log('Loading:', loading);
+  // console.log('Error:', error);
 
   return (
     <div>

@@ -37,7 +37,7 @@ export interface NexusGenObjects {
     lastName?: string | null; // String
     password?: string | null; // String
     phone?: string | null; // String
-    uid?: string | null; // String
+    uid: string; // String!
     username: string; // String!
   }
 }
@@ -60,7 +60,7 @@ export interface NexusGenFieldTypes {
     updateUser: NexusGenRootTypes['User']; // User!
   }
   Query: { // field return type
-    user: NexusGenRootTypes['User'] | null; // User
+    user: NexusGenRootTypes['User']; // User!
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
   User: { // field return type
@@ -70,7 +70,7 @@ export interface NexusGenFieldTypes {
     lastName: string | null; // String
     password: string | null; // String
     phone: string | null; // String
-    uid: string | null; // String
+    uid: string; // String!
     username: string; // String!
   }
 }
@@ -129,7 +129,7 @@ export interface NexusGenArgTypes {
   }
   Query: {
     user: { // args
-      id: number; // Int!
+      uid: string; // String!
     }
   }
 }

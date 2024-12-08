@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/src/components/ui/button";
+import Link from 'next/link';
 import {
   Form,
   FormControl,
@@ -14,8 +15,8 @@ import {
 import { Input } from "@/src/components/ui/input";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/lib/Contexts/AuthContext";
-import { emailAndPasswordSignIn } from "../lib/Firebase/EmailPasswordSignIn";
-import { googleSignIn } from '@/src/lib/Firebase/GoogleSignIn';
+import { useEmailPasswordSignIn } from '@/src/lib/Hooks/useEmailPasswordSignIn';
+import { useGoogleSignIn } from '@/src/lib/Hooks/useGoogleSignIn';
 import { FormEvent, useState } from "react";
 
 export function SignInForm() {
@@ -26,6 +27,9 @@ export function SignInForm() {
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorCode, setErrorCode] = useState("");
+
+  const { googleSignIn, queryError: googleQueryError} = useGoogleSignIn();
+  const { emailPasswordSignIn, queryError: emailPasswordQueryError } = useEmailPasswordSignIn();
 
   const formSchema = z.object({
     email: z.string().email({
@@ -46,19 +50,16 @@ export function SignInForm() {
 
   const onSignIn = async (values: z.infer<typeof formSchema>) => {
     const {
-      user,
+      user: emailPasswordUser,
       errorCode,
       errorMessage,
-    } = await emailAndPasswordSignIn(values.email, values.password);
-
-    console.log("emailAndPasswordSignIn response object:");
-    console.log(user, errorCode, errorMessage)
+    } = await emailPasswordSignIn(values.email, values.password);
     
     if (errorCode && errorMessage) {
       setErrorCode(errorCode)
       setErrorMessage(errorMessage)
-    } else if (user) {
-      router.push(`/home/${user.id}`)
+    } else if (emailPasswordUser) {
+      router.push(`/home/${emailPasswordUser.id}`)
     }
   }
 
@@ -98,6 +99,12 @@ export function SignInForm() {
           <Button type="submit">Sign in</Button>
         </form>
       </Form>
+      <div className="mt-6 space-y-4 text-center">
+        <p className="text-lg mb-2">New user? Create an account below:</p>
+        <Link href="/sign-up" passHref>
+          <Button className="m-15">Sign Up</Button>
+        </Link>
+      </div>
       <div className="mt-4 text-center">
         <p className="text-sm text-black mb-2">Or sign in with</p>
         <Button
@@ -108,6 +115,11 @@ export function SignInForm() {
                 errorCode,
                 errorMessage,
               } = await googleSignIn();
+
+              console.log('googleSignIn response object')
+              console.log(user)
+              console.log(errorCode)
+              console.log(errorMessage)
 
               if (errorCode && errorMessage) {
                 setErrorCode(errorCode)

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { Button } from '@/src/components/ui/button';
 import '@/src/app/globals.css'
-import { googleSignIn } from '@/src/lib/Firebase/GoogleSignIn'
+import { googleSignIn } from '@/src/lib/Hooks/useGoogleSignIn'
 
 const SignUpPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
