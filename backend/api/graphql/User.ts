@@ -34,6 +34,9 @@ export const UserQuery = extendType({
         const user = await ctx.db.user.findUnique({
           where: { uid: args.uid },
         });
+        if (!user) {
+          throw new Error(`No user with uid ${args.uid} found.`);
+        }
         return user;
       },
     });
@@ -51,7 +54,7 @@ export const UserMutation = extendType({
         username: nonNull(stringArg()),
         password: stringArg(),
         email: nonNull(stringArg()),
-        uid: stringArg(),
+        uid: nonNull(stringArg()),
         phone: stringArg(),
       },
       resolve: async (_root, args, ctx) => {
@@ -80,7 +83,7 @@ export const UserMutation = extendType({
         username: nonNull(stringArg()),
         password: stringArg(),
         email: nonNull(stringArg()),
-        uid: stringArg(),
+        uid: nonNull(stringArg()),
         phone: stringArg(),
       },
       resolve: async (_root, args, ctx) => {

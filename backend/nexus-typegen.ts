@@ -106,7 +106,7 @@ export interface NexusGenArgTypes {
       lastName?: string | null; // String
       password?: string | null; // String
       phone?: string | null; // String
-      uid?: string | null; // String
+      uid: string; // String!
       username: string; // String!
     }
     deleteUser: { // args
@@ -123,7 +123,7 @@ export interface NexusGenArgTypes {
       lastName?: string | null; // String
       password?: string | null; // String
       phone?: string | null; // String
-      uid?: string | null; // String
+      uid: string; // String!
       username: string; // String!
     }
   }
