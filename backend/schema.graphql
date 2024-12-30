@@ -2,16 +2,33 @@
 ### Do not make changes to this file directly
 
 
+enum InOrOutEnum {
+  IN
+  OUT
+}
+
 type Mutation {
   createUser(email: String!, firstName: String, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
   deleteUser(id: Int!): User!
   emailSignIn(password: String!, username: String!): User!
-  updateUser(email: String!, firstName: String, id: Int!, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
+  updateUserDetails(email: String!, firstName: String, id: Int!, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
 }
 
 type Query {
   user(uid: String!): User!
   users: [User!]!
+}
+
+type Transaction {
+  accountName: String!
+  amount: Float!
+  category: String
+  id: Int!
+  io: InOrOutEnum!
+  name: String!
+  reference: String
+  senderOrRecipientName: String!
+  userId: Int!
 }
 
 type User {
@@ -21,6 +38,7 @@ type User {
   lastName: String
   password: String
   phone: String
+  transactions: [Transaction]!
   uid: String!
   username: String!
 }

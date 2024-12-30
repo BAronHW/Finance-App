@@ -1,4 +1,5 @@
 import { objectType, extendType, stringArg, nonNull, intArg } from "nexus";
+import { Transaction } from "./Transaction";
 import bcrypt from "bcrypt";
 
 export const User = objectType({
@@ -12,6 +13,7 @@ export const User = objectType({
     t.string("password"); // Google users don't have a password
     t.string("phone");
     t.nonNull.string("uid");
+    t.nonNull.list.field("transactions", { type: Transaction});
   },
 });
 
@@ -21,7 +23,11 @@ export const UserQuery = extendType({
     t.nonNull.list.nonNull.field("users", {
       type: "User",
       async resolve(_root, _args, ctx) {
-        const users = await ctx.db.user.findMany();
+        const users = await ctx.db.user.findMany({
+          include: {
+            transactions: true
+          }
+        });
         return users;
       },
     });
@@ -33,6 +39,9 @@ export const UserQuery = extendType({
       async resolve(_root, args, ctx) {
         const user = await ctx.db.user.findUnique({
           where: { uid: args.uid },
+          include: {
+            transactions: true
+          }
         });
         if (!user) {
           throw new Error(`No user with uid ${args.uid} found.`);
@@ -71,10 +80,13 @@ export const UserMutation = extendType({
             uid: args.uid,
             phone: args.phone,
           },
+          include: {
+            transactions: true
+          }
         });
       },
     });
-    t.nonNull.field("updateUser", {
+    t.nonNull.field("updateUserDetails", {
       type: "User",
       args: {
         id: nonNull(intArg()),
@@ -100,6 +112,9 @@ export const UserMutation = extendType({
             email: args.email,
             uid: args.uid,
           },
+          include: {
+            transactions: true
+          }
         });
       },
     });
@@ -111,6 +126,9 @@ export const UserMutation = extendType({
       resolve(_root, args, ctx) {
         return ctx.db.user.delete({
           where: { id: args.id },
+          include: {
+            transactions: true
+          }
         });
       },
     });
@@ -132,6 +150,7 @@ export const UserMutation = extendType({
             password: true,
             uid: true,
             phone: true,
+            transactions: true
           },
         });
 

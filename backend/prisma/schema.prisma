@@ -22,4 +22,23 @@ model User {
   password       String?       
   uid           String      @unique
   phone          String?
+  transactions  Transaction[]
+}
+
+model Transaction {
+  id    Int     @id @default(autoincrement())
+  user    User    @relation(fields: [userId], references: [id])
+  userId    Int
+  accountName   String    @unique
+  io    InOrOut
+  name    String
+  senderOrRecipientName     String
+  amount    Float
+  Reference   String?
+  Category    String?
+}
+
+enum InOrOut {
+  IN
+  OUT
 }
