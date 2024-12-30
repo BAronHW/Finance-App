@@ -5,56 +5,67 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserMutation = exports.UserQuery = exports.User = void 0;
 const nexus_1 = require("nexus");
+const Transaction_1 = require("./Transaction");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 exports.User = (0, nexus_1.objectType)({
-    name: 'User',
+    name: "User",
     definition(t) {
-        t.nonNull.int('id');
-        t.string('firstName');
-        t.string('lastName');
-        t.nonNull.string('username');
-        t.nonNull.string('email');
-        t.nonNull.string('password');
-        t.string('uuid');
+        t.nonNull.int("id");
+        t.string("firstName");
+        t.string("lastName");
+        t.nonNull.string("username");
+        t.nonNull.string("email");
+        t.string("password"); // Google users don't have a password
+        t.string("phone");
+        t.nonNull.string("uid");
+        t.nonNull.list.field("transactions", { type: Transaction_1.Transaction });
     },
 });
 exports.UserQuery = (0, nexus_1.extendType)({
-    type: 'Query',
+    type: "Query",
     definition(t) {
-        t.nonNull.list.nonNull.field('users', {
-            type: 'User',
-            resolve(_root, _args, ctx) {
-                return ctx.db.user.findMany();
+        t.nonNull.list.nonNull.field("users", {
+            type: "User",
+            async resolve(_root, _args, ctx) {
+                const users = await ctx.db.user.findMany();
+                return users;
             },
         });
-        t.field('user', {
-            type: 'User',
+        t.nonNull.field("user", {
+            type: "User",
             args: {
-                id: (0, nexus_1.nonNull)((0, nexus_1.intArg)()),
+                uid: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()),
             },
-            resolve(_root, args, ctx) {
-                return ctx.db.user.findUnique({
-                    where: { id: args.id },
+            async resolve(_root, args, ctx) {
+                const user = await ctx.db.user.findUnique({
+                    where: { uid: args.uid },
                 });
+                if (!user) {
+                    throw new Error(`No user with uid ${args.uid} found.`);
+                }
+                return user;
             },
         });
     },
 });
 exports.UserMutation = (0, nexus_1.extendType)({
-    type: 'Mutation',
+    type: "Mutation",
     definition(t) {
-        t.nonNull.field('createUser', {
-            type: 'User',
+        t.nonNull.field("createUser", {
+            type: "User",
             args: {
-                firstName: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()),
-                lastName: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()),
+                firstName: (0, nexus_1.stringArg)(),
+                lastName: (0, nexus_1.stringArg)(),
                 username: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()),
-                password: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()),
+                password: (0, nexus_1.stringArg)(),
                 email: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()),
-                uuid: (0, nexus_1.stringArg)(),
+                uid: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()),
+                phone: (0, nexus_1.stringArg)(),
             },
-            resolve(_root, args, ctx) {
-                const hash = bcrypt_1.default.hash(args.password, 10);
+            resolve: async (_root, args, ctx) => {
+                const hash = args.password
+                    ? await bcrypt_1.default.hash(args.password, 10)
+                    : null;
                 return ctx.db.user.create({
                     data: {
                         firstName: args.firstName,
@@ -62,39 +73,43 @@ exports.UserMutation = (0, nexus_1.extendType)({
                         username: args.username,
                         password: hash,
                         email: args.email,
-                        uuid: args.uuid,
+                        uid: args.uid,
+                        phone: args.phone,
                     },
                 });
             },
         });
-        t.nonNull.field('updateUser', {
-            type: 'User',
+        t.nonNull.field("updateUserDetails", {
+            type: "User",
             args: {
                 id: (0, nexus_1.nonNull)((0, nexus_1.intArg)()),
                 firstName: (0, nexus_1.stringArg)(),
                 lastName: (0, nexus_1.stringArg)(),
                 username: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()),
-                password: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()),
+                password: (0, nexus_1.stringArg)(),
                 email: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()),
-                uuid: (0, nexus_1.stringArg)(),
+                uid: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()),
+                phone: (0, nexus_1.stringArg)(),
             },
-            resolve(_root, args, ctx) {
-                const hash = bcrypt_1.default.hash(args.password, 10);
+            resolve: async (_root, args, ctx) => {
+                const hash = args.password
+                    ? await bcrypt_1.default.hash(args.password, 10)
+                    : null;
                 return ctx.db.user.update({
                     where: { id: args.id },
                     data: {
                         firstName: args.firstName,
                         lastName: args.lastName,
                         username: args.username,
-                        password: hash,
+                        password: hash !== null && hash !== void 0 ? hash : undefined,
                         email: args.email,
-                        uuid: args.uuid,
+                        uid: args.uid,
                     },
                 });
             },
         });
-        t.nonNull.field('deleteUser', {
-            type: 'User',
+        t.nonNull.field("deleteUser", {
+            type: "User",
             args: {
                 id: (0, nexus_1.nonNull)((0, nexus_1.intArg)()),
             },
@@ -104,8 +119,8 @@ exports.UserMutation = (0, nexus_1.extendType)({
                 });
             },
         });
-        t.nonNull.field('signIn', {
-            type: 'User',
+        t.nonNull.field("emailSignIn", {
+            type: "User",
             args: {
                 username: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()),
                 password: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()),
@@ -113,16 +128,29 @@ exports.UserMutation = (0, nexus_1.extendType)({
             async resolve(_root, args, ctx) {
                 const user = await ctx.db.user.findUnique({
                     where: { username: args.username },
+                    select: {
+                        id: true,
+                        firstName: true,
+                        lastName: true,
+                        email: true,
+                        username: true,
+                        password: true,
+                        uid: true,
+                        phone: true,
+                    },
                 });
                 if (!user) {
-                    throw new Error('Invalid username or password');
+                    throw new Error("Invalid username");
+                }
+                if (!user.password) {
+                    throw new Error("User signed in with Google and does not have stored password.");
                 }
                 const valid = await bcrypt_1.default.compare(args.password, user.password);
                 if (!valid) {
-                    throw new Error('Invalid username or password');
+                    throw new Error("Invalid username or password");
                 }
                 return user;
-            }
+            },
         });
     },
 });

@@ -17,6 +17,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  InOrOutEnum: "IN" | "OUT"
 }
 
 export interface NexusGenScalars {
@@ -30,6 +31,17 @@ export interface NexusGenScalars {
 export interface NexusGenObjects {
   Mutation: {};
   Query: {};
+  Transaction: { // root type
+    accountName: string; // String!
+    amount: number; // Float!
+    category?: string | null; // String
+    id: number; // Int!
+    io: NexusGenEnums['InOrOutEnum']; // InOrOutEnum!
+    name: string; // String!
+    reference?: string | null; // String
+    senderOrRecipientName: string; // String!
+    userId: number; // Int!
+  }
   User: { // root type
     email: string; // String!
     firstName?: string | null; // String
@@ -37,6 +49,7 @@ export interface NexusGenObjects {
     lastName?: string | null; // String
     password?: string | null; // String
     phone?: string | null; // String
+    transactions: Array<NexusGenRootTypes['Transaction'] | null>; // [Transaction]!
     uid: string; // String!
     username: string; // String!
   }
@@ -50,18 +63,33 @@ export interface NexusGenUnions {
 
 export type NexusGenRootTypes = NexusGenObjects
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
   Mutation: { // field return type
     createUser: NexusGenRootTypes['User']; // User!
     deleteUser: NexusGenRootTypes['User']; // User!
     emailSignIn: NexusGenRootTypes['User']; // User!
-    updateUser: NexusGenRootTypes['User']; // User!
+    seedTransactions: boolean; // Boolean!
+    updateUserDetails: NexusGenRootTypes['User']; // User!
   }
   Query: { // field return type
+    allTransactions: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
+    transactionById: NexusGenRootTypes['Transaction']; // Transaction!
+    transactionsByUserId: Array<NexusGenRootTypes['Transaction'] | null>; // [Transaction]!
     user: NexusGenRootTypes['User']; // User!
     users: NexusGenRootTypes['User'][]; // [User!]!
+  }
+  Transaction: { // field return type
+    accountName: string; // String!
+    amount: number; // Float!
+    category: string | null; // String
+    id: number; // Int!
+    io: NexusGenEnums['InOrOutEnum']; // InOrOutEnum!
+    name: string; // String!
+    reference: string | null; // String
+    senderOrRecipientName: string; // String!
+    userId: number; // Int!
   }
   User: { // field return type
     email: string; // String!
@@ -70,6 +98,7 @@ export interface NexusGenFieldTypes {
     lastName: string | null; // String
     password: string | null; // String
     phone: string | null; // String
+    transactions: Array<NexusGenRootTypes['Transaction'] | null>; // [Transaction]!
     uid: string; // String!
     username: string; // String!
   }
@@ -80,11 +109,26 @@ export interface NexusGenFieldTypeNames {
     createUser: 'User'
     deleteUser: 'User'
     emailSignIn: 'User'
-    updateUser: 'User'
+    seedTransactions: 'Boolean'
+    updateUserDetails: 'User'
   }
   Query: { // field return type name
+    allTransactions: 'Transaction'
+    transactionById: 'Transaction'
+    transactionsByUserId: 'Transaction'
     user: 'User'
     users: 'User'
+  }
+  Transaction: { // field return type name
+    accountName: 'String'
+    amount: 'Float'
+    category: 'String'
+    id: 'Int'
+    io: 'InOrOutEnum'
+    name: 'String'
+    reference: 'String'
+    senderOrRecipientName: 'String'
+    userId: 'Int'
   }
   User: { // field return type name
     email: 'String'
@@ -93,6 +137,7 @@ export interface NexusGenFieldTypeNames {
     lastName: 'String'
     password: 'String'
     phone: 'String'
+    transactions: 'Transaction'
     uid: 'String'
     username: 'String'
   }
@@ -106,7 +151,7 @@ export interface NexusGenArgTypes {
       lastName?: string | null; // String
       password?: string | null; // String
       phone?: string | null; // String
-      uid?: string | null; // String
+      uid: string; // String!
       username: string; // String!
     }
     deleteUser: { // args
@@ -116,18 +161,27 @@ export interface NexusGenArgTypes {
       password: string; // String!
       username: string; // String!
     }
-    updateUser: { // args
+    seedTransactions: { // args
+      userId: number; // Int!
+    }
+    updateUserDetails: { // args
       email: string; // String!
       firstName?: string | null; // String
       id: number; // Int!
       lastName?: string | null; // String
       password?: string | null; // String
       phone?: string | null; // String
-      uid?: string | null; // String
+      uid: string; // String!
       username: string; // String!
     }
   }
   Query: {
+    transactionById: { // args
+      id: number; // Int!
+    }
+    transactionsByUserId: { // args
+      userId: number; // Int!
+    }
     user: { // args
       uid: string; // String!
     }
@@ -144,7 +198,7 @@ export type NexusGenObjectNames = keyof NexusGenObjects;
 
 export type NexusGenInputNames = never;
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = keyof NexusGenEnums;
 
 export type NexusGenInterfaceNames = never;
 
