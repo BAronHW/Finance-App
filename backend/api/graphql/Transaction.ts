@@ -1,7 +1,13 @@
-import { objectType, extendType, stringArg, nonNull, intArg, enumType } from "nexus";
+import {
+  objectType,
+  extendType,
+  stringArg,
+  nonNull,
+  intArg,
+  enumType,
+} from "nexus";
 import TransactionData from "../../sample-data/dummy-transactions.json";
 import { InOrOut } from "@prisma/client";
-
 
 export const Transaction = objectType({
   name: "Transaction",
@@ -15,20 +21,37 @@ export const Transaction = objectType({
     t.nonNull.float("amount");
     t.string("reference");
     t.string("category");
-  }
-})
+  },
+});
 
 export const TransactionQuery = extendType({
   type: "Query",
   definition(t) {
-    t.nonNull.list.nonNull.field("transactions", {
+    t.nonNull.list.nonNull.field("allTransactions", {
       type: "Transaction",
       async resolve(_root, _args, ctx) {
         const transactions = await ctx.db.transaction.findMany();
         return transactions;
       },
     });
-    t.nonNull.field("transaction", {
+    t.nonNull.list.field("transactionsByUserId", {
+      type: "Transaction",
+      args: {
+        userId: nonNull(intArg()),
+      },
+      resolve: async (_root, args, ctx) => {
+        const transactions = ctx.db.transaction.findMany({
+          where: {
+            userId: args.userId,
+          },
+          include: {
+            user: true,
+          },
+        });
+        return transactions;
+      },
+    });
+    t.nonNull.field("transactionById", {
       type: "Transaction",
       args: {
         id: nonNull(intArg()),
@@ -36,7 +59,7 @@ export const TransactionQuery = extendType({
       async resolve(_root, args, ctx) {
         const transaction = await ctx.db.transaction.findUnique({
           where: { id: args.id },
-        })
+        });
         if (!transaction) {
           throw new Error(`No transaction with id ${args.id} found.`);
         }
@@ -63,26 +86,26 @@ export const TransactionMutation = extendType({
                 io: transaction.io as InOrOut,
                 user: {
                   connect: {
-                    id: args.userId
-                  }
-                }
+                    id: args.userId,
+                  },
+                },
               },
-            })
-          })
+            });
+          });
           return true;
         } catch (error) {
           console.error("Error while seeding transactions: ", error);
           return false;
         }
-      }  
-    })
-  }
-})
+      },
+    });
+  },
+});
 
 const InOrOutEnum = enumType({
   name: "InOrOutEnum",
   members: {
     IN: "IN",
     OUT: "OUT",
-  }
-})
+  },
+});

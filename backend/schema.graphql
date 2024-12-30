@@ -16,8 +16,9 @@ type Mutation {
 }
 
 type Query {
-  transaction(id: Int!): Transaction!
-  transactions: [Transaction!]!
+  allTransactions: [Transaction!]!
+  transactionById(id: Int!): Transaction!
+  transactionsByUserId(userId: Int!): [Transaction]!
   user(uid: String!): User!
   users: [User!]!
 }

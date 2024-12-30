@@ -74,8 +74,9 @@ export interface NexusGenFieldTypes {
     updateUserDetails: NexusGenRootTypes['User']; // User!
   }
   Query: { // field return type
-    transaction: NexusGenRootTypes['Transaction']; // Transaction!
-    transactions: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
+    allTransactions: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
+    transactionById: NexusGenRootTypes['Transaction']; // Transaction!
+    transactionsByUserId: Array<NexusGenRootTypes['Transaction'] | null>; // [Transaction]!
     user: NexusGenRootTypes['User']; // User!
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
@@ -112,8 +113,9 @@ export interface NexusGenFieldTypeNames {
     updateUserDetails: 'User'
   }
   Query: { // field return type name
-    transaction: 'Transaction'
-    transactions: 'Transaction'
+    allTransactions: 'Transaction'
+    transactionById: 'Transaction'
+    transactionsByUserId: 'Transaction'
     user: 'User'
     users: 'User'
   }
@@ -174,8 +176,11 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
-    transaction: { // args
+    transactionById: { // args
       id: number; // Int!
+    }
+    transactionsByUserId: { // args
+      userId: number; // Int!
     }
     user: { // args
       uid: string; // String!

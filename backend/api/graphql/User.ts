@@ -13,7 +13,7 @@ export const User = objectType({
     t.string("password"); // Google users don't have a password
     t.string("phone");
     t.nonNull.string("uid");
-    t.nonNull.list.field("transactions", { type: Transaction});
+    t.nonNull.list.field("transactions", { type: Transaction });
   },
 });
 
@@ -25,8 +25,8 @@ export const UserQuery = extendType({
       async resolve(_root, _args, ctx) {
         const users = await ctx.db.user.findMany({
           include: {
-            transactions: true
-          }
+            transactions: true,
+          },
         });
         return users;
       },
@@ -40,8 +40,8 @@ export const UserQuery = extendType({
         const user = await ctx.db.user.findUnique({
           where: { uid: args.uid },
           include: {
-            transactions: true
-          }
+            transactions: true,
+          },
         });
         if (!user) {
           throw new Error(`No user with uid ${args.uid} found.`);
@@ -81,8 +81,8 @@ export const UserMutation = extendType({
             phone: args.phone,
           },
           include: {
-            transactions: true
-          }
+            transactions: true,
+          },
         });
       },
     });
@@ -113,8 +113,8 @@ export const UserMutation = extendType({
             uid: args.uid,
           },
           include: {
-            transactions: true
-          }
+            transactions: true,
+          },
         });
       },
     });
@@ -127,8 +127,8 @@ export const UserMutation = extendType({
         return ctx.db.user.delete({
           where: { id: args.id },
           include: {
-            transactions: true
-          }
+            transactions: true,
+          },
         });
       },
     });
@@ -150,7 +150,7 @@ export const UserMutation = extendType({
             password: true,
             uid: true,
             phone: true,
-            transactions: true
+            transactions: true,
           },
         });
 
