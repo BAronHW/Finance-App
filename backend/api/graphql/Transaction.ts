@@ -56,8 +56,8 @@ export const TransactionMutation = extendType({
       },
       async resolve(_root, args, ctx) {
         try {
-          TransactionData.transactions.forEach((transaction) => {
-            ctx.db.transaction.create({
+          TransactionData.transactions.forEach(async (transaction) => {
+            await ctx.db.transaction.create({
               data: {
                 ...transaction,
                 io: transaction.io as InOrOut,
