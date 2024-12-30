@@ -78,22 +78,6 @@ export const TransactionMutation = extendType({
   }
 })
 
-          // const user = await ctx.db.user.findUnique({
-          //   where: {
-          //     id: args.userId,
-          //   },
-          //   include: {
-          //     transactions: true
-          //   }
-          // });
-          // if (!user) {
-          //   throw new Error("User not found.");
-          // }
-          // if ( user.transactions.length !== 0) {
-          //   throw new Error("User already has existing transactions.");
-          // }
-
-
 const InOrOutEnum = enumType({
   name: "InOrOutEnum",
   members: {
