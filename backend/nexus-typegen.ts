@@ -70,9 +70,12 @@ export interface NexusGenFieldTypes {
     createUser: NexusGenRootTypes['User']; // User!
     deleteUser: NexusGenRootTypes['User']; // User!
     emailSignIn: NexusGenRootTypes['User']; // User!
+    seedTransactions: boolean; // Boolean!
     updateUserDetails: NexusGenRootTypes['User']; // User!
   }
   Query: { // field return type
+    transaction: NexusGenRootTypes['Transaction']; // Transaction!
+    transactions: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
     user: NexusGenRootTypes['User']; // User!
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
@@ -105,9 +108,12 @@ export interface NexusGenFieldTypeNames {
     createUser: 'User'
     deleteUser: 'User'
     emailSignIn: 'User'
+    seedTransactions: 'Boolean'
     updateUserDetails: 'User'
   }
   Query: { // field return type name
+    transaction: 'Transaction'
+    transactions: 'Transaction'
     user: 'User'
     users: 'User'
   }
@@ -153,6 +159,9 @@ export interface NexusGenArgTypes {
       password: string; // String!
       username: string; // String!
     }
+    seedTransactions: { // args
+      userId: number; // Int!
+    }
     updateUserDetails: { // args
       email: string; // String!
       firstName?: string | null; // String
@@ -165,6 +174,9 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    transaction: { // args
+      id: number; // Int!
+    }
     user: { // args
       uid: string; // String!
     }

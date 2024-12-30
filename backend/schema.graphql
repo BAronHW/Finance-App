@@ -11,10 +11,13 @@ type Mutation {
   createUser(email: String!, firstName: String, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
   deleteUser(id: Int!): User!
   emailSignIn(password: String!, username: String!): User!
+  seedTransactions(userId: Int!): Boolean!
   updateUserDetails(email: String!, firstName: String, id: Int!, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
 }
 
 type Query {
+  transaction(id: Int!): Transaction!
+  transactions: [Transaction!]!
   user(uid: String!): User!
   users: [User!]!
 }

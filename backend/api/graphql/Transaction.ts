@@ -49,7 +49,7 @@ export const TransactionQuery = extendType({
 export const TransactionMutation = extendType({
   type: "Mutation",
   definition(t) {
-    t.nonNull.field("_seedTransactions", {
+    t.nonNull.field("seedTransactions", {
       type: "Boolean",
       args: {
         userId: nonNull(intArg()),
@@ -69,6 +69,7 @@ export const TransactionMutation = extendType({
               },
             })
           })
+          return true;
         } catch (error) {
           console.error("Error while seeding transactions: ", error);
           return false;
