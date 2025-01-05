@@ -17,11 +17,7 @@ export default function TestComp() {
       console.error('Error fetching users:', err);
     }
   };
-
-  // console.log('Current data:', data);
-  // console.log('Loading:', loading);
-  // console.log('Error:', error);
-
+  
   return (
     <div>
       <Button onClick={fetchUsers}>Fetch Users</Button>
