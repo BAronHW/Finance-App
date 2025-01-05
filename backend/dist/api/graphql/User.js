@@ -27,7 +27,11 @@ exports.UserQuery = (0, nexus_1.extendType)({
         t.nonNull.list.nonNull.field("users", {
             type: "User",
             async resolve(_root, _args, ctx) {
-                const users = await ctx.db.user.findMany();
+                const users = await ctx.db.user.findMany({
+                    include: {
+                        transactions: true,
+                    },
+                });
                 return users;
             },
         });
@@ -39,6 +43,9 @@ exports.UserQuery = (0, nexus_1.extendType)({
             async resolve(_root, args, ctx) {
                 const user = await ctx.db.user.findUnique({
                     where: { uid: args.uid },
+                    include: {
+                        transactions: true,
+                    },
                 });
                 if (!user) {
                     throw new Error(`No user with uid ${args.uid} found.`);
@@ -76,6 +83,9 @@ exports.UserMutation = (0, nexus_1.extendType)({
                         uid: args.uid,
                         phone: args.phone,
                     },
+                    include: {
+                        transactions: true,
+                    },
                 });
             },
         });
@@ -105,6 +115,9 @@ exports.UserMutation = (0, nexus_1.extendType)({
                         email: args.email,
                         uid: args.uid,
                     },
+                    include: {
+                        transactions: true,
+                    },
                 });
             },
         });
@@ -116,6 +129,9 @@ exports.UserMutation = (0, nexus_1.extendType)({
             resolve(_root, args, ctx) {
                 return ctx.db.user.delete({
                     where: { id: args.id },
+                    include: {
+                        transactions: true,
+                    },
                 });
             },
         });
@@ -137,6 +153,7 @@ exports.UserMutation = (0, nexus_1.extendType)({
                         password: true,
                         uid: true,
                         phone: true,
+                        transactions: true,
                     },
                 });
                 if (!user) {

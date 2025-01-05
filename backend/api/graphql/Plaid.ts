@@ -21,22 +21,43 @@ export const PlaidMutations = extendType({
       t.field('createLinkToken', {
         type: 'LinkToken',
         args: {
-          userId: nonNull(stringArg()), // You might want to get this from context instead
+          userId: nonNull(stringArg()),
         },
         async resolve(_root, args, ctx) {
           try {
+            const user = await ctx.db.user.findUnique({
+                where: {
+                    id: parseInt(args.userId)
+                },
+            })
+            if(!user){
+                throw new Error("No User with this id found")
+            }
+
+            await ctx.db.user.update({
+                where: {
+                    id: parseInt(args.userId)
+                },
+                data:{
+                    
+                }
+            });
             const plaidRequest = {
                 user: {
-                  client_user_id: args.userId,  // Use the passed userId
+                  client_user_id: args.userId,
                 },
                 client_name: 'Plaid Test App',
                 products: ['auth'] as Products[],
                 language: 'en',
-                redirect_uri: 'http://localhost:3000/',
+                redirect_uri: 'http://localhost:4000/',
                 country_codes: ['GB'] as CountryCode[],
               };
   
             const createTokenResponse = await plaidClient.linkTokenCreate(plaidRequest);
+            
+
+            
+            console.log(user)
             
             return {
               link_token: createTokenResponse.data.link_token,

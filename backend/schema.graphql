@@ -7,7 +7,14 @@ enum InOrOutEnum {
   OUT
 }
 
+type LinkToken {
+  expiration: String
+  link_token: String
+  request_id: String
+}
+
 type Mutation {
+  createLinkToken(userId: String!): LinkToken
   createUser(email: String!, firstName: String, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
   deleteUser(id: Int!): User!
   emailSignIn(password: String!, username: String!): User!

@@ -29,6 +29,11 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  LinkToken: { // root type
+    expiration?: string | null; // String
+    link_token?: string | null; // String
+    request_id?: string | null; // String
+  }
   Mutation: {};
   Query: {};
   Transaction: { // root type
@@ -66,7 +71,13 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  LinkToken: { // field return type
+    expiration: string | null; // String
+    link_token: string | null; // String
+    request_id: string | null; // String
+  }
   Mutation: { // field return type
+    createLinkToken: NexusGenRootTypes['LinkToken'] | null; // LinkToken
     createUser: NexusGenRootTypes['User']; // User!
     deleteUser: NexusGenRootTypes['User']; // User!
     emailSignIn: NexusGenRootTypes['User']; // User!
@@ -105,7 +116,13 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  LinkToken: { // field return type name
+    expiration: 'String'
+    link_token: 'String'
+    request_id: 'String'
+  }
   Mutation: { // field return type name
+    createLinkToken: 'LinkToken'
     createUser: 'User'
     deleteUser: 'User'
     emailSignIn: 'User'
@@ -145,6 +162,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    createLinkToken: { // args
+      userId: string; // String!
+    }
     createUser: { // args
       email: string; // String!
       firstName?: string | null; // String

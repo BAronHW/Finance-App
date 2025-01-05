@@ -1,0 +1,40 @@
+{
+    "transactions": [
+        {
+            "accountName": "Savings-001",
+            "io": "IN",
+            "name": "Salary Deposit",
+            "senderOrRecipientName": "Tech Corp Inc",
+            "amount": 5000.00,
+            "Reference": "SALARY-MAR2024",
+            "Category": "Income"
+        },
+        {
+            "accountName": "Checking-001",
+            "io": "OUT",
+            "name": "Grocery Shopping",
+            "senderOrRecipientName": "Whole Foods Market",
+            "amount": 156.78,
+            "Reference": "POS-TRANSACTION",
+            "Category": "Groceries"
+        },
+        {
+            "accountName": "Business-001",
+            "io": "IN",
+            "name": "Client Payment",
+            "senderOrRecipientName": "Client Solutions LLC",
+            "amount": 2500.00,
+            "Reference": "INV-2024-001",
+            "Category": "Business Income"
+        },
+        {
+            "accountName": "Personal-001",
+            "io": "OUT",
+            "name": "Utility Bill",
+            "senderOrRecipientName": "City Power & Water",
+            "amount": 145.50,
+            "Reference": "BILL-MAR2024",
+            "Category": "Utilities"
+        }
+    ]
+}
