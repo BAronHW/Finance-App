@@ -1,7 +1,7 @@
 import { Configuration, PlaidApi, PlaidEnvironments } from 'plaid'
 
 // Initialize Plaid client
-const configuration = new Configuration({
+export const configuration = new Configuration({
   basePath: PlaidEnvironments.sandbox,
   baseOptions: {
     headers: {
