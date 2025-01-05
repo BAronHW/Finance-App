@@ -16,7 +16,8 @@
     "apollo-server": "^3.13.0",
     "bcrypt": "^5.1.1",
     "graphql": "^16.9.0",
-    "nexus": "^1.3.0"
+    "nexus": "^1.3.0",
+    "plaid": "^30.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
