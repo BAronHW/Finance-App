@@ -95,7 +95,7 @@ export const SignUpForm: FunctionComponent<{ withGoogle: boolean }> = ({
     },
   });
 
-  const [createUser] = useMutation(CREATE_USER);
+  const [createUser, {loading, error, data}] = useMutation(CREATE_USER);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (withGoogle && authData.currentUser) {
@@ -130,7 +130,6 @@ export const SignUpForm: FunctionComponent<{ withGoogle: boolean }> = ({
               uid: firebaseUser.uid,
             },
           });
-
           router.push(`/home/${newUser.data.createUser.id}`);
         })
         .catch((error) => {
