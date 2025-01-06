@@ -35,6 +35,7 @@ export interface NexusGenObjects {
     accountName: string; // String!
     amount: number; // Float!
     category?: string | null; // String
+    date: number; // Int!
     id: number; // Int!
     io: NexusGenEnums['InOrOutEnum']; // InOrOutEnum!
     name: string; // String!
@@ -75,8 +76,8 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     allTransactions: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
-    transactionById: NexusGenRootTypes['Transaction']; // Transaction!
-    transactionsByUserId: Array<NexusGenRootTypes['Transaction'] | null>; // [Transaction]!
+    getTransactionById: NexusGenRootTypes['Transaction']; // Transaction!
+    getTransactionsByUserId: Array<NexusGenRootTypes['Transaction'] | null>; // [Transaction]!
     user: NexusGenRootTypes['User']; // User!
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
@@ -84,6 +85,7 @@ export interface NexusGenFieldTypes {
     accountName: string; // String!
     amount: number; // Float!
     category: string | null; // String
+    date: number; // Int!
     id: number; // Int!
     io: NexusGenEnums['InOrOutEnum']; // InOrOutEnum!
     name: string; // String!
@@ -114,8 +116,8 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     allTransactions: 'Transaction'
-    transactionById: 'Transaction'
-    transactionsByUserId: 'Transaction'
+    getTransactionById: 'Transaction'
+    getTransactionsByUserId: 'Transaction'
     user: 'User'
     users: 'User'
   }
@@ -123,6 +125,7 @@ export interface NexusGenFieldTypeNames {
     accountName: 'String'
     amount: 'Float'
     category: 'String'
+    date: 'Int'
     id: 'Int'
     io: 'InOrOutEnum'
     name: 'String'
@@ -176,10 +179,10 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
-    transactionById: { // args
+    getTransactionById: { // args
       id: number; // Int!
     }
-    transactionsByUserId: { // args
+    getTransactionsByUserId: { // args
       userId: number; // Int!
     }
     user: { // args

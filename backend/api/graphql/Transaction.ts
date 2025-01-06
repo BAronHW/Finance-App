@@ -19,6 +19,7 @@ export const Transaction = objectType({
     t.nonNull.string("name");
     t.nonNull.string("senderOrRecipientName");
     t.nonNull.float("amount");
+    t.nonNull.int("date");
     t.string("reference");
     t.string("category");
   },
@@ -34,7 +35,7 @@ export const TransactionQuery = extendType({
         return transactions;
       },
     });
-    t.nonNull.list.field("transactionsByUserId", {
+    t.nonNull.list.field("getTransactionsByUserId", {
       type: "Transaction",
       args: {
         userId: nonNull(intArg()),
@@ -51,7 +52,7 @@ export const TransactionQuery = extendType({
         return transactions;
       },
     });
-    t.nonNull.field("transactionById", {
+    t.nonNull.field("getTransactionById", {
       type: "Transaction",
       args: {
         id: nonNull(intArg()),

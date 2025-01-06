@@ -17,8 +17,8 @@ type Mutation {
 
 type Query {
   allTransactions: [Transaction!]!
-  transactionById(id: Int!): Transaction!
-  transactionsByUserId(userId: Int!): [Transaction]!
+  getTransactionById(id: Int!): Transaction!
+  getTransactionsByUserId(userId: Int!): [Transaction]!
   user(uid: String!): User!
   users: [User!]!
 }
@@ -27,6 +27,7 @@ type Transaction {
   accountName: String!
   amount: Float!
   category: String
+  date: Int!
   id: Int!
   io: InOrOutEnum!
   name: String!
