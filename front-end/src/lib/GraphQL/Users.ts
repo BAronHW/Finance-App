@@ -1,6 +1,6 @@
-import { gql } from "@apollo/client";
+import { gql } from "@//__generated__/gql";
 
-export const GET_ALL_USERS = gql`
+export const GET_ALL_USERS = gql(`
   query Users {
     users {
       firstName
@@ -11,11 +11,23 @@ export const GET_ALL_USERS = gql`
       email
       uid
       id
+      transactions {
+        id
+        userId
+        accountName
+        io
+        name
+        senderOrRecipientName
+        amount
+        reference
+        category
+        date
+      }
     }
   }
-`;
+`);
 
-export const DELETE_USER = gql`
+export const DELETE_USER = gql(`
   mutation DeleteUser($id: Int!) {
     deleteUser(id: $id) {
       id
@@ -26,11 +38,23 @@ export const DELETE_USER = gql`
       phone
       email
       uid
+      transactions {
+        id
+        userId
+        accountName
+        io
+        name
+        senderOrRecipientName
+        amount
+        reference
+        category
+        date
+      }
     }
   }
-`;
+`);
 
-export const GET_SINGLE_USER_BY_UID = gql`
+export const GET_SINGLE_USER_BY_UID = gql(`
   query User($uid: String!) {
     user (uid: $uid) {
       id
@@ -41,11 +65,23 @@ export const GET_SINGLE_USER_BY_UID = gql`
       phone
       email
       uid
+      transactions {
+        id
+        userId
+        accountName
+        io
+        name
+        senderOrRecipientName
+        amount
+        reference
+        category
+        date
+      }
     }
   }
-`;
+`);
 
-export const CREATE_USER = gql`
+export const CREATE_USER = gql(`
   mutation CreateUser(
     $firstName: String
     $lastName: String
@@ -72,6 +108,18 @@ export const CREATE_USER = gql`
       email
       uid
       phone
+      transactions {
+        id
+        userId
+        accountName
+        io
+        name
+        senderOrRecipientName
+        amount
+        reference
+        category
+        date
+      }
     }
   }
-`;
+`);

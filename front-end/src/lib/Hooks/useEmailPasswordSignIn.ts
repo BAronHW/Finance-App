@@ -1,11 +1,8 @@
 import {
-  getAuth,
-  GoogleAuthProvider,
   signInWithEmailAndPassword,
-  signInWithPopup,
 } from "@firebase/auth";
 import { ApolloError, useLazyQuery, useQuery } from "@apollo/client";
-import { GET_SINGLE_USER_BY_UID } from "@/src/lib/GraphQL/Users";
+import { GET_SINGLE_USER_BY_UID } from "@//lib/GraphQL/Users";
 import { NexusGenObjects } from "@/../backend/nexus-typegen";
 import { useRouter } from "next/router";
 import { auth } from "../Firebase/Firebase";
@@ -21,7 +18,7 @@ export const useEmailPasswordSignIn = (): {
   >;
   queryError: ApolloError | null;
 } => {
-  const [getUserByUid, { data, error: getUserError }] = useLazyQuery(
+  const [getUserByUid, { error: getUserError }] = useLazyQuery(
     GET_SINGLE_USER_BY_UID
   );
 
@@ -29,12 +26,12 @@ export const useEmailPasswordSignIn = (): {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
       const firebaseUser = result.user;
-      const { data } = await getUserByUid({
+      const { data: data } = await getUserByUid({
         variables: { uid: firebaseUser.uid },
       });
 
       return {
-        user: data.user || null,
+        user: data?.user || null,
         errorCode: null,
         errorMessage: null,
       };

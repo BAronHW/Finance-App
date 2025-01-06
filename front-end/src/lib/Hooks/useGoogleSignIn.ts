@@ -6,7 +6,7 @@ import {
   signInWithRedirect,
 } from "@firebase/auth";
 import { ApolloError, useLazyQuery, useQuery } from "@apollo/client";
-import { GET_SINGLE_USER_BY_UID } from "@/src/lib/GraphQL/Users";
+import { GET_SINGLE_USER_BY_UID } from "@//lib/GraphQL/Users";
 import {
   NexusGenAbstractsUsingStrategyResolveType,
   NexusGenObjects,

@@ -14,44 +14,49 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 const documents = {
-    "\n  query Users {\n    users {\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      id\n    }\n  }\n": types.UsersDocument,
-    "\n  mutation DeleteUser($id: Int!) {\n    deleteUser(id: $id) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n    }\n  }\n": types.DeleteUserDocument,
-    "\n  query User($uid: String!) {\n    user (uid: $uid) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n    }\n  }\n": types.UserDocument,
-    "\n  mutation CreateUser(\n    $firstName: String\n    $lastName: String\n    $username: String!\n    $password: String\n    $email: String!\n    $uid: String!\n    $phone: String\n  ) {\n    createUser(\n      firstName: $firstName\n      lastName: $lastName\n      username: $username\n      password: $password\n      email: $email\n      uid: $uid\n      phone: $phone\n    ) {\n      id\n      firstName\n      lastName\n      username\n      password\n      email\n      uid\n      phone\n    }\n  }\n": types.CreateUserDocument,
+    "\n    query GetTransactionsByUserId($userId: Int!) {\n      getTransactionsByUserId(userId: $userId) {\n        id\n        userId\n        accountName\n        io\n        name\n        senderOrRecipientName\n        amount\n        reference\n        category\n        date\n      }\n    }\n  ": types.GetTransactionsByUserIdDocument,
+    "\n  query Users {\n    users {\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      id\n      transactions {\n        id\n        userId\n        accountName\n        io\n        name\n        senderOrRecipientName\n        amount\n        reference\n        category\n        date\n      }\n    }\n  }\n": types.UsersDocument,
+    "\n  mutation DeleteUser($id: Int!) {\n    deleteUser(id: $id) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      transactions {\n        id\n        userId\n        accountName\n        io\n        name\n        senderOrRecipientName\n        amount\n        reference\n        category\n        date\n      }\n    }\n  }\n": types.DeleteUserDocument,
+    "\n  query User($uid: String!) {\n    user (uid: $uid) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      transactions {\n        id\n        userId\n        accountName\n        io\n        name\n        senderOrRecipientName\n        amount\n        reference\n        category\n        date\n      }\n    }\n  }\n": types.UserDocument,
+    "\n  mutation CreateUser(\n    $firstName: String\n    $lastName: String\n    $username: String!\n    $password: String\n    $email: String!\n    $uid: String!\n    $phone: String\n  ) {\n    createUser(\n      firstName: $firstName\n      lastName: $lastName\n      username: $username\n      password: $password\n      email: $email\n      uid: $uid\n      phone: $phone\n    ) {\n      id\n      firstName\n      lastName\n      username\n      password\n      email\n      uid\n      phone\n      transactions {\n        id\n        userId\n        accountName\n        io\n        name\n        senderOrRecipientName\n        amount\n        reference\n        category\n        date\n      }\n    }\n  }\n": types.CreateUserDocument,
 };
 
 /**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  *
  *
  * @example
  * ```ts
- * const query = graphql(`query GetUser($id: ID!) { user(id: $id) { name } }`);
+ * const query = gql(`query GetUser($id: ID!) { user(id: $id) { name } }`);
  * ```
  *
  * The query argument is unknown!
  * Please regenerate the types.
  */
-export function graphql(source: string): unknown;
+export function gql(source: string): unknown;
 
 /**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query Users {\n    users {\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      id\n    }\n  }\n"): (typeof documents)["\n  query Users {\n    users {\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      id\n    }\n  }\n"];
+export function gql(source: "\n    query GetTransactionsByUserId($userId: Int!) {\n      getTransactionsByUserId(userId: $userId) {\n        id\n        userId\n        accountName\n        io\n        name\n        senderOrRecipientName\n        amount\n        reference\n        category\n        date\n      }\n    }\n  "): (typeof documents)["\n    query GetTransactionsByUserId($userId: Int!) {\n      getTransactionsByUserId(userId: $userId) {\n        id\n        userId\n        accountName\n        io\n        name\n        senderOrRecipientName\n        amount\n        reference\n        category\n        date\n      }\n    }\n  "];
 /**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation DeleteUser($id: Int!) {\n    deleteUser(id: $id) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n    }\n  }\n"): (typeof documents)["\n  mutation DeleteUser($id: Int!) {\n    deleteUser(id: $id) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n    }\n  }\n"];
+export function gql(source: "\n  query Users {\n    users {\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      id\n      transactions {\n        id\n        userId\n        accountName\n        io\n        name\n        senderOrRecipientName\n        amount\n        reference\n        category\n        date\n      }\n    }\n  }\n"): (typeof documents)["\n  query Users {\n    users {\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      id\n      transactions {\n        id\n        userId\n        accountName\n        io\n        name\n        senderOrRecipientName\n        amount\n        reference\n        category\n        date\n      }\n    }\n  }\n"];
 /**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query User($uid: String!) {\n    user (uid: $uid) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n    }\n  }\n"): (typeof documents)["\n  query User($uid: String!) {\n    user (uid: $uid) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n    }\n  }\n"];
+export function gql(source: "\n  mutation DeleteUser($id: Int!) {\n    deleteUser(id: $id) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      transactions {\n        id\n        userId\n        accountName\n        io\n        name\n        senderOrRecipientName\n        amount\n        reference\n        category\n        date\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation DeleteUser($id: Int!) {\n    deleteUser(id: $id) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      transactions {\n        id\n        userId\n        accountName\n        io\n        name\n        senderOrRecipientName\n        amount\n        reference\n        category\n        date\n      }\n    }\n  }\n"];
 /**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation CreateUser(\n    $firstName: String\n    $lastName: String\n    $username: String!\n    $password: String\n    $email: String!\n    $uid: String!\n    $phone: String\n  ) {\n    createUser(\n      firstName: $firstName\n      lastName: $lastName\n      username: $username\n      password: $password\n      email: $email\n      uid: $uid\n      phone: $phone\n    ) {\n      id\n      firstName\n      lastName\n      username\n      password\n      email\n      uid\n      phone\n    }\n  }\n"): (typeof documents)["\n  mutation CreateUser(\n    $firstName: String\n    $lastName: String\n    $username: String!\n    $password: String\n    $email: String!\n    $uid: String!\n    $phone: String\n  ) {\n    createUser(\n      firstName: $firstName\n      lastName: $lastName\n      username: $username\n      password: $password\n      email: $email\n      uid: $uid\n      phone: $phone\n    ) {\n      id\n      firstName\n      lastName\n      username\n      password\n      email\n      uid\n      phone\n    }\n  }\n"];
+export function gql(source: "\n  query User($uid: String!) {\n    user (uid: $uid) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      transactions {\n        id\n        userId\n        accountName\n        io\n        name\n        senderOrRecipientName\n        amount\n        reference\n        category\n        date\n      }\n    }\n  }\n"): (typeof documents)["\n  query User($uid: String!) {\n    user (uid: $uid) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      transactions {\n        id\n        userId\n        accountName\n        io\n        name\n        senderOrRecipientName\n        amount\n        reference\n        category\n        date\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CreateUser(\n    $firstName: String\n    $lastName: String\n    $username: String!\n    $password: String\n    $email: String!\n    $uid: String!\n    $phone: String\n  ) {\n    createUser(\n      firstName: $firstName\n      lastName: $lastName\n      username: $username\n      password: $password\n      email: $email\n      uid: $uid\n      phone: $phone\n    ) {\n      id\n      firstName\n      lastName\n      username\n      password\n      email\n      uid\n      phone\n      transactions {\n        id\n        userId\n        accountName\n        io\n        name\n        senderOrRecipientName\n        amount\n        reference\n        category\n        date\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation CreateUser(\n    $firstName: String\n    $lastName: String\n    $username: String!\n    $password: String\n    $email: String!\n    $uid: String!\n    $phone: String\n  ) {\n    createUser(\n      firstName: $firstName\n      lastName: $lastName\n      username: $username\n      password: $password\n      email: $email\n      uid: $uid\n      phone: $phone\n    ) {\n      id\n      firstName\n      lastName\n      username\n      password\n      email\n      uid\n      phone\n      transactions {\n        id\n        userId\n        accountName\n        io\n        name\n        senderOrRecipientName\n        amount\n        reference\n        category\n        date\n      }\n    }\n  }\n"];
 
-export function graphql(source: string) {
+export function gql(source: string) {
   return (documents as any)[source] ?? {};
 }
 

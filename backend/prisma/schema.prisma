@@ -34,8 +34,9 @@ model Transaction {
   name    String
   senderOrRecipientName     String
   amount    Float
-  Reference   String?
-  Category    String?
+  date    Int     @default(0)
+  reference   String?
+  category    String?
 }
 
 enum InOrOut {
