@@ -1,9 +1,9 @@
 'use client'
 
 import Link from 'next/link';
-import Header from '@/src/components/Header';
-import { Button } from '@/src/components/ui/button';
-import TestComp from '@/src/components/testComp';
+import Header from '@//components/Header';
+import { Button } from '@//components/ui/button';
+import TestComp from '@//components/testComp';
 import "../globals.css"
 
 export default function Landing() {

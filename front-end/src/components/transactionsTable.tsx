@@ -8,6 +8,7 @@ import {
   useReactTable,
   ColumnFiltersState,
   getFilteredRowModel,
+  VisibilityState,
 } from "@tanstack/react-table";
 
 import {
@@ -17,7 +18,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/src/components/ui/table";
+} from "@//components/ui/table";
 
 import {
   DropdownMenu,
@@ -25,11 +26,11 @@ import {
   DropdownMenuContent,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/src/components/ui/dropdown-menu";
+} from "@//components/ui/dropdown-menu";
 
-import { Input } from "@/src/components/ui/input";
+import { Input } from "@//components/ui/input";
 
-import { Button } from "@/src/components/ui/button";
+import { Button } from "@//components/ui/button";
 import { useState } from "react";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { InOrOutEnum } from "../__generated__/types";
@@ -45,6 +46,8 @@ export function TransactionsTable<TData, TValue>({
 }: TransactionsTable<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data,
@@ -55,9 +58,13 @@ export function TransactionsTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
+      columnVisibility,
+      rowSelection,
     },
   });
 
@@ -77,22 +84,56 @@ export function TransactionsTable<TData, TValue>({
         <div className="flex-1">
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <Button variant="outline">Filter by In/Out</Button>
+              <Button variant="outline" className="font-normal text-slate-500">
+                Filter by In/Out
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem
                 className="text-center"
-                onClick={(event) => table.getColumn("io")?.setFilterValue(InOrOutEnum.Out)}
+                onClick={(event) =>
+                  table.getColumn("io")?.setFilterValue(InOrOutEnum.Out)
+                }
               >
                 Sent
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="text-center"
-                onClick={(event) => table.getColumn("io")?.setFilterValue(InOrOutEnum.In)}
+                onClick={(event) =>
+                  table.getColumn("io")?.setFilterValue(InOrOutEnum.In)
+                }
               >
                 Received
               </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div className="items-end">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Column Visibility
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -147,23 +188,29 @@ export function TransactionsTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
+      <div className="flex">
+        <div className="absolute left-1/2 transform -translate-x-1/2 text-sm text-muted-foreground mt-6 text-lg">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
+        <div className="ml-auto items-end space-x-2 py-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   );

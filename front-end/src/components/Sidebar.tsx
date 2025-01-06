@@ -4,8 +4,8 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, Users, FileText, Settings, LogOut, Menu } from 'lucide-react';
-import { Button } from "@/src/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/src/components/ui/sheet";
+import { Button } from "@//components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@//components/ui/sheet";
 
 const menuItems = [
   { id: 1, label: "Dashboard", icon: Home, link: "/" },

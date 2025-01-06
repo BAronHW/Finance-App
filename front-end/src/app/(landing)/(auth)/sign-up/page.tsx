@@ -1,6 +1,6 @@
 "use client";
 
-import { SignUpForm } from "@/src/components/SignUpForm";
+import { SignUpForm } from "@//components/SignUpForm";
 import React from "react";
 import "@/src/app/globals.css";
 

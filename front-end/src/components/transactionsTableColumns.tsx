@@ -1,9 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table"
-import { Transaction } from "@/src/__generated__/types"
+import { Transaction } from "@//__generated__/types"
 import { MoreHorizontal } from "lucide-react"
 import { ArrowUpDown } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
 
-import { Button } from "@/src/components/ui/button"
+import { Button } from "@//components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,10 +12,31 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/src/components/ui/dropdown-menu"
+} from "@//components/ui/dropdown-menu"
 
  
 export const columns: ColumnDef<Transaction>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "id",
     header: "ID",
