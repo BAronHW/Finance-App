@@ -108,18 +108,6 @@ export const CREATE_USER = gql(`
       email
       uid
       phone
-      transactions {
-        id
-        userId
-        accountName
-        io
-        name
-        senderOrRecipientName
-        amount
-        reference
-        category
-        date
-      }
     }
   }
 `);
