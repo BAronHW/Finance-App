@@ -1,10 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table"
-import { Transaction } from "@//__generated__/types"
+import { Transaction } from "@/__generated__/types"
 import { MoreHorizontal } from "lucide-react"
 import { ArrowUpDown } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 
-import { Button } from "@//components/ui/button"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +12,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@//components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu"
 
  
 export const columns: ColumnDef<Transaction>[] = [

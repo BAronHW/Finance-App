@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@//components/ui/button";
+import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import {
   Form,
@@ -11,12 +11,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@//components/ui/form";
-import { Input } from "@//components/ui/input";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@//lib/Contexts/AuthContext";
-import { useEmailPasswordSignIn } from '@//lib/Hooks/useEmailPasswordSignIn';
-import { useGoogleSignIn } from '@//lib/Hooks/useGoogleSignIn';
+import { useAuth } from "@/lib/Contexts/AuthContext";
+import { useEmailPasswordSignIn } from '@/lib/Hooks/useEmailPasswordSignIn';
+import { useGoogleSignIn } from '@/lib/Hooks/useGoogleSignIn';
 import { FormEvent, useState } from "react";
 
 export function SignInForm() {

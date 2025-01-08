@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { ApolloWrapper } from "@//components/Wrappers/ApolloWrapper";
-import DotPattern from "@//components/magicui/dot-pattern";
-import { cn } from "@//lib/utils";
-import { AuthProvider, useAuth } from "@//lib/Contexts/AuthContext";
+import { ApolloWrapper } from "@/components/Wrappers/ApolloWrapper";
+import DotPattern from "@/components/magicui/dot-pattern";
+import { cn } from "@/lib/utils";
+import { AuthProvider, useAuth } from "@/lib/Contexts/AuthContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

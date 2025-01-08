@@ -18,7 +18,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@//components/ui/table";
+} from "@/components/ui/table";
 
 import {
   DropdownMenu,
@@ -26,11 +26,11 @@ import {
   DropdownMenuContent,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@//components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
-import { Input } from "@//components/ui/input";
+import { Input } from "@/components/ui/input";
 
-import { Button } from "@//components/ui/button";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { InOrOutEnum } from "../__generated__/types";
