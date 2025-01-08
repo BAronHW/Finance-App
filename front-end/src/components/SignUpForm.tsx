@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@//components/ui/button";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import {
   Form,
@@ -12,8 +12,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@//components/ui/form";
-import { Input } from "@//components/ui/input";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { FunctionComponent, useState } from "react";
 import { auth } from "../lib/Firebase/Firebase";
@@ -29,13 +29,17 @@ export const SignUpForm: FunctionComponent<{ withGoogle: boolean }> = ({
   withGoogle: boolean;
 }) => {
   const router = useRouter();
-
   const authData = useAuth();
+  const [createUser] = useMutation(CREATE_USER);
 
   const [errorMessage, setErrorMessage] = useState("");
   const [errorCode, setErrorCode] = useState("");
 
   const { googleSignIn, queryError: googleQueryError } = useGoogleSignIn();
+
+  if (withGoogle && (!authData.currentUser || !authData.currentUser?.email)) {
+    throw new Error("No user email detected through Auth context.");
+  }
 
   const formSchema = z
     .object({
@@ -75,12 +79,8 @@ export const SignUpForm: FunctionComponent<{ withGoogle: boolean }> = ({
     })
     .transform((data) => ({
       ...data,
-      username: data.username ? data.username : data.email,
+      username: data.username ?? data.email ?? authData.currentUser?.email,
     }));
-
-  if (!authData.currentUser?.email) {
-    throw new Error("No user email detected throm Auth context.");
-  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -94,8 +94,6 @@ export const SignUpForm: FunctionComponent<{ withGoogle: boolean }> = ({
       phone: "",
     },
   });
-
-  const [createUser] = useMutation(CREATE_USER);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (withGoogle && authData.currentUser) {
@@ -189,7 +187,8 @@ export const SignUpForm: FunctionComponent<{ withGoogle: boolean }> = ({
                 Email<span style={{ color: "red" }}>&nbsp;*</span>
               </FormLabel>
               <FormControl>
-                <Input placeholder="Enter your email" {...field} />
+                {/* <Input placeholder="Enter your email" {...field} /> */}
+                <Input />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -1,4 +1,4 @@
-import { gql } from "@//__generated__/gql";
+import { gql } from "@/__generated__/gql";
 
 export const GET_ALL_USERS = gql(`
   query Users {
@@ -108,18 +108,6 @@ export const CREATE_USER = gql(`
       email
       uid
       phone
-      transactions {
-        id
-        userId
-        accountName
-        io
-        name
-        senderOrRecipientName
-        amount
-        reference
-        category
-        date
-      }
     }
   }
 `);

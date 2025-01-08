@@ -1,8 +1,8 @@
 'use client'
 import React from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from "@//components/ui/avatar";
-import { Button } from "@//components/ui/button";
-import { Card, CardContent } from "@//components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Bell, Settings } from 'lucide-react';
 import BlurIn from './magicui/blur-in';
 import {
@@ -10,7 +10,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@//components/ui/tooltip";
+} from "@/components/ui/tooltip";
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip as ChartTooltip, Legend } from 'chart.js';
 

@@ -1,8 +1,8 @@
 "use client";
 
-import { SignUpForm } from "@//components/SignUpForm";
+import { SignUpForm } from "@/components/SignUpForm";
 import React from "react";
-import "@/src/app/globals.css";
+import "@/app/globals.css";
 
 const SignUpPage = () => {
   return (
