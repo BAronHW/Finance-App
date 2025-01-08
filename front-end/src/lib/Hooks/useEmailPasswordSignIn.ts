@@ -2,10 +2,10 @@ import {
   signInWithEmailAndPassword,
 } from "@firebase/auth";
 import { ApolloError, useLazyQuery, useQuery } from "@apollo/client";
-import { GET_SINGLE_USER_BY_UID } from "@/lib/GraphQL/Users";
+import { GET_SINGLE_USER_BY_UID } from "@/lib/graphql/Users";
 import { NexusGenObjects } from "@/../backend/nexus-typegen";
 import { useRouter } from "next/router";
-import { auth } from "../Firebase/Firebase";
+import { auth } from "../firebase/firebase";
 
 export const useEmailPasswordSignIn = (): {
   emailPasswordSignIn: (

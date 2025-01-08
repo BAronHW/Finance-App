@@ -33,7 +33,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
-import { InOrOutEnum } from "../__generated__/types";
+import { InOrOutEnum } from "../../__generated__/types";
 
 interface TransactionsTable<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

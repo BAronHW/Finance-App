@@ -16,12 +16,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { FunctionComponent, useState } from "react";
-import { auth } from "../lib/Firebase/Firebase";
+import { auth } from "../../lib/firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useMutation } from "@apollo/client";
-import { CREATE_USER } from "../lib/GraphQL/Users";
-import { useAuth } from "../lib/Contexts/AuthContext";
-import { useGoogleSignIn } from "../lib/Hooks/useGoogleSignIn";
+import { CREATE_USER } from "../../lib/graphql/Users";
+import { useAuth } from "../../lib/contexts/authContext";
+import { useGoogleSignIn } from "../../lib/hooks/useGoogleSignIn";
 
 export const SignUpForm: FunctionComponent<{ withGoogle: boolean }> = ({
   withGoogle,

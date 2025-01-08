@@ -1,11 +1,11 @@
 "use client"
 
-import { SignUpForm } from '@/components/SignUpForm'
+import { SignUpForm } from '@/components/customComponents/SignUpForm'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button';
 import '@/app/globals.css'
-import { useAuth } from "@/lib/Contexts/AuthContext"
+import { useAuth } from "@/lib/contexts/authContext"
 
 const SignUpPage = () => {
   const authData = useAuth()
