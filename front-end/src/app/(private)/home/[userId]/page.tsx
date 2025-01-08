@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 import TestComp from "@/components/customComponents/testComp";
 import { BentoDemo } from "@/components/customComponents/BentoDemo";
 import { useParams } from "next/navigation";
-import { TransactionsTable } from "@/components/customComponents/transactionsTable";
+import { TransactionsTable } from "@/components/customComponents/TransactionsTable";
 import { useAuth } from "@/lib/contexts/authContext";
 import { useQuery } from "@apollo/client";
 import { GET_TRANSACTIONS_BY_USER_ID } from "@/lib/graphql/Transaction";
-import { columns } from "@/components/customComponents/transactionsTableColumns";
+import { columns } from "@/components/customComponents/TransactionsTableColumns";
 
 export default function Home() {
   const params = useParams();
