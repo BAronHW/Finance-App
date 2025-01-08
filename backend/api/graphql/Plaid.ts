@@ -49,7 +49,7 @@ export const PlaidMutations = extendType({
                 client_name: 'Plaid Test App',
                 products: ['auth'] as Products[],
                 language: 'en',
-                redirect_uri: 'http://localhost:4000/',
+                redirect_uri: 'http://localhost:4000/', //make sure this is localhost 3000 for the frontend 
                 country_codes: ['GB'] as CountryCode[],
               };
   
