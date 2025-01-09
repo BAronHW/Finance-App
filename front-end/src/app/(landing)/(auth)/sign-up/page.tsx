@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CustomError } from "@/lib/utils";
-import { EmailSignUpForm } from "@/components/customComponents/EmailSignUpForm";
+import { EmailSignUpForm } from "@/components/customComponents/authComponents/EmailSignUpForm";
 import GoogleSignIn from "@/components/customComponents/GoogleSignIn";
 
 export const emailSignUpFormSchema = z

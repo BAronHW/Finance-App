@@ -10,7 +10,7 @@ import { TransactionsTable } from "@/components/customComponents/TransactionsTab
 import { useAuth } from "@/lib/contexts/authContext";
 import { useQuery } from "@apollo/client";
 import { GET_TRANSACTIONS_BY_USER_ID } from "@/lib/graphql/Transaction";
-import { columns } from "@/components/customComponents/TransactionsTableColumns";
+import { columns } from "@/components/customComponents/userComponents/transactionsTableColumns";
 
 export default function Home() {
   const params = useParams();
