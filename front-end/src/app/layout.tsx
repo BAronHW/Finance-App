@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { ApolloWrapper } from "@/components/wrappers/ApolloWrapper";
+import { ApolloWrapper } from "@/lib/apollo/ApolloWrapper";
 import DotPattern from "@/components/magicui/dot-pattern";
 import { cn } from "@/lib/utils";
 import { AuthProvider, useAuth } from "@/lib/contexts/authContext";
