@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import "@/app/globals.css";
 import { useAuth } from "@/lib/contexts/authContext";
-import { GoogleSignUpForm } from "@/components/customComponents/GoogleSignUpForm";
+import { GoogleSignUpForm } from "@/components/customComponents/authComponents/GoogleSignUpForm";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@apollo/client";

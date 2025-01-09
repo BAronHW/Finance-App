@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { SignInForm } from "@/components/customComponents/SigninForm";
+import { SignInForm } from "@/components/customComponents/authComponents/SigninForm";
 
 const SigninPage = () => {
   return (
