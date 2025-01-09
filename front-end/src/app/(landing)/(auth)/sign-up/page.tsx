@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CustomError } from "@/lib/utils";
 import { EmailSignUpForm } from "@/components/customComponents/authComponents/EmailSignUpForm";
-import GoogleSignIn from "@/components/customComponents/GoogleSignIn";
+import GoogleSignIn from "@/components/customComponents/authComponents/GoogleSignIn";
 
 export const emailSignUpFormSchema = z
   .object({
