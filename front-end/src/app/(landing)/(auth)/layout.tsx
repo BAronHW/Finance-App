@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import "../../globals.css";
 import WordPullUp from "@/components/magicui/word-pull-up";
-import { MeteorDemo } from "@/components/MeteorsDemo";
+import { MeteorDemo } from "@/components/customComponents/MeteorsDemo";
 
 export default function RootLayout({
   children,

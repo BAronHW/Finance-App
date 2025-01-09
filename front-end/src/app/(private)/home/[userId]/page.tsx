@@ -1,16 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import Header from "@/components/Header";
+import Header from "@/components/customComponents/Header";
 import { Button } from "@/components/ui/button";
-import TestComp from "@/components/testComp";
-import { BentoDemo } from "@/components/BentoDemo";
+import TestComp from "@/components/customComponents/testComp";
+import { BentoDemo } from "@/components/customComponents/BentoDemo";
 import { useParams } from "next/navigation";
-import { TransactionsTable } from "@/components/transactionsTable";
-import { useAuth } from "@/lib/Contexts/AuthContext";
+import { TransactionsTable } from "@/components/customComponents/TransactionsTable";
+import { useAuth } from "@/lib/contexts/authContext";
 import { useQuery } from "@apollo/client";
-import { GET_TRANSACTIONS_BY_USER_ID } from "@/lib/GraphQL/Transaction";
-import { columns } from "@/components/transactionsTableColumns";
+import { GET_TRANSACTIONS_BY_USER_ID } from "@/lib/graphql/Transaction";
+import { columns } from "@/components/customComponents/TransactionsTableColumns";
 
 export default function Home() {
   const params = useParams();
