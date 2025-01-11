@@ -13,7 +13,14 @@ export const LinkToken = objectType({
     },
 });
 
-export const types = [LinkToken];
+export const AccessToken = objectType({
+  name: 'AccessToken',
+  definition(t) {
+    t.string('accessToken')
+    t.string("item_id")
+    t.string("request_id")
+  }
+})
 
 export const PlaidMutations = extendType({
     type: 'Mutation',
@@ -55,10 +62,6 @@ export const PlaidMutations = extendType({
   
             const createTokenResponse = await plaidClient.linkTokenCreate(plaidRequest);
             
-
-            
-            console.log(user)
-            
             return {
               link_token: createTokenResponse.data.link_token,
               expiration: createTokenResponse.data.expiration,
@@ -69,6 +72,12 @@ export const PlaidMutations = extendType({
             throw new Error('Failed to create link token');
           }
         },
+      });
+      t.field('exchangePublicToken', {
+        type: "PublicToken",
+        args:{
+          
+        }
       });
     },
   });
