@@ -29,6 +29,11 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  AccessToken: { // root type
+    accessToken?: string | null; // String
+    item_id?: string | null; // String
+    request_id?: string | null; // String
+  }
   LinkToken: { // root type
     expiration?: string | null; // String
     link_token?: string | null; // String
@@ -71,6 +76,11 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  AccessToken: { // field return type
+    accessToken: string | null; // String
+    item_id: string | null; // String
+    request_id: string | null; // String
+  }
   LinkToken: { // field return type
     expiration: string | null; // String
     link_token: string | null; // String
@@ -81,6 +91,7 @@ export interface NexusGenFieldTypes {
     createUser: NexusGenRootTypes['User']; // User!
     deleteUser: NexusGenRootTypes['User']; // User!
     emailSignIn: NexusGenRootTypes['User']; // User!
+    exchangePublicToken: NexusGenRootTypes['AccessToken'] | null; // AccessToken
     seedTransactions: boolean; // Boolean!
     updateUserDetails: NexusGenRootTypes['User']; // User!
   }
@@ -116,6 +127,11 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  AccessToken: { // field return type name
+    accessToken: 'String'
+    item_id: 'String'
+    request_id: 'String'
+  }
   LinkToken: { // field return type name
     expiration: 'String'
     link_token: 'String'
@@ -126,6 +142,7 @@ export interface NexusGenFieldTypeNames {
     createUser: 'User'
     deleteUser: 'User'
     emailSignIn: 'User'
+    exchangePublicToken: 'AccessToken'
     seedTransactions: 'Boolean'
     updateUserDetails: 'User'
   }
@@ -180,6 +197,10 @@ export interface NexusGenArgTypes {
     emailSignIn: { // args
       password: string; // String!
       username: string; // String!
+    }
+    exchangePublicToken: { // args
+      public_token: string; // String!
+      userId: number; // Int!
     }
     seedTransactions: { // args
       userId: number; // Int!

@@ -23,8 +23,7 @@ model User {
   uid           String      @unique
   phone          String?
   transactions  Transaction[]
-  linkToken     LinkToken?    @relation(fields: [linkTokenId], references: [id])
-  linkTokenId   Int?      @unique
+  AccessToken   String?     @unique
 }
 
 model Transaction {
@@ -38,14 +37,6 @@ model Transaction {
   amount    Float
   Reference   String?
   Category    String?
-}
-
-model LinkToken {
-  id          Int      @id @default(autoincrement())
-  link_token  String
-  expiration  String
-  request_id  String
-  user        User?
 }
 
 enum InOrOut {

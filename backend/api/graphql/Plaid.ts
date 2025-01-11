@@ -1,6 +1,6 @@
 import { CountryCode, PlaidApi, PlaidEnvironments, Products } from "plaid";
 import { configuration } from "../utils/PlaidConfiguration";
-import { extendType, nonNull, objectType, stringArg } from "nexus";
+import { extendType, intArg, nonNull, objectType, stringArg } from "nexus";
 
 const plaidClient = new PlaidApi(configuration);
 
@@ -41,14 +41,6 @@ export const PlaidMutations = extendType({
                 throw new Error("No User with this id found")
             }
 
-            await ctx.db.user.update({
-                where: {
-                    id: parseInt(args.userId)
-                },
-                data:{
-                    
-                }
-            });
             const plaidRequest = {
                 user: {
                   client_user_id: args.userId,
@@ -74,9 +66,39 @@ export const PlaidMutations = extendType({
         },
       });
       t.field('exchangePublicToken', {
-        type: "PublicToken",
-        args:{
-          
+        type: 'AccessToken',
+        args: {
+          userId: nonNull(intArg()),
+          public_token: nonNull(stringArg()),
+        },
+        async resolve(_root, args, ctx) {
+          const publicToken = args.public_token;
+          try {
+            /**
+             * Get the access token object from the plaid api.
+             */
+
+              const plaidResponse = await plaidClient.itemPublicTokenExchange({
+                public_token: publicToken,
+              });
+  
+              const accessToken = plaidResponse.data.access_token;
+              const itemID = plaidResponse.data.item_id;
+
+              // store the accesstoken in the db
+              await ctx.db.user.findUnique({
+                where: {
+                  id: args.userId
+                },
+              })
+  
+              return {
+                accessToken: accessToken
+              };
+          } catch(err) {
+              console.log(err);
+              throw new Error('Failed to exchange public token: ' + err);
+          }
         }
       });
     },

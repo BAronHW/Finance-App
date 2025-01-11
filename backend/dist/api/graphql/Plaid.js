@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PlaidMutations = exports.types = exports.LinkToken = void 0;
+exports.PlaidMutations = exports.AccessToken = exports.LinkToken = void 0;
 const plaid_1 = require("plaid");
 const PlaidConfiguration_1 = require("../utils/PlaidConfiguration");
 const nexus_1 = require("nexus");
@@ -13,25 +13,46 @@ exports.LinkToken = (0, nexus_1.objectType)({
         t.string('request_id');
     },
 });
-exports.types = [exports.LinkToken];
+exports.AccessToken = (0, nexus_1.objectType)({
+    name: 'AccessToken',
+    definition(t) {
+        t.string('accessToken');
+        t.string("item_id");
+        t.string("request_id");
+    }
+});
 exports.PlaidMutations = (0, nexus_1.extendType)({
     type: 'Mutation',
     definition(t) {
         t.field('createLinkToken', {
             type: 'LinkToken',
             args: {
-                userId: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()), // You might want to get this from context instead
+                userId: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()),
             },
             async resolve(_root, args, ctx) {
                 try {
+                    const user = await ctx.db.user.findUnique({
+                        where: {
+                            id: parseInt(args.userId)
+                        },
+                    });
+                    if (!user) {
+                        throw new Error("No User with this id found");
+                    }
+                    await ctx.db.user.update({
+                        where: {
+                            id: parseInt(args.userId)
+                        },
+                        data: {}
+                    });
                     const plaidRequest = {
                         user: {
-                            client_user_id: args.userId, // Use the passed userId
+                            client_user_id: args.userId,
                         },
                         client_name: 'Plaid Test App',
                         products: ['auth'],
                         language: 'en',
-                        redirect_uri: 'http://localhost:3000/',
+                        redirect_uri: 'http://localhost:4000/', //make sure this is localhost 3000 for the frontend 
                         country_codes: ['GB'],
                     };
                     const createTokenResponse = await plaidClient.linkTokenCreate(plaidRequest);
@@ -47,6 +68,14 @@ exports.PlaidMutations = (0, nexus_1.extendType)({
                 }
             },
         });
+        t.field('exchangePublicToken', {
+            type: "PublicToken",
+            args: {}
+        });
     },
 });
+// need to implement mutation called public token exchange
+//*
+// public_token_exchange takes public token from client applicaiton (front-end) then exchanges it for a access token 
+//  */ 
 //# sourceMappingURL=Plaid.js.map

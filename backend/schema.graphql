@@ -2,6 +2,12 @@
 ### Do not make changes to this file directly
 
 
+type AccessToken {
+  accessToken: String
+  item_id: String
+  request_id: String
+}
+
 enum InOrOutEnum {
   IN
   OUT
@@ -18,6 +24,7 @@ type Mutation {
   createUser(email: String!, firstName: String, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
   deleteUser(id: Int!): User!
   emailSignIn(password: String!, username: String!): User!
+  exchangePublicToken(public_token: String!, userId: Int!): AccessToken
   seedTransactions(userId: Int!): Boolean!
   updateUserDetails(email: String!, firstName: String, id: Int!, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
 }
