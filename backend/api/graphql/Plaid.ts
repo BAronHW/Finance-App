@@ -86,10 +86,13 @@ export const PlaidMutations = extendType({
               const itemID = plaidResponse.data.item_id;
 
               // store the accesstoken in the db
-              await ctx.db.user.findUnique({
+              await ctx.db.user.update({
                 where: {
                   id: args.userId
                 },
+                data:{
+                  AccessToken: accessToken
+                }
               })
   
               return {
