@@ -1,12 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import Header from "@/components/customComponents/Header";
-import { Button } from "@/components/ui/button";
-import TestComp from "@/components/customComponents/testComp";
-import { BentoDemo } from "@/components/customComponents/BentoDemo";
+import Header from "@/components/customComponents/userComponents/Header";
 import { useParams } from "next/navigation";
-import { TransactionsTable } from "@/components/customComponents/TransactionsTable";
+import { TransactionsTable } from "@/components/customComponents/userComponents/transactionsTable";
 import { useAuth } from "@/lib/contexts/authContext";
 import { useQuery } from "@apollo/client";
 import { GET_TRANSACTIONS_BY_USER_ID } from "@/lib/graphql/Transaction";
@@ -38,7 +34,7 @@ export default function Home() {
       <main className="flex-grow flex items-center justify-center flex-col gap-10 m-7">
         <div className="mt-6 space-y-4 text-center">
           <p className="text-lg">View your transactions below:</p>
-          <TransactionsTable columns={columns} data={transactionData} />
+          <TransactionsTable columns={columns} data={transactionData.filter(transaction => transaction !== null)} />
         </div>
       </main>
     </div>
