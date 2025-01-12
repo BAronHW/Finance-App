@@ -31,6 +31,7 @@ const GoogleSignIn = (): ReactElement => {
             if (errorCode && errorMessage) {
               setErrorCode(errorCode);
               setErrorMessage(errorMessage);
+              router.push(`/google-sign-up`);
             } else if (user) {
               router.push(`/home/${user.id}`);
             }

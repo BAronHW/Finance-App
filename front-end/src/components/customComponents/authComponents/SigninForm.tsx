@@ -18,6 +18,7 @@ import { useAuth } from "@/lib/contexts/authContext";
 import { useEmailPasswordSignIn } from '@/lib/hooks/useEmailPasswordSignIn';
 import { useGoogleSignIn } from '@/lib/hooks/useGoogleSignIn';
 import { FormEvent, useState } from "react";
+import GoogleSignIn from "./GoogleSignIn";
 
 export function SignInForm() {
   const router = useRouter();
@@ -105,45 +106,7 @@ export function SignInForm() {
           <Button className="m-15">Sign Up</Button>
         </Link>
       </div>
-      <div className="mt-4 text-center">
-        <p className="text-sm text-black mb-2">Or sign in with</p>
-        <Button
-          onClick={
-            async () => {
-              const {
-                user,
-                errorCode,
-                errorMessage,
-              } = await googleSignIn();
-
-              console.log('googleSignIn response object')
-              console.log(user)
-              console.log(errorCode)
-              console.log(errorMessage)
-
-              if (errorCode && errorMessage) {
-                setErrorCode(errorCode)
-                setErrorMessage(errorMessage)
-              } else if (user) {
-                router.push(`/home/${user.id}`)
-              } else {
-                router.push(`/google-sign-up`)
-              }
-            }
-          }
-          variant="outline"
-          className="w-full bg-white text-gray-800 hover:bg-gray-100"
-        >
-          Google
-        </Button>
-        {
-          errorCode && errorMessage &&
-          <div className="items-center p-4 my-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800">
-            <p>{"Error whilst signing in: " + errorCode + "\n"}</p>
-            <p>{errorMessage}</p>
-          </div>
-        }
-      </div>
+      <GoogleSignIn />
     </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import "@/app/globals.css";
 import { useAuth } from "@/lib/contexts/authContext";
 import { GoogleSignUpForm } from "@/components/customComponents/authComponents/GoogleSignUpForm";
@@ -8,7 +8,6 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@apollo/client";
 import { CREATE_USER } from "@/lib/graphql/Users";
-import { useGoogleSignIn } from "@/lib/hooks/useGoogleSignIn";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CustomError } from "@/lib/utils";

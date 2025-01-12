@@ -1,10 +1,10 @@
-import { ColumnDef } from "@tanstack/react-table"
-import { Transaction } from "@/__generated__/types"
-import { MoreHorizontal } from "lucide-react"
-import { ArrowUpDown } from "lucide-react"
-import { Checkbox } from "@/components/ui/checkbox"
+import { ColumnDef } from "@tanstack/react-table";
+import { Transaction } from "@/__generated__/types";
+import { MoreHorizontal } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,16 +12,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
- 
 export const columns: ColumnDef<Transaction>[] = [
   {
     id: "select",
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -68,7 +68,7 @@ export const columns: ColumnDef<Transaction>[] = [
           Date
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
   },
   {
@@ -82,7 +82,7 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const transaction = row.original
+      const transaction = row.original;
 
       return (
         <DropdownMenu>
@@ -95,7 +95,9 @@ export const columns: ColumnDef<Transaction>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(transaction.id.toString())}
+              onClick={() =>
+                navigator.clipboard.writeText(transaction.id.toString())
+              }
             >
               Copy Transaction ID
             </DropdownMenuItem>
@@ -103,7 +105,7 @@ export const columns: ColumnDef<Transaction>[] = [
             <DropdownMenuItem>Delete Transaction</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
-    }
-  }
-]
+      );
+    },
+  },
+];
