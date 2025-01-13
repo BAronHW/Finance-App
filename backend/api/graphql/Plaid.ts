@@ -27,28 +27,28 @@ export const PlaidMutations = extendType({
     definition(t) {
       t.field('createLinkToken', {
         type: 'LinkToken',
-        args: {
-          userId: nonNull(stringArg()),
-        },
+        // args: {
+        //   userId: nonNull(stringArg()),
+        // },
         async resolve(_root, args, ctx) {
           try {
-            const user = await ctx.db.user.findUnique({
-                where: {
-                    id: parseInt(args.userId)
-                },
-            })
-            if(!user){
-                throw new Error("No User with this id found")
-            }
+            // const user = await ctx.db.user.findUnique({
+            //     where: {
+            //         id: parseInt(args.userId)
+            //     },
+            // })
+            // if(!user){
+            //     throw new Error("No User with this id found")
+            // }
 
             const plaidRequest = {
                 user: {
-                  client_user_id: args.userId,
+                  client_user_id: "1",
                 },
                 client_name: 'Plaid Test App',
                 products: ['auth'] as Products[],
                 language: 'en',
-                redirect_uri: 'http://localhost:4000/', //make sure this is localhost 3000 for the frontend 
+                redirect_uri: 'http://localhost:3000/', //make sure this is localhost 3000 for the frontend 
                 country_codes: ['GB'] as CountryCode[],
               };
   

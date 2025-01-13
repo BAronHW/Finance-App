@@ -179,9 +179,6 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
-    createLinkToken: { // args
-      userId: string; // String!
-    }
     createUser: { // args
       email: string; // String!
       firstName?: string | null; // String
