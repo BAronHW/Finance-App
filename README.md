@@ -20,7 +20,7 @@ FinApp is a personal banking application designed to help students manage their 
 - **Styling**: Tailwind CSS, shadcn/ui components
 - **State Management**: React Hooks
 - **API**: GraphQL with Apollo Client
-- **Authentication**: JWT and Firebase
+- **Authentication**: Firebase
 - **Database**: PostgreSQL
 
 ## Getting Started
@@ -30,23 +30,27 @@ FinApp is a personal banking application designed to help students manage their 
 - Node.js (v14 or later)
 - npm or yarn
 
-### Installation
+### Set up locally:
 
-1. Clone the repository:
+1. Clone the repository
 
-2. Run npm install
+2. Set up a local instance of Postgres, and set the database url in your .env file
 
-3. npm run dev
+3. Move to the frontend folder
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+4. Run npm install
 
-5. Move to the backend folder
+5. npm run dev
 
-6. npm install
+6. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
-7. npx prisma migrate dev --name init
+7. Move to the backend folder
 
-9. npm run dev
+8. npm install
+
+9. npx prisma migrate dev --name init
+
+10. npm run dev
 
 ## Project Structure
 

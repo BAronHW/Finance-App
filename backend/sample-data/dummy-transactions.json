@@ -7,7 +7,8 @@
       "senderOrRecipientName": "Tech Corp Inc",
       "amount": 5000.00,
       "Reference": "SALARY-MAR2024",
-      "Category": "Income"
+      "Category": "Income",
+      "Date": 1717454488
     },
     {
       "accountName": "Checking-001",
@@ -16,7 +17,8 @@
       "senderOrRecipientName": "Whole Foods Market",
       "amount": 156.78,
       "Reference": "POS-TRANSACTION",
-      "Category": "Groceries"
+      "Category": "Groceries",
+      "Date": 1728147308
     },
     {
       "accountName": "Business-001",
@@ -25,7 +27,8 @@
       "senderOrRecipientName": "Client Solutions LLC",
       "amount": 2500.00,
       "Reference": "INV-2024-001",
-      "Category": "Business Income"
+      "Category": "Business Income",
+      "Date": 1731220487
     },
     {
       "accountName": "Personal-001",
@@ -34,7 +37,8 @@
       "senderOrRecipientName": "City Power & Water",
       "amount": 145.50,
       "Reference": "BILL-MAR2024",
-      "Category": "Utilities"
+      "Category": "Utilities",
+      "Date": 1706370114 
     }
   ]
 }

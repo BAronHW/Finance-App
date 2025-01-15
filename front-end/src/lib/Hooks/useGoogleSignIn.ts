@@ -1,31 +1,25 @@
 import {
-  AuthError,
-  getAuth,
   GoogleAuthProvider,
   signInWithPopup,
-  signInWithRedirect,
 } from "@firebase/auth";
-import { ApolloError, useLazyQuery, useQuery } from "@apollo/client";
-import { GET_SINGLE_USER_BY_UID } from "@/src/lib/GraphQL/Users";
-import {
-  NexusGenAbstractsUsingStrategyResolveType,
-  NexusGenObjects,
-} from "@/../backend/nexus-typegen";
-import { useRouter } from "next/router";
-import { auth } from "../Firebase/Firebase";
+import { ApolloError, useLazyQuery } from "@apollo/client";
+import { GET_SINGLE_USER_BY_UID } from "@/lib/graphql/Users";
+import { auth } from "../firebase/firebase";
+import { User } from "@/__generated__/graphql";
+import { CustomError } from "../utils";
 
 const provider = new GoogleAuthProvider();
 
 export const useGoogleSignIn = (): {
   googleSignIn: () => Promise<{
-      user: NexusGenObjects["User"] | null;
+      user: User | null;
       errorCode: string | null;
       errorMessage: string | null;
     }
   >;
   queryError: ApolloError | null;
 } => {
-  const [getUserByUid, { data: user, error: getUserError }] = useLazyQuery(
+  const [getUserByUid, { error: getUserError }] = useLazyQuery(
     GET_SINGLE_USER_BY_UID
   );
 
@@ -36,6 +30,12 @@ export const useGoogleSignIn = (): {
       const { data } = await getUserByUid({
         variables: { uid: firebaseUser.uid },
       });
+      if (!data) {
+        throw new CustomError(
+          "Error fetching user",
+          "user.data is nullish"
+        );
+      }
       return {
         user: data.user || null,
         errorCode: null,

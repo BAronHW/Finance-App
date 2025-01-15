@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client'; // Changed from useQuery

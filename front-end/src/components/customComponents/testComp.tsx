@@ -2,8 +2,8 @@
 
 import { useLazyQuery } from '@apollo/client';
 import React from 'react';
-import { Button } from './ui/button';
-import { GET_ALL_USERS } from '@/src/lib/GraphQL/Users';
+import { Button } from '../ui/button';
+import { GET_ALL_USERS } from '@/lib/graphql/Users';
 
 export default function TestComp() {
   const [getUsers, { data, loading, error }] = useLazyQuery<{ users: any[] }>(GET_ALL_USERS);
