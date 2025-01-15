@@ -56,7 +56,6 @@ export default function Home() {
         <div className="mt-6 space-y-4 text-center">
           <p className="text-lg">Welcome to your dashboard!</p>
           <TestComp />
-          {/* Add button to open Plaid */}
           <button 
             onClick={() => open()} 
             disabled={!ready}
