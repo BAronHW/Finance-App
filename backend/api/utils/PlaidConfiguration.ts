@@ -1,12 +1,13 @@
 import { Configuration, PlaidApi, PlaidEnvironments } from 'plaid'
+import dotenv from 'dotenv'
+dotenv.config()
 
-// Initialize Plaid client
-const configuration = new Configuration({
+export const configuration = new Configuration({
   basePath: PlaidEnvironments.sandbox,
   baseOptions: {
     headers: {
-      'PLAID-CLIENT-ID': process.env.PLAID_CLIENT_ID,
-      'PLAID-SECRET': process.env.PLAID_SECRET,
+      'PLAID-CLIENT-ID': process.env.PLAIDCLIENTID,
+      'PLAID-SECRET': process.env.PLAIDSECRET,
     },
   },
 });
