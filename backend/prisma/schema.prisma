@@ -14,29 +14,29 @@ datasource db {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
-  firstName     String?
-  lastName      String?
-  username       String     @unique
-  email          String     @unique
-  password       String?       
-  uid           String      @unique
-  phone          String?
-  transactions  Transaction[]
+  id           Int           @id @default(autoincrement())
+  firstName    String?
+  lastName     String?
+  username     String        @unique
+  email        String        @unique
+  password     String?
+  uid          String        @unique
+  phone        String?
+  transactions Transaction[]
 }
 
 model Transaction {
-  id    Int     @id @default(autoincrement())
-  user    User    @relation(fields: [userId], references: [id])
-  userId    Int
-  accountName   String    @unique
-  io    InOrOut
-  name    String
-  senderOrRecipientName     String
-  amount    Float
-  date    Int     @default(0)
-  reference   String?
-  category    String?
+  id                    Int     @id @default(autoincrement())
+  user                  User    @relation(fields: [userId], references: [id])
+  userId                Int
+  accountName           String  @unique
+  io                    InOrOut
+  name                  String
+  senderOrRecipientName String
+  amount                Float
+  date                  Int     @default(0)
+  reference             String?
+  category              String?
 }
 
 enum InOrOut {

@@ -200,7 +200,7 @@ export interface NexusGenArgTypes {
     }
     exchangePublicToken: { // args
       public_token: string; // String!
-      userId: number; // Int!
+      userId: string; // String!
     }
     seedTransactions: { // args
       userId: number; // Int!

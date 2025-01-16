@@ -68,7 +68,7 @@ export const PlaidMutations = extendType({
       t.field('exchangePublicToken', {
         type: 'AccessToken',
         args: {
-          userId: nonNull(intArg()),
+          userId: nonNull(stringArg()),
           public_token: nonNull(stringArg()),
         },
         async resolve(_root, args, ctx) {
@@ -77,18 +77,35 @@ export const PlaidMutations = extendType({
             /**
              * Get the access token object from the plaid api.
              */
+              console.log(publicToken)
+
+              const user = await ctx.db.user.findUnique({
+                where: { id: parseInt(args.userId) }
+              });
+
+              console.log(user)
+
+              if (!user) {
+                throw new Error('User not found');
+              }
 
               const plaidResponse = await plaidClient.itemPublicTokenExchange({
-                public_token: publicToken,
+                public_token: args.public_token,
               });
+
+              console.log('here')
+
   
               const accessToken = plaidResponse.data.access_token;
-              const itemID = plaidResponse.data.item_id;
+              const itemId = plaidResponse.data.item_id;
+              const requestId = plaidResponse.data.request_id;
+
+              // console.log(accessToken);
 
               // store the accesstoken in the db
               await ctx.db.user.update({
                 where: {
-                  id: args.userId
+                  id: parseInt(args.userId)
                 },
                 data:{
                   AccessToken: accessToken
