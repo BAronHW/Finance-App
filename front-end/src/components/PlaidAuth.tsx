@@ -4,7 +4,7 @@ import { useMutation, gql } from '@apollo/client'
 import { argsToArgsConfig } from 'graphql/type/definition'
 import { AccessToken } from '../../../backend/api/graphql/Plaid'
 
-type PlaidAuthProps = {
+interface PlaidAuthProps {
     pubToken: string
     userId: number
 }
