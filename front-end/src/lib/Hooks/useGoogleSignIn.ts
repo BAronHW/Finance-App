@@ -3,8 +3,8 @@ import {
   signInWithPopup,
 } from "@firebase/auth";
 import { ApolloError, useLazyQuery } from "@apollo/client";
-import { GET_SINGLE_USER_BY_UID } from "@/lib/graphql/Users";
-import { auth } from "../firebase/firebase";
+import { GET_SINGLE_USER_BY_UID } from "@/lib/GraphQL/Users";
+import { auth } from "../Firebase/Firebase";
 import { User } from "@/__generated__/graphql";
 import { CustomError } from "../utils";
 

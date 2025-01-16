@@ -39,7 +39,7 @@ export default function Home() {
     if (currentUser && !token) {
       fetchLinkToken();
     }
-  }, [currentUser]); // Changed dependency to currentUser
+  }, [currentUser]);
 
   const { open, ready } = usePlaidLink({
     token,

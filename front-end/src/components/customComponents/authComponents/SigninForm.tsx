@@ -15,8 +15,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/contexts/authContext";
-import { useEmailPasswordSignIn } from '@/lib/hooks/useEmailPasswordSignIn';
-import { useGoogleSignIn } from '@/lib/hooks/useGoogleSignIn';
+import { useEmailPasswordSignIn } from '@/lib/Hooks/useEmailPasswordSignIn';
+import { useGoogleSignIn } from '@/lib/Hooks/useGoogleSignIn';
 import { FormEvent, useState } from "react";
 import GoogleSignIn from "./GoogleSignIn";
 

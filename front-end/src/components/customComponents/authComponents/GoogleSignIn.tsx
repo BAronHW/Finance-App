@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ReactElement, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useGoogleSignIn } from "@/lib/hooks/useGoogleSignIn";
+import { useGoogleSignIn } from "@/lib/Hooks/useGoogleSignIn";
 
 const GoogleSignIn = (): ReactElement => {
   const router = useRouter();
