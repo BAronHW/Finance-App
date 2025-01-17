@@ -34,12 +34,73 @@ export interface NexusGenObjects {
     item_id?: string | null; // String
     request_id?: string | null; // String
   }
+  Account: { // root type
+    account_id?: string | null; // String
+    balances?: NexusGenRootTypes['Balances'] | null; // Balances
+    mask?: string | null; // String
+    name?: string | null; // String
+    official_name?: string | null; // String
+    subtype?: string | null; // String
+    type?: string | null; // String
+  }
+  Balances: { // root type
+    available?: number | null; // Float
+    current?: number | null; // Float
+    iso_currency_code?: string | null; // String
+    limit?: number | null; // Float
+    unofficial_currency_code?: string | null; // String
+  }
+  Counterparty: { // root type
+    confidence_level?: string | null; // String
+    entity_id?: string | null; // String
+    logo_url?: string | null; // String
+    name?: string | null; // String
+    type?: string | null; // String
+    website?: string | null; // String
+  }
+  Item: { // root type
+    auth_method?: string | null; // String
+    available_products?: Array<string | null> | null; // [String]
+    billed_products?: Array<string | null> | null; // [String]
+    consent_expiration_time?: string | null; // String
+    error?: string | null; // String
+    institution_id?: string | null; // String
+    institution_name?: string | null; // String
+    item_id?: string | null; // String
+    update_type?: string | null; // String
+    webhook?: string | null; // String
+  }
   LinkToken: { // root type
     expiration?: string | null; // String
     link_token?: string | null; // String
     request_id?: string | null; // String
   }
+  Location: { // root type
+    address?: string | null; // String
+    city?: string | null; // String
+    country?: string | null; // String
+    lat?: number | null; // Float
+    lon?: number | null; // Float
+    postal_code?: string | null; // String
+    region?: string | null; // String
+    store_number?: string | null; // String
+  }
   Mutation: {};
+  PaymentMeta: { // root type
+    by_order_of?: string | null; // String
+    payee?: string | null; // String
+    payer?: string | null; // String
+    payment_method?: string | null; // String
+    payment_processor?: string | null; // String
+    ppd_id?: string | null; // String
+    reason?: string | null; // String
+    reference_number?: string | null; // String
+  }
+  PersonalFinanceCategory: { // root type
+    confidence_level?: string | null; // String
+    detailed?: string | null; // String
+    primary?: string | null; // String
+  }
   Query: {};
   Transaction: { // root type
     accountName: string; // String!
@@ -82,10 +143,56 @@ export interface NexusGenFieldTypes {
     item_id: string | null; // String
     request_id: string | null; // String
   }
+  Account: { // field return type
+    account_id: string | null; // String
+    balances: NexusGenRootTypes['Balances'] | null; // Balances
+    mask: string | null; // String
+    name: string | null; // String
+    official_name: string | null; // String
+    subtype: string | null; // String
+    type: string | null; // String
+  }
+  Balances: { // field return type
+    available: number | null; // Float
+    current: number | null; // Float
+    iso_currency_code: string | null; // String
+    limit: number | null; // Float
+    unofficial_currency_code: string | null; // String
+  }
+  Counterparty: { // field return type
+    confidence_level: string | null; // String
+    entity_id: string | null; // String
+    logo_url: string | null; // String
+    name: string | null; // String
+    type: string | null; // String
+    website: string | null; // String
+  }
+  Item: { // field return type
+    auth_method: string | null; // String
+    available_products: Array<string | null> | null; // [String]
+    billed_products: Array<string | null> | null; // [String]
+    consent_expiration_time: string | null; // String
+    error: string | null; // String
+    institution_id: string | null; // String
+    institution_name: string | null; // String
+    item_id: string | null; // String
+    update_type: string | null; // String
+    webhook: string | null; // String
+  }
   LinkToken: { // field return type
     expiration: string | null; // String
     link_token: string | null; // String
     request_id: string | null; // String
+  }
+  Location: { // field return type
+    address: string | null; // String
+    city: string | null; // String
+    country: string | null; // String
+    lat: number | null; // Float
+    lon: number | null; // Float
+    postal_code: string | null; // String
+    region: string | null; // String
+    store_number: string | null; // String
   }
   Mutation: { // field return type
     createLinkToken: NexusGenRootTypes['LinkToken'] | null; // LinkToken
@@ -95,6 +202,21 @@ export interface NexusGenFieldTypes {
     exchangePublicToken: NexusGenRootTypes['AccessToken'] | null; // AccessToken
     seedTransactions: boolean; // Boolean!
     updateUserDetails: NexusGenRootTypes['User']; // User!
+  }
+  PaymentMeta: { // field return type
+    by_order_of: string | null; // String
+    payee: string | null; // String
+    payer: string | null; // String
+    payment_method: string | null; // String
+    payment_processor: string | null; // String
+    ppd_id: string | null; // String
+    reason: string | null; // String
+    reference_number: string | null; // String
+  }
+  PersonalFinanceCategory: { // field return type
+    confidence_level: string | null; // String
+    detailed: string | null; // String
+    primary: string | null; // String
   }
   Query: { // field return type
     allTransactions: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
@@ -134,10 +256,56 @@ export interface NexusGenFieldTypeNames {
     item_id: 'String'
     request_id: 'String'
   }
+  Account: { // field return type name
+    account_id: 'String'
+    balances: 'Balances'
+    mask: 'String'
+    name: 'String'
+    official_name: 'String'
+    subtype: 'String'
+    type: 'String'
+  }
+  Balances: { // field return type name
+    available: 'Float'
+    current: 'Float'
+    iso_currency_code: 'String'
+    limit: 'Float'
+    unofficial_currency_code: 'String'
+  }
+  Counterparty: { // field return type name
+    confidence_level: 'String'
+    entity_id: 'String'
+    logo_url: 'String'
+    name: 'String'
+    type: 'String'
+    website: 'String'
+  }
+  Item: { // field return type name
+    auth_method: 'String'
+    available_products: 'String'
+    billed_products: 'String'
+    consent_expiration_time: 'String'
+    error: 'String'
+    institution_id: 'String'
+    institution_name: 'String'
+    item_id: 'String'
+    update_type: 'String'
+    webhook: 'String'
+  }
   LinkToken: { // field return type name
     expiration: 'String'
     link_token: 'String'
     request_id: 'String'
+  }
+  Location: { // field return type name
+    address: 'String'
+    city: 'String'
+    country: 'String'
+    lat: 'Float'
+    lon: 'Float'
+    postal_code: 'String'
+    region: 'String'
+    store_number: 'String'
   }
   Mutation: { // field return type name
     createLinkToken: 'LinkToken'
@@ -147,6 +315,21 @@ export interface NexusGenFieldTypeNames {
     exchangePublicToken: 'AccessToken'
     seedTransactions: 'Boolean'
     updateUserDetails: 'User'
+  }
+  PaymentMeta: { // field return type name
+    by_order_of: 'String'
+    payee: 'String'
+    payer: 'String'
+    payment_method: 'String'
+    payment_processor: 'String'
+    ppd_id: 'String'
+    reason: 'String'
+    reference_number: 'String'
+  }
+  PersonalFinanceCategory: { // field return type name
+    confidence_level: 'String'
+    detailed: 'String'
+    primary: 'String'
   }
   Query: { // field return type name
     allTransactions: 'Transaction'

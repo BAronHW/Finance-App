@@ -8,15 +8,66 @@ type AccessToken {
   request_id: String
 }
 
+type Account {
+  account_id: String
+  balances: Balances
+  mask: String
+  name: String
+  official_name: String
+  subtype: String
+  type: String
+}
+
+type Balances {
+  available: Float
+  current: Float
+  iso_currency_code: String
+  limit: Float
+  unofficial_currency_code: String
+}
+
+type Counterparty {
+  confidence_level: String
+  entity_id: String
+  logo_url: String
+  name: String
+  type: String
+  website: String
+}
+
 enum InOrOutEnum {
   IN
   OUT
+}
+
+type Item {
+  auth_method: String
+  available_products: [String]
+  billed_products: [String]
+  consent_expiration_time: String
+  error: String
+  institution_id: String
+  institution_name: String
+  item_id: String
+  update_type: String
+  webhook: String
 }
 
 type LinkToken {
   expiration: String
   link_token: String
   request_id: String
+}
+
+type Location {
+  address: String
+  city: String
+  country: String
+  lat: Float
+  lon: Float
+  postal_code: String
+  region: String
+  store_number: String
 }
 
 type Mutation {
@@ -27,6 +78,23 @@ type Mutation {
   exchangePublicToken(public_token: String!, userId: String!): AccessToken
   seedTransactions(userId: Int!): Boolean!
   updateUserDetails(email: String!, firstName: String, id: Int!, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
+}
+
+type PaymentMeta {
+  by_order_of: String
+  payee: String
+  payer: String
+  payment_method: String
+  payment_processor: String
+  ppd_id: String
+  reason: String
+  reference_number: String
+}
+
+type PersonalFinanceCategory {
+  confidence_level: String
+  detailed: String
+  primary: String
 }
 
 type Query {

@@ -22,6 +22,116 @@ export const AccessToken = objectType({
   }
 })
 
+export const Account = objectType({
+  name: 'Account',
+  definition(t) {
+    t.string('account_id')
+    t.field('balances', { type: 'Balances' })
+    t.string('mask')
+    t.string('name')
+    t.string('official_name')
+    t.string('subtype')
+    t.string('type')
+  }
+})
+
+export const Balances = objectType({
+  name: 'Balances',
+  definition(t) {
+    t.float('available')
+    t.float('current')
+    t.string('iso_currency_code')
+    t.nullable.float('limit')
+    t.nullable.string('unofficial_currency_code')
+  }
+})
+
+export const Item = objectType({
+  name: 'Item',
+  definition(t) {
+    t.list.string('available_products')
+    t.list.string('billed_products')
+    t.nullable.string('consent_expiration_time')
+    t.nullable.string('error')
+    t.string('institution_id')
+    t.string('institution_name')
+    t.string('item_id')
+    t.string('update_type')
+    t.string('webhook')
+    t.string('auth_method')
+  },
+})
+
+export const PersonalFinanceCategory = objectType({
+  name: 'PersonalFinanceCategory',
+  definition(t) {
+    t.string('primary')
+    t.string('detailed')
+    t.string('confidence_level')
+  },
+})
+
+export const PaymentMeta = objectType({
+  name: 'PaymentMeta',
+  definition(t) {
+    t.nullable.string('by_order_of')
+    t.nullable.string('payee')
+    t.nullable.string('payer')
+    t.nullable.string('payment_method')
+    t.nullable.string('payment_processor')
+    t.nullable.string('ppd_id')
+    t.nullable.string('reason')
+    t.nullable.string('reference_number')
+  },
+})
+
+export const Location = objectType({
+  name: 'Location',
+  definition(t) {
+    t.nullable.string('address')
+    t.nullable.string('city')
+    t.nullable.string('region')
+    t.nullable.string('postal_code')
+    t.nullable.string('country')
+    t.nullable.float('lat')
+    t.nullable.float('lon')
+    t.nullable.string('store_number')
+  },
+})
+
+export const Counterparty = objectType({
+  name: 'Counterparty',
+  definition(t) {
+    t.string('name')
+    t.string('type')
+    t.string('logo_url')
+    t.string('website')
+    t.string('entity_id')
+    t.string('confidence_level')
+  },
+})
+
+export const TransactionRes = objectType({
+  name: 'TransactionRes',
+  definition(t) {
+    t.list.field('accounts', {
+      type: 'Account'
+    })
+    t.list.field('transactions', {
+      type: 'Transaction'
+    })
+    t.field('item', {
+      type: 'Item'
+    })
+    t.int('total_transactions')
+    t.string('request_id')
+  }
+})
+
+// https://plaid.com/docs/api/products/transactions/#transactionsget refer back to this api doc to see the response and request fields required
+
+
+
 export const PlaidMutations = extendType({
     type: 'Mutation',
     definition(t) {
@@ -77,13 +187,10 @@ export const PlaidMutations = extendType({
             /**
              * Get the access token object from the plaid api.
              */
-              console.log(publicToken)
 
               const user = await ctx.db.user.findUnique({
                 where: { id: parseInt(args.userId) }
               });
-
-              console.log(user)
 
               if (!user) {
                 throw new Error('User not found');
@@ -92,9 +199,6 @@ export const PlaidMutations = extendType({
               const plaidResponse = await plaidClient.itemPublicTokenExchange({
                 public_token: args.public_token,
               });
-
-              console.log('here')
-
   
               const accessToken = plaidResponse.data.access_token;
               const itemId = plaidResponse.data.item_id;
@@ -121,6 +225,12 @@ export const PlaidMutations = extendType({
           }
         }
       });
+      /**
+       * Finish the get_transaction_data mutation
+       */
+      // t.field('get_transaction_data', {
+        
+      // })
     },
   });
 
