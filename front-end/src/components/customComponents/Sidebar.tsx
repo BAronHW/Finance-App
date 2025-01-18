@@ -3,7 +3,15 @@
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Users, FileText, Settings, LogOut, Menu } from 'lucide-react'
+import {
+    Home,
+    Users,
+    FileText,
+    Settings,
+    LogOut,
+    Menu,
+    Upload,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { useAuth } from '@/lib/contexts/authContext'
@@ -13,6 +21,7 @@ const menuItems = [
     { id: 2, label: 'Users', icon: Users, link: '/users' },
     { id: 3, label: 'Documents', icon: FileText, link: '/documents' },
     { id: 4, label: 'Settings', icon: Settings, link: '/settings' },
+    { id: 5, label: 'Upload', icon: Upload, link: '/Upload' },
 ]
 
 function Sidebar() {
