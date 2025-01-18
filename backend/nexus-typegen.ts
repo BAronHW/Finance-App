@@ -114,6 +114,13 @@ export interface NexusGenObjects {
     senderOrRecipientName: string; // String!
     userId: number; // Int!
   }
+  TransactionRes: { // root type
+    accounts?: Array<NexusGenRootTypes['Account'] | null> | null; // [Account]
+    item?: NexusGenRootTypes['Item'] | null; // Item
+    request_id?: string | null; // String
+    total_transactions?: number | null; // Int
+    transactions?: Array<NexusGenRootTypes['Transaction'] | null> | null; // [Transaction]
+  }
   User: { // root type
     email: string; // String!
     firstName?: string | null; // String
@@ -237,6 +244,13 @@ export interface NexusGenFieldTypes {
     senderOrRecipientName: string; // String!
     userId: number; // Int!
   }
+  TransactionRes: { // field return type
+    accounts: Array<NexusGenRootTypes['Account'] | null> | null; // [Account]
+    item: NexusGenRootTypes['Item'] | null; // Item
+    request_id: string | null; // String
+    total_transactions: number | null; // Int
+    transactions: Array<NexusGenRootTypes['Transaction'] | null> | null; // [Transaction]
+  }
   User: { // field return type
     email: string; // String!
     firstName: string | null; // String
@@ -349,6 +363,13 @@ export interface NexusGenFieldTypeNames {
     reference: 'String'
     senderOrRecipientName: 'String'
     userId: 'Int'
+  }
+  TransactionRes: { // field return type name
+    accounts: 'Account'
+    item: 'Item'
+    request_id: 'String'
+    total_transactions: 'Int'
+    transactions: 'Transaction'
   }
   User: { // field return type name
     email: 'String'

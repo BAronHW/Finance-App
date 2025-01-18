@@ -118,6 +118,14 @@ type Transaction {
   userId: Int!
 }
 
+type TransactionRes {
+  accounts: [Account]
+  item: Item
+  request_id: String
+  total_transactions: Int
+  transactions: [Transaction]
+}
+
 type User {
   email: String!
   firstName: String

@@ -187,7 +187,7 @@ export const PlaidMutations = extendType({
             /**
              * Get the access token object from the plaid api.
              */
-
+            
               const user = await ctx.db.user.findUnique({
                 where: { id: parseInt(args.userId) }
               });

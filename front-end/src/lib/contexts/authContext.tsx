@@ -1,49 +1,53 @@
-"use client"
+'use client'
 
-import { ReactNode, useContext, useEffect, useState } from "react";
-import { auth } from "@/lib/Firebase/Firebase";
-import React from "react";
-import { onAuthStateChanged, User } from "firebase/auth";
+import { ReactNode, useContext, useEffect, useState } from 'react'
+import { auth } from '@/lib/Firebase/Firebase'
+import React from 'react'
+import { onAuthStateChanged, User } from 'firebase/auth'
+import { LogOut } from 'lucide-react'
 
 interface AuthContextType {
-    currentUser: User | null;
-    userLoggedIn: boolean;
-    loading: boolean;
+    currentUser: User | null
+    userLoggedIn: boolean
+    loading: boolean
+    logOut(): void
 }
 
 interface AuthProviderProps {
-    children: ReactNode;
+    children: ReactNode
 }
 
-export const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = React.createContext<AuthContextType | undefined>(
+    undefined
+)
 
 export const useAuth = () => {
-    const context = useContext(AuthContext);
+    const context = useContext(AuthContext)
     if (!context) {
-        throw new Error("useAuth must be used within an AuthProvider");
+        throw new Error('useAuth must be used within an AuthProvider')
     }
-    return context;
+    return context
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-    const [currentUser, setCurrentUser] = useState<User | null>(null);
-    const [userLoggedIn, setUserLoggedIn] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [currentUser, setCurrentUser] = useState<User | null>(null)
+    const [userLoggedIn, setUserLoggedIn] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        onAuthStateChanged(auth, initialiseUser);
+        onAuthStateChanged(auth, initialiseUser)
     }, [])
-
+    AuthProvider
     const initialiseUser = (user: User | null) => {
-        setLoading(true);
+        setLoading(true)
         if (user) {
-            setCurrentUser(user);
-            setUserLoggedIn(true);
+            setCurrentUser(user)
+            setUserLoggedIn(true)
         } else {
-            setCurrentUser(null);
-            setUserLoggedIn(false);
+            setCurrentUser(null)
+            setUserLoggedIn(false)
         }
-        setLoading(false);
+        setLoading(false)
     }
 
     const value = {
@@ -51,6 +55,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         userLoggedIn,
         loading,
     }
+
+    /**
+     * Todo:
+     * 1. either make a new wrapper component (HOC higher order component) that checks if the user is signed in or not
+     * or modify this component to make it so that it wraps around root layout.tsx and does the checking
+     */
 
     return (
         <AuthContext.Provider value={value}>
