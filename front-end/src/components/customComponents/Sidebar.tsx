@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { Home, Users, FileText, Settings, LogOut, Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { useAuth } from '@/lib/contexts/authContext'
 
 const menuItems = [
     { id: 1, label: 'Dashboard', icon: Home, link: '/' },
@@ -16,6 +17,13 @@ const menuItems = [
 
 function Sidebar() {
     const pathname = usePathname()
+    const auth = useAuth()
+
+    const logOut = () => {
+        auth.logOut()
+        console.log(auth.currentUser)
+        console.log(auth.userLoggedIn)
+    }
 
     return (
         <Sheet>
@@ -54,6 +62,7 @@ function Sidebar() {
                         <Button
                             variant="ghost"
                             className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-100"
+                            onClick={() => logOut()}
                         >
                             <LogOut className="mr-2 h-4 w-4" />
                             Logout

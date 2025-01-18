@@ -3,14 +3,15 @@
 import { ReactNode, useContext, useEffect, useState } from 'react'
 import { auth } from '@/lib/Firebase/Firebase'
 import React from 'react'
-import { onAuthStateChanged, User } from 'firebase/auth'
+import { onAuthStateChanged, signOut, User } from 'firebase/auth'
 import { LogOut } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
-interface AuthContextType {
+export interface AuthContextType {
     currentUser: User | null
     userLoggedIn: boolean
     loading: boolean
-    logOut(): void
+    logOut(): Promise<void>
 }
 
 interface AuthProviderProps {
@@ -33,11 +34,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [currentUser, setCurrentUser] = useState<User | null>(null)
     const [userLoggedIn, setUserLoggedIn] = useState(false)
     const [loading, setLoading] = useState(true)
+    const router = useRouter()
 
     useEffect(() => {
         onAuthStateChanged(auth, initialiseUser)
     }, [])
-    AuthProvider
     const initialiseUser = (user: User | null) => {
         setLoading(true)
         if (user) {
@@ -50,10 +51,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setLoading(false)
     }
 
+    const logOut = async (): Promise<void> => {
+        try {
+            await signOut(auth)
+            setCurrentUser(null)
+            setUserLoggedIn(false)
+            router.push('/')
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     const value = {
         currentUser,
         userLoggedIn,
         loading,
+        logOut,
     }
 
     /**
