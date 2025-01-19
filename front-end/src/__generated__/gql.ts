@@ -14,6 +14,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 const documents = {
+    "\n  mutation CreateLinkToken {\n    createLinkToken {\n      link_token\n      expiration\n      request_id\n    }\n  }\n": types.CreateLinkTokenDocument,
+    "\n  mutation ExchangePublicToken($userId: String!, $public_token: String!) {\n    exchangePublicToken(userId: $userId, public_token: $public_token) {\n        accessToken\n        item_id\n        request_id\n    }\n  }\n": types.ExchangePublicTokenDocument,
     "\n    query GetTransactionsByUserId($userId: Int!) {\n      getTransactionsByUserId(userId: $userId) {\n        id\n        userId\n        accountName\n        io\n        name\n        senderOrRecipientName\n        amount\n        reference\n        category\n        date\n      }\n    }\n  ": types.GetTransactionsByUserIdDocument,
     "\n  query Users {\n    users {\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      id\n      transactions {\n        id\n        userId\n        accountName\n        io\n        name\n        senderOrRecipientName\n        amount\n        reference\n        category\n        date\n      }\n    }\n  }\n": types.UsersDocument,
     "\n  mutation DeleteUser($id: Int!) {\n    deleteUser(id: $id) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      transactions {\n        id\n        userId\n        accountName\n        io\n        name\n        senderOrRecipientName\n        amount\n        reference\n        category\n        date\n      }\n    }\n  }\n": types.DeleteUserDocument,
@@ -35,6 +37,14 @@ const documents = {
  */
 export function gql(source: string): unknown;
 
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CreateLinkToken {\n    createLinkToken {\n      link_token\n      expiration\n      request_id\n    }\n  }\n"): (typeof documents)["\n  mutation CreateLinkToken {\n    createLinkToken {\n      link_token\n      expiration\n      request_id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation ExchangePublicToken($userId: String!, $public_token: String!) {\n    exchangePublicToken(userId: $userId, public_token: $public_token) {\n        accessToken\n        item_id\n        request_id\n    }\n  }\n"): (typeof documents)["\n  mutation ExchangePublicToken($userId: String!, $public_token: String!) {\n    exchangePublicToken(userId: $userId, public_token: $public_token) {\n        accessToken\n        item_id\n        request_id\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
