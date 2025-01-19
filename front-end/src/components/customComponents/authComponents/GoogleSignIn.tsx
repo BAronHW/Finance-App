@@ -4,7 +4,7 @@ import { ReactElement, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useGoogleSignIn } from "@/lib/hooks/useGoogleSignIn";
 
-const GoogleSignIn = (): ReactElement => {
+const GoogleSignIn = ({ signUp }: { signUp: boolean }): ReactElement => {
   const router = useRouter();
   const { googleSignIn } = useGoogleSignIn();
 
@@ -13,12 +13,16 @@ const GoogleSignIn = (): ReactElement => {
 
   return (
     <>
-      <div className="mt-6 space-y-4 text-center">
-        <p className="text-lg mb-2">Already have an account?</p>
-        <Link href="/sign-in" passHref>
-          <Button variant="secondary"  className="m-15 w-full">Sign In</Button>
-        </Link>
-      </div>
+      {signUp && (
+        <div className="mt-6 space-y-4 text-center">
+          <p className="text-lg mb-2">Already have an account?</p>
+          <Link href="/sign-in" passHref>
+            <Button variant="secondary" className="m-15 w-full">
+              Sign In
+            </Button>
+          </Link>
+        </div>
+      )}
       <div className="mt-4 text-center">
         <p className="text-sm text-black mb-2">Or sign in with</p>
         <Button

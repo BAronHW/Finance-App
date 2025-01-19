@@ -55,6 +55,7 @@ const SignUpPage = () => {
   const [createUser] = useMutation(CREATE_USER);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorCode, setErrorCode] = useState("");
+  const [emailInUse, setEmailInUse] = useState(false);
 
   const form = useForm<z.infer<EmailSignUpSchemaType>>({
     resolver: zodResolver(emailSignUpFormSchema),
@@ -70,6 +71,7 @@ const SignUpPage = () => {
   });
 
   const onSubmit = async (values: z.infer<EmailSignUpSchemaType>) => {
+    setEmailInUse(false);
     createUserWithEmailAndPassword(auth, values.email, values.password)
       .then(async (userCredential) => {
         const firebaseUser = userCredential.user;
@@ -98,6 +100,9 @@ const SignUpPage = () => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        if (errorCode === "auth/email-already-in-use") {
+          setEmailInUse(true);
+        }
         setErrorCode(errorCode);
         setErrorMessage(errorMessage);
       });
@@ -107,8 +112,15 @@ const SignUpPage = () => {
     <>
       <h2 className="text-3xl font-bold text-center mb-6">Sign Up</h2>
       <EmailSignUpForm form={form} onSubmit={onSubmit} />
-      <GoogleSignIn />
+      <GoogleSignIn 
+        signUp={true}
+      />
       {errorCode && errorMessage && (
+        emailInUse ?
+        <div className="text-center p-4 mt-6 text-sm text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800">
+          <p className="flex-1 my-2">Email already in use. Go to sign in instead or use a new email to create a new account.</p>
+        </div>
+        :
         <div className="flex-column text-center p-4 mt-6 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800">
           <p className="flex-1 my-2">Error while registering new user:</p>
           <p className="flex-1 my-2">{errorCode}</p>
@@ -120,3 +132,5 @@ const SignUpPage = () => {
 };
 
 export default SignUpPage;
+
+// auth/email-already-in-use
