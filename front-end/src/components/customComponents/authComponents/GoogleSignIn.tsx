@@ -16,7 +16,7 @@ const GoogleSignIn = (): ReactElement => {
       <div className="mt-6 space-y-4 text-center">
         <p className="text-lg mb-2">Already have an account?</p>
         <Link href="/sign-in" passHref>
-          <Button className="m-15">Sign In</Button>
+          <Button variant="secondary"  className="m-15 w-full">Sign In</Button>
         </Link>
       </div>
       <div className="mt-4 text-center">
