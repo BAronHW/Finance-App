@@ -103,10 +103,19 @@ export function SignInForm() {
       <div className="mt-6 space-y-4 text-center">
         <p className="text-lg mb-2">New user? Create an account below:</p>
         <Link href="/sign-up" passHref>
-          <Button className="m-15">Sign Up</Button>
+          <Button variant="secondary" className="m-15 w-full">Sign Up</Button>
         </Link>
       </div>
-      <GoogleSignIn />
+      <GoogleSignIn 
+        signUp={false}
+      />
+      {errorCode && errorMessage && (
+        <div className="flex-column text-center p-4 mt-6 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800">
+          <p className="flex-1 my-2">Error while registering new user:</p>
+          <p className="flex-1 my-2">{errorCode}</p>
+          <p className="flex-1 my-2">{errorMessage}</p>
+        </div>
+      )}
     </>
   );
 }
