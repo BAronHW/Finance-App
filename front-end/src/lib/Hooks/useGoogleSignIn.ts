@@ -28,7 +28,6 @@ export const useGoogleSignIn = (): {
     try {
       const result = await signInWithPopup(auth, provider);
       const firebaseUser = result.user;
-      // something is wrong here when signing into google but it doesnt stop the sign-in process just means that the user is not registered onto firebase auth dashboard
       const { data } = await getUserByUid({
         variables: { uid: firebaseUser.uid },
       });

@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import "@/app/globals.css";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useAuth } from "@/lib/contexts/authContext";
-import { auth } from "@/lib/Firebase/Firebase";
-import { CREATE_USER } from "@/lib/GraphQL/Users";
+import { auth } from "@/lib/firebase/firebase";
+import { CREATE_USER } from "@/lib/graphql/Users";
 import { useMutation } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -30,9 +30,6 @@ export const emailSignUpFormSchema = z
     }),
     username: z
       .string()
-      .min(2, {
-        message: "Username must be at least 2 characters.",
-      })
       .optional(),
     phone: z
       .string()
@@ -56,10 +53,8 @@ const SignUpPage = () => {
   const router = useRouter();
   const authData = useAuth();
   const [createUser] = useMutation(CREATE_USER);
-
-  if (!authData.currentUser || !authData.currentUser?.email) {
-    throw new Error("No user email detected through Auth context.");
-  }
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errorCode, setErrorCode] = useState("");
 
   const form = useForm<z.infer<EmailSignUpSchemaType>>({
     resolver: zodResolver(emailSignUpFormSchema),
@@ -103,8 +98,8 @@ const SignUpPage = () => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode);
-        console.log(errorMessage);
+        setErrorCode(errorCode);
+        setErrorMessage(errorMessage);
       });
   };
 
@@ -113,6 +108,13 @@ const SignUpPage = () => {
       <h2 className="text-3xl font-bold text-center mb-6">Sign Up</h2>
       <EmailSignUpForm form={form} onSubmit={onSubmit} />
       <GoogleSignIn />
+      {errorCode && errorMessage && (
+        <div className="flex-column text-center p-4 mt-6 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800">
+          <p className="flex-1 my-2">Error while registering new user:</p>
+          <p className="flex-1 my-2">{errorCode}</p>
+          <p className="flex-1 my-2">{errorMessage}</p>
+        </div>
+      )}
     </>
   );
 };
