@@ -3,10 +3,11 @@ import {
   signInWithPopup,
 } from "@firebase/auth";
 import { ApolloError, useLazyQuery } from "@apollo/client";
-import { GET_SINGLE_USER_BY_UID } from "@/lib/GraphQL/Users";
-import { auth } from "../Firebase/Firebase";
+import { GET_SINGLE_USER_BY_UID } from "@/lib/graphql/Users";
 import { User } from "@/__generated__/graphql";
+import { auth } from "@/lib/firebase/firebase"
 import { CustomError } from "../utils";
+import { useAuth } from "../contexts/authContext";
 
 const provider = new GoogleAuthProvider();
 
@@ -31,14 +32,8 @@ export const useGoogleSignIn = (): {
       const { data } = await getUserByUid({
         variables: { uid: firebaseUser.uid },
       });
-      if (!data) {
-        throw new CustomError(
-          "Error fetching user",
-          "user.data is nullish"
-        );
-      }
       return {
-        user: data.user || null,
+        user: data?.user || null,
         errorCode: null,
         errorMessage: null,
       };

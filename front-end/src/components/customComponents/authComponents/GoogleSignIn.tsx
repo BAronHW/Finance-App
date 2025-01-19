@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ReactElement, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useGoogleSignIn } from "@/lib/Hooks/useGoogleSignIn";
+import { useGoogleSignIn } from "@/lib/hooks/useGoogleSignIn";
 
 const GoogleSignIn = (): ReactElement => {
   const router = useRouter();
@@ -31,9 +31,10 @@ const GoogleSignIn = (): ReactElement => {
             if (errorCode && errorMessage) {
               setErrorCode(errorCode);
               setErrorMessage(errorMessage);
-              router.push(`/google-sign-up`);
             } else if (user) {
               router.push(`/home/${user.id}`);
+            } else {
+              router.push(`/google-sign-up`);
             }
           }}
           variant="outline"
