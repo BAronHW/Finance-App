@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@apollo/server": "^4.11.3",
     "@as-integrations/next": "^3.2.0",
     "@prisma/client": "^5.19.1",
     "apollo-server": "^3.13.0",

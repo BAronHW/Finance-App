@@ -1,6 +1,21 @@
-// api/index.ts
-import { server } from './server'
+// api/server.ts
+import { ApolloServer } from '@apollo/server'
+import { context } from './context'
+import { schema } from './schema'
+import { startStandaloneServer } from '@apollo/server/standalone'
 
-server.listen().then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`)
+export const server = new ApolloServer({ 
+    schema, 
 })
+
+const startServer = async () => {
+    const { url } = await startStandaloneServer(server, {
+        context: async () => ({
+            db: await context.db
+        })
+    })
+    
+    console.log(`🚀  Server ready at ${url}`)
+}
+
+startServer()

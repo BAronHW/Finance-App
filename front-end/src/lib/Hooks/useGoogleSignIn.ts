@@ -3,9 +3,9 @@ import {
   signInWithPopup,
 } from "@firebase/auth";
 import { ApolloError, useLazyQuery } from "@apollo/client";
-import { GET_SINGLE_USER_BY_UID } from "@/lib/graphql/Users";
+import { GET_SINGLE_USER_BY_UID } from "@/lib/GraphQL/Users";
 import { User } from "@/__generated__/graphql";
-import { auth } from "@/lib/firebase/firebase"
+import { auth } from "@/lib/Firebase/Firebase"
 import { CustomError } from "../utils";
 import { useAuth } from "../contexts/authContext";
 

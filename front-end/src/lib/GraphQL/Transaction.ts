@@ -1,4 +1,4 @@
-import { gql } from "@/__generated__/gql";
+import gql from 'graphql-tag';
 
 export const GET_TRANSACTIONS_BY_USER_ID = gql(`
     query GetTransactionsByUserId($userId: Int!) {
