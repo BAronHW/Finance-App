@@ -11,7 +11,7 @@ export const server = new ApolloServer({
 const startServer = async () => {
     const { url } = await startStandaloneServer(server, {
         context: async () => ({
-            db: await context.db
+            db: context.db
         })
     })
     
