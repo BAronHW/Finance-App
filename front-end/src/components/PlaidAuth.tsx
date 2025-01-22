@@ -13,8 +13,6 @@ export function PlaidAuth({ pubToken, userId }: PlaidAuthProps) {
     const [exchangeToken, { data, loading, error }] =
         useMutation(EXCHANGE_PUB_TOKEN)
 
-    console.log(pubToken, userId)
-
     const [accessToken, setAccessToken] = useState('')
 
     useEffect(() => {

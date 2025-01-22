@@ -38,6 +38,9 @@ type Counterparty {
   website: String
 }
 
+"""For representing data in ISO format"""
+scalar Date
+
 enum InOrOutEnum {
   IN
   OUT

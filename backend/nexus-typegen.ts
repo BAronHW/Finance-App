@@ -27,6 +27,7 @@ export interface NexusGenScalars {
   Boolean: boolean
   ID: string
   Any: any
+  Date: any
 }
 
 export interface NexusGenObjects {
