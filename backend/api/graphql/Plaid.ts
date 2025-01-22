@@ -1,6 +1,7 @@
 import { CountryCode, PlaidApi, PlaidEnvironments, Products } from "plaid";
 import { configuration } from "../utils/PlaidConfiguration";
 import { extendType, intArg, nonNull, objectType, scalarType, stringArg } from "nexus";
+import { Any } from '../utils/Scalar'
 
 const plaidClient = new PlaidApi(configuration);
 
@@ -128,17 +129,6 @@ export const TransactionRes = objectType({
   }
 })
 
-export const Any = scalarType({
-  name: 'Any',
-  description: 'For anything to not lock yourself in strict types',
-  parseValue(value: any){
-    return value
-  },
-  serialize(value: any){
-    return value
-  }
-})
-
 // https://plaid.com/docs/api/products/transactions/#transactionsget refer back to this api doc to see the response and request fields required
 
 
@@ -167,7 +157,7 @@ export const PlaidMutations = extendType({
                   client_user_id: "1",
                 },
                 client_name: 'Plaid Test App',
-                products: ['auth', 'transactions'] as Products[],
+                products: ['auth', 'transactions', 'balance'] as Products[],
                 language: 'en',
                 redirect_uri: 'http://localhost:3000/', //make sure this is localhost 3000 for the frontend 
                 country_codes: ['GB'] as CountryCode[],
@@ -273,6 +263,8 @@ export const PlaidMutations = extendType({
               hasMore = allTransactions.length < plaidResponse.data.total_transactions;
             }
 
+            //we may want to filter some of the items before returning
+
             return{
               transactions: allTransactions
             }
@@ -282,6 +274,27 @@ export const PlaidMutations = extendType({
           }
         }
         
+      })
+      t.field('get_balance', {
+        type: 'Any', //terrible once again fix later
+        args:{
+          access_token: nonNull(stringArg())
+        },
+        resolve: async (_root, args, ctx) => {
+          const plaidReqObj = {
+            access_token: args.access_token
+          }
+          try{
+            const plaidResponse = await plaidClient.accountsBalanceGet(plaidReqObj);
+            const accounts = plaidResponse.data.accounts;
+
+            return{
+              accounts_arr: accounts
+            }
+          }catch(err){
+            console.log(err);
+          }
+        }
       })
     },
   });
