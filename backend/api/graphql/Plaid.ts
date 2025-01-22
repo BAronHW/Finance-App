@@ -237,10 +237,13 @@ export const PlaidMutations = extendType({
         }
       });
       /**
-       * Finish the get_transaction_data mutation
+       * @param access_token This is the access you get affter exchanging the public token
+       * @param start_date Start date of transactions you want to fetch
+       * @param end_date To what date you want to fetch to this should be Date.now() but for now this is okay
+       * @returns transactions[] this is an array of transcations basically a bunch of objects that you can refer back to the plaid api if you want more details
        */
       t.field('get_transaction_data', {
-        type: 'Any',
+        type: 'Any', // this is terrible 
         args: {
           access_token: nonNull(stringArg()),
           start_date: nonNull(stringArg()),
