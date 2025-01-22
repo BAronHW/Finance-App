@@ -1,6 +1,6 @@
 import { CountryCode, PlaidApi, PlaidEnvironments, Products } from "plaid";
 import { configuration } from "../utils/PlaidConfiguration";
-import { extendType, intArg, nonNull, objectType, stringArg } from "nexus";
+import { extendType, intArg, nonNull, objectType, scalarType, stringArg } from "nexus";
 
 const plaidClient = new PlaidApi(configuration);
 
@@ -128,6 +128,17 @@ export const TransactionRes = objectType({
   }
 })
 
+export const Any = scalarType({
+  name: 'Any',
+  description: 'For anything to not lock yourself in strict types',
+  parseValue(value: any){
+    return value
+  },
+  serialize(value: any){
+    return value
+  }
+})
+
 // https://plaid.com/docs/api/products/transactions/#transactionsget refer back to this api doc to see the response and request fields required
 
 
@@ -156,7 +167,7 @@ export const PlaidMutations = extendType({
                   client_user_id: "1",
                 },
                 client_name: 'Plaid Test App',
-                products: ['auth'] as Products[],
+                products: ['auth', 'transactions'] as Products[],
                 language: 'en',
                 redirect_uri: 'http://localhost:3000/', //make sure this is localhost 3000 for the frontend 
                 country_codes: ['GB'] as CountryCode[],
@@ -228,9 +239,47 @@ export const PlaidMutations = extendType({
       /**
        * Finish the get_transaction_data mutation
        */
-      // t.field('get_transaction_data', {
+      t.field('get_transaction_data', {
+        type: 'Any',
+        args: {
+          access_token: nonNull(stringArg()),
+          start_date: nonNull(stringArg()),
+          end_date: nonNull(stringArg()),
+        },
+        async resolve(_root, args, ctx){
+          try{
+            // const acccess_token = args.access_token;
+            // const start_date = args.start_date;
+            // const end_date = args.end_date;
+
+            const transactionsRequest = {
+              access_token: args.access_token,
+              start_date: args.start_date || '2018-01-01',
+              end_date: args.end_date || '2020-02-01',
+            }
+
+            // fuck functional programming hahahahahah just joking. I need to change this later but for now this works
+            let allTransactions: any = [];
+            let hasMore = true;
+
+            while (hasMore) {
+              const plaidResponse = await plaidClient.transactionsGet(transactionsRequest);
+              const newTransactions = plaidResponse.data.transactions;
+              allTransactions = allTransactions.concat(newTransactions);
+              
+              hasMore = allTransactions.length < plaidResponse.data.total_transactions;
+            }
+
+            return{
+              transactions: allTransactions
+            }
+            
+          }catch(err){
+            console.log(err)
+          }
+        }
         
-      // })
+      })
     },
   });
 

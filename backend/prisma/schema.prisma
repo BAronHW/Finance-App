@@ -23,6 +23,7 @@ model User {
   uid          String        @unique
   phone        String?
   transactions Transaction[]
+  AccessToken  String?
 }
 
 model Transaction {

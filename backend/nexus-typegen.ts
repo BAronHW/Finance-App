@@ -26,6 +26,7 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
+  Any: any
 }
 
 export interface NexusGenObjects {
@@ -207,6 +208,7 @@ export interface NexusGenFieldTypes {
     deleteUser: NexusGenRootTypes['User']; // User!
     emailSignIn: NexusGenRootTypes['User']; // User!
     exchangePublicToken: NexusGenRootTypes['AccessToken'] | null; // AccessToken
+    get_transaction_data: NexusGenScalars['Any'] | null; // Any
     seedTransactions: boolean; // Boolean!
     updateUserDetails: NexusGenRootTypes['User']; // User!
   }
@@ -327,6 +329,7 @@ export interface NexusGenFieldTypeNames {
     deleteUser: 'User'
     emailSignIn: 'User'
     exchangePublicToken: 'AccessToken'
+    get_transaction_data: 'Any'
     seedTransactions: 'Boolean'
     updateUserDetails: 'User'
   }
@@ -405,6 +408,11 @@ export interface NexusGenArgTypes {
     exchangePublicToken: { // args
       public_token: string; // String!
       userId: string; // String!
+    }
+    get_transaction_data: { // args
+      access_token: string; // String!
+      end_date: string; // String!
+      start_date: string; // String!
     }
     seedTransactions: { // args
       userId: number; // Int!

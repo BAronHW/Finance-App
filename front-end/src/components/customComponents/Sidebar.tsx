@@ -18,10 +18,10 @@ import { useAuth } from '@/lib/contexts/authContext'
 
 const menuItems = [
     { id: 1, label: 'Dashboard', icon: Home, link: '/' },
-    { id: 2, label: 'Users', icon: Users, link: '/users' },
+    { id: 2, label: 'Analytics', icon: Users, link: '/analytics' },
     { id: 3, label: 'Documents', icon: FileText, link: '/documents' },
-    { id: 4, label: 'Settings', icon: Settings, link: '/settings' },
-    { id: 5, label: 'Upload', icon: Upload, link: '/Upload' },
+    { id: 4, label: 'Upload', icon: Upload, link: '/upload' },
+    { id: 5, label: 'Settings', icon: Settings, link: '/settings' },
 ]
 
 function Sidebar() {
