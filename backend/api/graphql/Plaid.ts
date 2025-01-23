@@ -134,33 +134,29 @@ export const TransactionRes = objectType({
 
 /**
  * @param userId : an Integer that is the id of the user you wish to get access token for
+ * 
  * The idea of this query is to decrease the number of queries that you would need to make to the plaidAPI
  */
 
 export const PlaidQueries = extendType({
   type: 'Query',
   definition(t) {
-    t.field('fetchAccessTokenFromDB', {
+    t.field('fetchAccessTokenFromUser', {
       type: 'AccessToken',
       args: {
-        userId: nonNull(intArg())
+        userId: nonNull(intArg()),
       },
       async resolve(_root, args, ctx) {
-        try{
-          const user = await ctx.db.user.findUnique({
-            where: {
-              id: args.userId
-            }
-          })
-          console.log(user)
-          return{
-            accessToken: user?.AccessToken
+        const user = await ctx.db.user.findUnique({
+          where: {
+            id: args.userId
           }
-        }catch(err){
-          console.log(err)
-        }
+        });
+        return {
+          accessToken: user?.AccessToken
+        };
       }
-    })
+    });
   }
 
 });

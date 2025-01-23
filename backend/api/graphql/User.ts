@@ -49,6 +49,22 @@ export const UserQuery = extendType({
         return user;
       },
     });
+    t.field('fetchAccessTokenFromUser', {
+      type: 'AccessToken',
+      args: {
+        userId: nonNull(intArg()),
+      },
+      async resolve(_root, args, ctx) {
+        const user = await ctx.db.user.findUnique({
+          where: {
+            id: args.userId
+          }
+        });
+        return {
+          accessToken: user?.AccessToken
+        };
+      }
+    });
   },
 });
 
