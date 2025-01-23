@@ -327,8 +327,3 @@ export const PlaidMutations = extendType({
       })
     },
   });
-
-// need to implement mutation called public token exchange
-//*
-// public_token_exchange takes public token from client applicaiton (front-end) then exchanges it for a access token 
-//  */ 

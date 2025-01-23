@@ -49,6 +49,11 @@ export const UserQuery = extendType({
         return user;
       },
     });
+    /**
+ * @param userId : an Integer that is the id of the user you wish to get access token for
+ * 
+ * The idea of this query is to decrease the number of queries that you would need to make to the plaidAPI
+ */
     t.field('fetchAccessTokenFromUser', {
       type: 'AccessToken',
       args: {
