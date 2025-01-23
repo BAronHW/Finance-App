@@ -231,6 +231,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     allTransactions: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
+    fetchAccessTokenFromDB: NexusGenRootTypes['AccessToken'] | null; // AccessToken
     getTransactionById: NexusGenRootTypes['Transaction']; // Transaction!
     getTransactionsByUserId: Array<NexusGenRootTypes['Transaction'] | null>; // [Transaction]!
     user: NexusGenRootTypes['User']; // User!
@@ -353,6 +354,7 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     allTransactions: 'Transaction'
+    fetchAccessTokenFromDB: 'AccessToken'
     getTransactionById: 'Transaction'
     getTransactionsByUserId: 'Transaction'
     user: 'User'
@@ -435,6 +437,9 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    fetchAccessTokenFromDB: { // args
+      userId: number; // Int!
+    }
     getTransactionById: { // args
       id: number; // Int!
     }

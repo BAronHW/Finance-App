@@ -132,6 +132,39 @@ export const TransactionRes = objectType({
 // https://plaid.com/docs/api/products/transactions/#transactionsget refer back to this api doc to see the response and request fields required
 
 
+/**
+ * @param userId : an Integer that is the id of the user you wish to get access token for
+ * The idea of this query is to decrease the number of queries that you would need to make to the plaidAPI
+ */
+
+export const PlaidQueries = extendType({
+  type: 'Query',
+  definition(t) {
+    t.field('fetchAccessTokenFromDB', {
+      type: 'AccessToken',
+      args: {
+        userId: nonNull(intArg())
+      },
+      async resolve(_root, args, ctx) {
+        try{
+          const user = await ctx.db.user.findUnique({
+            where: {
+              id: args.userId
+            }
+          })
+          console.log(user)
+          return{
+            accessToken: user?.AccessToken
+          }
+        }catch(err){
+          console.log(err)
+        }
+      }
+    })
+  }
+
+});
+
 
 export const PlaidMutations = extendType({
     type: 'Mutation',

@@ -1,5 +1,5 @@
 import { Kind } from "graphql"
-import { scalarType } from "nexus"
+import { scalarType, stringArg } from 'nexus';
 
 export const Any = scalarType({
   name: 'Any',
@@ -16,10 +16,10 @@ export const dateType = scalarType({
   name: 'Date',
   description: 'For representing data in ISO format',
   parseValue(value){
-    return new Date(value)
+    return new Date(value as string)
   },
-  serialize(value) {
-    return value.getTime()
+  serialize(value: any) {
+    return value.getTime(value)
   },
   parseLiteral(ast) {
     if (ast.kind === Kind.INT) {

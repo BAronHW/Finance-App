@@ -107,6 +107,7 @@ type PersonalFinanceCategory {
 
 type Query {
   allTransactions: [Transaction!]!
+  fetchAccessTokenFromDB(userId: Int!): AccessToken
   getTransactionById(id: Int!): Transaction!
   getTransactionsByUserId(userId: Int!): [Transaction]!
   user(uid: String!): User!
