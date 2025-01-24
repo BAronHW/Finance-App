@@ -70,4 +70,8 @@ We welcome contributions to FinApp! Please read our contributing guidelines befo
 
 Project Link: [https://github.com/yourusername/finapp](https://github.com/yourusername/finapp)
 
+![System Diagram (1)](https://github.com/user-attachments/assets/1bb0f1d6-aa36-49d6-993c-bab79cf06db4)
+
+
+
 
