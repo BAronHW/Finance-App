@@ -262,47 +262,50 @@ export const PlaidMutations = extendType({
        * @returns transactions[] this is an array of transcations basically a bunch of objects that you can refer back to the plaid api if you want more details
        */
       t.field('get_transaction_data', {
-        type: 'Any', // this is terrible 
+        type: 'Any',
         args: {
           access_token: nonNull(stringArg()),
-          start_date: nonNull(stringArg()),
-          end_date: nonNull(stringArg()),
+          start_date: stringArg(),
+          end_date: stringArg(),
         },
-        async resolve(_root, args, ctx){
-          try{
-            // const acccess_token = args.access_token;
-            // const start_date = args.start_date;
-            // const end_date = args.end_date;
-
+        async resolve(_root, args, ctx) {
+          try {
             const transactionsRequest = {
               access_token: args.access_token,
-              start_date: args.start_date || '2018-01-01',
-              end_date: args.end_date || '2020-02-01',
-            }
-
-            // fuck functional programming hahahahahah just joking. I need to change this later but for now this works
+              start_date: args.start_date || '2023-01-01',
+              end_date: args.end_date || '2024-02-01',
+              options: {
+                count: 100,
+                offset: 0
+              }
+            };
+      
             let allTransactions: any = [];
             let hasMore = true;
-
+      
             while (hasMore) {
               const plaidResponse = await plaidClient.transactionsGet(transactionsRequest);
               const newTransactions = plaidResponse.data.transactions;
               allTransactions = allTransactions.concat(newTransactions);
               
               hasMore = allTransactions.length < plaidResponse.data.total_transactions;
+              if (hasMore) {
+                transactionsRequest.options.offset = allTransactions.length;
+              }
             }
-
-            //we may want to filter some of the items before returning
-
-            return{
-              transactions: allTransactions
-            }
+      
+            console.log('Total transactions:', allTransactions.length);
+      
+            return {
+              transactions: allTransactions,
+              total_transactions: allTransactions.length
+            };
             
-          }catch(err){
-            console.log(err)
+          } catch (err) {
+            console.error('Error in get_transaction_data:', err);
+            throw err;
           }
         }
-        
       })
       t.field('get_balance', {
         type: 'Any', //terrible once again fix later

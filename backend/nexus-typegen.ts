@@ -419,8 +419,8 @@ export interface NexusGenArgTypes {
     }
     get_transaction_data: { // args
       access_token: string; // String!
-      end_date: string; // String!
-      start_date: string; // String!
+      end_date?: string | null; // String
+      start_date?: string | null; // String
     }
     seedTransactions: { // args
       userId: number; // Int!

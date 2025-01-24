@@ -83,7 +83,7 @@ type Mutation {
   emailSignIn(password: String!, username: String!): User!
   exchangePublicToken(public_token: String!, userId: String!): AccessToken
   get_balance(access_token: String!): Any
-  get_transaction_data(access_token: String!, end_date: String!, start_date: String!): Any
+  get_transaction_data(access_token: String!, end_date: String, start_date: String): Any
   seedTransactions(userId: Int!): Boolean!
   updateUserDetails(email: String!, firstName: String, id: Int!, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
 }
