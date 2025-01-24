@@ -94,7 +94,7 @@ export default function Home() {
                 >
                     Connect a bank account
                 </button>
-                <PlaidAuth pubToken={publicToken} userId={1}></PlaidAuth>
+                <PlaidAuth pubToken={publicToken} userId={userId}></PlaidAuth>
             </main>
         </div>
     )
