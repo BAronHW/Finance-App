@@ -12,6 +12,8 @@ import { getAuth } from 'firebase/auth'
 import { CREATE_LINKTOKEN } from '@/lib/GraphQL/Plaid'
 import { PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 import { PlaidAuth } from '@/components/PlaidAuth'
+import { FETCH_ACCESS_TOKEN_FROM_USER, GET_BALANCE } from '@/lib/GraphQL/Users'
+import { AccessToken } from '../../../../../../backend/api/graphql/Plaid'
 
 export default function Home() {
     const [token, setToken] = useState('')
@@ -20,8 +22,43 @@ export default function Home() {
     const auth = getAuth()
     const currentUser = auth.currentUser
 
+    const userId = Array.isArray(params?.userId)
+        ? Number(params?.userId[0])
+        : Number(params?.userId)
+
     const [createLinkToken, { data, loading, error }] =
         useMutation(CREATE_LINKTOKEN)
+
+    const [getBalance, { data: Balance, error: balanceError }] =
+        useMutation(GET_BALANCE)
+
+    const { data: transactionuserdata } = useQuery(
+        GET_TRANSACTIONS_BY_USER_ID,
+        {
+            variables: {
+                userId: userId,
+            },
+        }
+    )
+
+    const { open, ready } = usePlaidLink({
+        token,
+        onSuccess: (
+            public_token: string,
+            metadata: PlaidLinkOnSuccessMetadata
+        ) => {
+            console.log('success', public_token, metadata)
+            setPublicToken(public_token)
+        },
+    })
+
+    const { data: AccessToken } = useQuery(FETCH_ACCESS_TOKEN_FROM_USER, {
+        variables: { userId },
+    })
+
+    const accessToken = AccessToken?.fetchAccessTokenFromUser?.accessToken ?? ''
+
+    const transactionData = transactionuserdata?.getTransactionsByUserId ?? []
 
     useEffect(() => {
         async function fetchLinkToken() {
@@ -43,31 +80,13 @@ export default function Home() {
         }
     }, [currentUser])
 
-    const { open, ready } = usePlaidLink({
-        token,
-        onSuccess: (
-            public_token: string,
-            metadata: PlaidLinkOnSuccessMetadata
-        ) => {
-            console.log('success', public_token, metadata)
-            setPublicToken(public_token)
-        },
-    })
-
-    const userId = Array.isArray(params?.userId)
-        ? Number(params?.userId[0])
-        : Number(params?.userId)
-
-    const { data: transactionuserdata } = useQuery(
-        GET_TRANSACTIONS_BY_USER_ID,
-        {
-            variables: {
-                userId: userId,
-            },
+    useEffect(() => {
+        if (accessToken) {
+            getBalance({ variables: { access_token: accessToken } })
         }
-    )
+    }, [accessToken])
 
-    const transactionData = transactionuserdata?.getTransactionsByUserId ?? []
+    const balance = Balance?.get_balance.accounts_arr[0].balances.current ?? 0
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -75,7 +94,7 @@ export default function Home() {
                 <Header
                     name={currentUser?.displayName ?? ''}
                     appMoto="Manage your student funds"
-                    accBal={10}
+                    accBal={balance}
                 />
             </div>
             <main className="flex-grow flex items-center justify-center flex-col gap-10 m-7">
