@@ -134,6 +134,9 @@ export interface NexusGenObjects {
     uid: string; // String!
     username: string; // String!
   }
+  uid: { // root type
+    uid: string; // String!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -234,6 +237,7 @@ export interface NexusGenFieldTypes {
     fetchAccessTokenFromUser: NexusGenRootTypes['AccessToken'] | null; // AccessToken
     getTransactionById: NexusGenRootTypes['Transaction']; // Transaction!
     getTransactionsByUserId: Array<NexusGenRootTypes['Transaction'] | null>; // [Transaction]!
+    getuseruidfromuserid: NexusGenRootTypes['uid'] | null; // uid
     user: NexusGenRootTypes['User']; // User!
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
@@ -266,6 +270,9 @@ export interface NexusGenFieldTypes {
     transactions: Array<NexusGenRootTypes['Transaction'] | null>; // [Transaction]!
     uid: string; // String!
     username: string; // String!
+  }
+  uid: { // field return type
+    uid: string; // String!
   }
 }
 
@@ -357,6 +364,7 @@ export interface NexusGenFieldTypeNames {
     fetchAccessTokenFromUser: 'AccessToken'
     getTransactionById: 'Transaction'
     getTransactionsByUserId: 'Transaction'
+    getuseruidfromuserid: 'uid'
     user: 'User'
     users: 'User'
   }
@@ -389,6 +397,9 @@ export interface NexusGenFieldTypeNames {
     transactions: 'Transaction'
     uid: 'String'
     username: 'String'
+  }
+  uid: { // field return type name
+    uid: 'String'
   }
 }
 
@@ -444,6 +455,9 @@ export interface NexusGenArgTypes {
       id: number; // Int!
     }
     getTransactionsByUserId: { // args
+      userId: number; // Int!
+    }
+    getuseruidfromuserid: { // args
       userId: number; // Int!
     }
     user: { // args

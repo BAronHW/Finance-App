@@ -17,6 +17,13 @@ export const User = objectType({
   },
 });
 
+export const UID = objectType({
+  name: 'uid',
+  definition(t){
+    t.nonNull.string('uid')
+  },
+})
+
 export const UserQuery = extendType({
   type: "Query",
   definition(t) {
@@ -70,6 +77,31 @@ export const UserQuery = extendType({
         };
       }
     });
+    t.field('getuseruidfromuserid', {
+      type: 'uid',
+      args: {
+        userId: nonNull(intArg())
+      },
+      async resolve(_root, args, ctx) {
+        const user = await ctx.db.user.findUnique({
+          where: {
+            id: args.userId
+          }
+        });
+    
+        if (!user) {
+          throw new Error(`No user found with ID ${args.userId}`);
+        }
+    
+        if (!user.uid) {
+          throw new Error(`User ${args.userId} has no UID`);
+        }
+    
+        return {
+          uid: user.uid
+        }
+      }
+    })
   },
 });
 

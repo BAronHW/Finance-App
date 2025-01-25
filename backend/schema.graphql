@@ -110,6 +110,7 @@ type Query {
   fetchAccessTokenFromUser(userId: Int!): AccessToken
   getTransactionById(id: Int!): Transaction!
   getTransactionsByUserId(userId: Int!): [Transaction]!
+  getuseruidfromuserid(userId: Int!): uid
   user(uid: String!): User!
   users: [User!]!
 }
@@ -145,4 +146,8 @@ type User {
   transactions: [Transaction]!
   uid: String!
   username: String!
+}
+
+type uid {
+  uid: String!
 }
