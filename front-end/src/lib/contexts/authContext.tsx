@@ -62,7 +62,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setLoading(false)
     }
 
-    const compareIdToCurrentUser = (currUser, currUserId) => {
+    const compareIdToCurrentUser = (currUser: string, currUserId: number) => {
         // fetch the uid of the given curruserid
         // if the uid fetched doesnt match the uid of the currentuser.uid then redirect to /
     }
