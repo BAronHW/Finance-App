@@ -78,15 +78,15 @@ export default function Home() {
         if (currentUser && !token) {
             fetchLinkToken()
         }
-    }, [currentUser])
 
-    useEffect(() => {
         if (accessToken) {
             getBalance({ variables: { access_token: accessToken } })
         }
-    }, [accessToken])
+    }, [currentUser, accessToken])
 
-    const balance = Balance?.get_balance.accounts_arr[0].balances.current ?? 0
+    const balance = Balance?.get_balance.accounts_arr[0].balances.current ?? ''
+
+    console.log(balance)
 
     return (
         <div className="flex flex-col min-h-screen">

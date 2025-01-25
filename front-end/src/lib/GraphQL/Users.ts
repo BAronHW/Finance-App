@@ -127,3 +127,11 @@ query FetchAccessTokenFromUser($userId: Int!) {
     }
 }
 `
+
+export const FETCH_UID_FROM_USER = gql`
+query Getuseruidfromuserid($userId: Int!) {
+    getuseruidfromuserid(userId: $userId) {
+        uid
+    }
+}
+`
