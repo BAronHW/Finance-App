@@ -102,7 +102,7 @@ export default function Home() {
                     <TransactionsTable
                         columns={columns}
                         data={transactionData.filter(
-                            (transaction) => transaction !== null
+                            (transaction: any) => transaction !== null
                         )}
                     />
                 </div>
