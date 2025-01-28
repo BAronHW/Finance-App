@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const CREATE_LINKTOKEN = gql`
+export const CREATE_LINKTOKEN = gql(`
   mutation CreateLinkToken {
     createLinkToken {
       link_token
@@ -8,9 +8,9 @@ export const CREATE_LINKTOKEN = gql`
       request_id
     }
   }
-`;
+`);
 
-export const EXCHANGE_PUB_TOKEN = gql`
+export const EXCHANGE_PUB_TOKEN = gql(`
   mutation ExchangePublicToken($userId: String!, $public_token: String!) {
     exchangePublicToken(userId: $userId, public_token: $public_token) {
         accessToken
@@ -18,4 +18,4 @@ export const EXCHANGE_PUB_TOKEN = gql`
         request_id
     }
   }
-`;
+`);

@@ -9,13 +9,14 @@ type AccessToken {
 }
 
 type Account {
-  account_id: String
-  balances: Balances
+  balances: Balances!
+  balancesId: Int!
+  id: String!
   mask: String
-  name: String
-  official_name: String
+  name: String!
+  officialName: String
   subtype: String
-  type: String
+  type: String!
 }
 
 """For anything to not lock yourself in strict types"""
@@ -24,6 +25,7 @@ scalar Any
 type Balances {
   available: Float
   current: Float
+  id: Int!
   iso_currency_code: String
   limit: Float
   unofficial_currency_code: String
@@ -77,15 +79,18 @@ type Location {
 }
 
 type Mutation {
+  createAccount(balancesId: Int!, mask: String, name: String!, officialName: String, subType: String, subtype: String, type: String!): Account!
+  createBalances(available: Float!, current: Float!, isoCurrencyCode: String, limit: Float, unofficialCurrencyCode: String): Balances
   createLinkToken: LinkToken
+  createTransaction(accountId: Int!, amount: Float!, category: String, date: Int!, merchantName: String!, name: String, userId: Int!): Transaction!
   createUser(email: String!, firstName: String, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
+  deleteTransaction(id: Int!): Transaction
   deleteUser(id: Int!): User!
   emailSignIn(password: String!, username: String!): User!
   exchangePublicToken(public_token: String!, userId: String!): AccessToken
-  get_balance(access_token: String!): Any
-  get_transaction_data(access_token: String!, end_date: String!, start_date: String!): Any
-  seedTransactions(userId: Int!): Boolean!
   updateUserDetails(email: String!, firstName: String, id: Int!, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
+  upsertAccount(access_token: String!): Any
+  upsertTransactions(access_token: String!, accountId: Int, end_date: String!, start_date: String!, userId: Int!): [Transaction!]!
 }
 
 type PaymentMeta {
@@ -109,21 +114,23 @@ type Query {
   allTransactions: [Transaction!]!
   fetchAccessTokenFromUser(userId: Int!): AccessToken
   getTransactionById(id: Int!): Transaction!
-  getTransactionsByUserId(userId: Int!): [Transaction]!
+  getTransactionsByUserId(userId: Int!): [Transaction!]!
   user(uid: String!): User!
   users: [User!]!
 }
 
 type Transaction {
-  accountName: String!
+  Account: Account
+  User: User!
+  accountId: Int
   amount: Float!
   category: String
   date: Int!
   id: Int!
-  io: InOrOutEnum!
-  name: String!
-  reference: String
-  senderOrRecipientName: String!
+  io: InOrOutEnum
+  merchantName: String!
+  name: String
+  plaidId: String!
   userId: Int!
 }
 
@@ -142,7 +149,7 @@ type User {
   lastName: String
   password: String
   phone: String
-  transactions: [Transaction]!
+  transactions: [Transaction!]
   uid: String!
   username: String!
 }

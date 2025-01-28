@@ -1,4 +1,4 @@
 export * from './User'
 export * from './Transaction'
-export * from './Plaid'
-export * from '../utils/Scalar'
+export * from './plaid'
+export * from '../config/Scalar'

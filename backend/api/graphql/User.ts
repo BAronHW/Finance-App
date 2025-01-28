@@ -1,5 +1,4 @@
 import { objectType, extendType, stringArg, nonNull, intArg } from "nexus";
-import { Transaction } from "./Transaction";
 import bcrypt from "bcrypt";
 
 export const User = objectType({
@@ -13,7 +12,7 @@ export const User = objectType({
     t.string("password"); // Google users don't have a password
     t.string("phone");
     t.nonNull.string("uid");
-    t.nonNull.list.field("transactions", { type: Transaction });
+    t.list.nonNull.field("transactions", { type: "Transaction" });
   },
 });
 

@@ -14,12 +14,11 @@ export const GET_ALL_USERS = gql(`
       transactions {
         id
         userId
-        accountName
+        accountId
         io
         name
-        senderOrRecipientName
+        merchantName
         amount
-        reference
         category
         date
       }
@@ -41,12 +40,11 @@ export const DELETE_USER = gql(`
       transactions {
         id
         userId
-        accountName
+        accountId
         io
         name
-        senderOrRecipientName
+        merchantName
         amount
-        reference
         category
         date
       }
@@ -68,12 +66,11 @@ export const GET_SINGLE_USER_BY_UID = gql(`
       transactions {
         id
         userId
-        accountName
+        accountId
         io
         name
-        senderOrRecipientName
+        merchantName
         amount
-        reference
         category
         date
       }

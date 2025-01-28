@@ -28,16 +28,38 @@ model User {
 
 model Transaction {
   id                    Int     @id @default(autoincrement())
-  user                  User    @relation(fields: [userId], references: [id])
   userId                Int
-  accountName           String  @unique
-  io                    InOrOut
-  name                  String
-  senderOrRecipientName String
+  User                  User    @relation(fields: [userId], references: [id])
+  accountId             Int?
+  Account               Account?     @relation(fields: [accountId], references: [id])
+  name                  String?
+  merchantName          String
   amount                Float
   date                  Int     @default(0)
-  reference             String?
   category              String?
+  plaidId               String
+}
+
+model Account {
+  id      Int    @id @default(autoincrement())
+  balancesId   Int      @unique
+  Balances    Balances    @relation(fields: [balancesId], references: [id])
+  Transactions    Transaction[]
+  mask    String?
+  name    String
+  officialName    String?
+  type    String
+  subType   String?
+}
+
+model Balances {
+  id          Int     @id @default(autoincrement())
+  Account     Account?
+  available   Float
+  current     Float
+  isoCurrencyCode   String?  // Going to become a relationally field to Currency
+  unofficialCurrencyCode    String?
+  limit       Float?
 }
 
 enum InOrOut {
