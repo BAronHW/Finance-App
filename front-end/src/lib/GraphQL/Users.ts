@@ -11,7 +11,7 @@ export const GET_ALL_USERS = gql(`
       email
       uid
       id
-      transactions {
+      Transactions {
         id
         userId
         accountId
@@ -26,6 +26,12 @@ export const GET_ALL_USERS = gql(`
   }
 `);
 
+export const FETCH_ACCESS_TOKEN_FROM_USER = gql(`
+  query FetchAccessTokenFromUser($userId: Int!) {
+    fetchAccessTokenFromUser(userId: $userId) 
+  }
+  `) 
+
 export const DELETE_USER = gql(`
   mutation DeleteUser($id: Int!) {
     deleteUser(id: $id) {
@@ -37,7 +43,7 @@ export const DELETE_USER = gql(`
       phone
       email
       uid
-      transactions {
+      Transactions {
         id
         userId
         accountId
@@ -63,7 +69,7 @@ export const GET_SINGLE_USER_BY_UID = gql(`
       phone
       email
       uid
-      transactions {
+      Transactions {
         id
         userId
         accountId

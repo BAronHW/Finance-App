@@ -51,6 +51,9 @@ export const TransactionQuery = extendType({
             User: true,
           },
         });
+        if (!transactions) {
+          throw new Error("Error whilst fetching transactions.");
+        }
         return transactions;
       },
     });
@@ -145,10 +148,6 @@ export const TransactionMutations = extendType({
         end_date: nonNull(stringArg()),
       },
       async resolve(_root, args, ctx) {
-        // const acccess_token = args.access_token;
-        // const start_date = args.start_date;
-        // const end_date = args.end_date;
-
         const transactionsRequest = {
           access_token: args.access_token,
           start_date: args.start_date || "2018-01-01",
@@ -189,10 +188,42 @@ export const TransactionMutations = extendType({
 
         console.log(transactions.length);
 
+        await ctx.db.user.findFirstOrThrow({
+          where: {
+            id: args.userId,
+          }
+        })
+
+        if (args.accountId) {
+          await ctx.db.account.findFirstOrThrow({
+            where: {
+              id: args.accountId,
+            }
+          })
+        }
+
         const createdTransactions = await Promise.all(
           transactions.map((transaction) =>
-            ctx.db.transaction.create({
-              data: {
+            ctx.db.transaction.upsert({
+              where: {
+                plaidId: transaction.plaidId,
+              },
+              update: {
+                ...transaction,
+                User: {
+                  connect: {
+                    id: args.userId,
+                  },
+                },
+                ...(args.accountId && {
+                  Account: {
+                    connect: {
+                      id: args.accountId,
+                    },
+                  },
+                }),
+              },
+              create: {
                 ...transaction,
                 User: {
                   connect: {
@@ -221,33 +252,35 @@ export const TransactionMutations = extendType({
       type: "Transaction",
       args: {
         userId: nonNull(intArg()),
-        accountId: nonNull(intArg()),
+        accountId: intArg(),
         name: stringArg(),
         merchantName: nonNull(stringArg()),
         amount: nonNull(floatArg()),
         date: nonNull(intArg()),
         category: stringArg(),
+        plaidId: nonNull(stringArg()),
       },
       resolve: async (_root, args, ctx) => {
         const transaction = await ctx.db.transaction.create({
           data: {
-            userId: args.userId,
             User: {
               connect: {
                 id: args.userId,
               },
             },
-            accountId: args.accountId,
-            Account: {
-              connect: {
-                id: args.accountId,
+            ...(args.accountId && {
+              Account: {
+                connect: {
+                  id: args.accountId,
+                },
               },
-            },
+            }),
             name: args.name,
             merchantName: args.merchantName,
             amount: args.amount,
             date: args.date,
             category: args.category,
+            plaidId: args.plaidId,
           },
         });
         if (!transaction) {

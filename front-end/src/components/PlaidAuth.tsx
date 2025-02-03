@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { EXCHANGE_PUB_TOKEN, UPSERT_TRANSACTIONS } from "@/lib/graphql/Plaid";
+import { EXCHANGE_PUB_TOKEN } from "@/lib/graphql/Plaid";
 import { useMutation, gql } from "@apollo/client";
 import { argsToArgsConfig } from "graphql/type/definition";
 import { AccessToken } from "../../../backend/api/graphql/Plaid";
+import { UPSERT_TRANSACTIONS } from "@/lib/graphql/Transaction";
 
 interface PlaidAuthProps {
   pubToken: string;
@@ -14,7 +15,7 @@ export function PlaidAuth({ pubToken, userId }: PlaidAuthProps) {
     useMutation(EXCHANGE_PUB_TOKEN);
 
   const [
-    getTransactionData,
+    upsertTransactions,
     {
       data: transactionData,
       loading: transactionsLoading,
@@ -54,12 +55,12 @@ export function PlaidAuth({ pubToken, userId }: PlaidAuthProps) {
     }
   }, [pubToken, userId, exchangeToken]);
 
-  console.log({ userId })
+  console.log({ accessToken })
   useEffect(() => {
     const fetchTransactions = async () => {
         const startDate = "2000-01-01";
         const endDate = "2025-02-01";
-        await getTransactionData({
+        await upsertTransactions({
         variables: {
             userId: userId,
             start_date: startDate,
@@ -85,5 +86,9 @@ export function PlaidAuth({ pubToken, userId }: PlaidAuthProps) {
     console.log({ error })
   }
 
-  return transactionData?.transactions.map((t) => <div>{t.amount}</div>)
+  return (
+    <div>
+      Transactions fetched!
+    </div>
+  )
 }

@@ -3,8 +3,6 @@ import { ApolloServer } from '@apollo/server'
 import { context } from './context'
 import { schema } from './schema'
 import { startStandaloneServer } from '@apollo/server/standalone'
-import { getAuth } from 'firebase/auth'
-import { auth } from './utils/Firebase'
 
 export const server = new ApolloServer({ 
     schema, 

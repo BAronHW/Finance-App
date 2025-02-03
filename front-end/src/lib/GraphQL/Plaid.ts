@@ -11,11 +11,7 @@ export const CREATE_LINKTOKEN = gql(`
 `);
 
 export const EXCHANGE_PUB_TOKEN = gql(`
-  mutation ExchangePublicToken($userId: String!, $public_token: String!) {
-    exchangePublicToken(userId: $userId, public_token: $public_token) {
-        accessToken
-        item_id
-        request_id
-    }
+  mutation ExchangePublicToken($userId: Int!, $public_token: String!) {
+    exchangePublicToken(userId: $userId, public_token: $public_token)
   }
 `);

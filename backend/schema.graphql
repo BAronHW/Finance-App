@@ -9,27 +9,25 @@ type AccessToken {
 }
 
 type Account {
-  balances: Balances!
-  balancesId: Int!
+  Transactions: [Transaction!]
+  User: User!
+  available: Float
+  current: Float
   id: String!
+  isoCurrencyCode: String
+  limit: Float
   mask: String
   name: String!
   officialName: String
+  plaidId: String!
   subtype: String
   type: String!
+  unofficialCurrencyCode: String
+  userId: Int!
 }
 
 """For anything to not lock yourself in strict types"""
 scalar Any
-
-type Balances {
-  available: Float
-  current: Float
-  id: Int!
-  iso_currency_code: String
-  limit: Float
-  unofficial_currency_code: String
-}
 
 type Counterparty {
   confidence_level: String
@@ -79,17 +77,16 @@ type Location {
 }
 
 type Mutation {
-  createAccount(balancesId: Int!, mask: String, name: String!, officialName: String, subType: String, subtype: String, type: String!): Account!
-  createBalances(available: Float!, current: Float!, isoCurrencyCode: String, limit: Float, unofficialCurrencyCode: String): Balances
+  createAccount(available: Float!, current: Float!, isoCurrencyCode: String, limit: Float, mask: String, name: String!, officialName: String, plaidId: String!, subtype: String, type: String!, unofficialCurrencyCode: String, userId: Int!): Account!
   createLinkToken: LinkToken
-  createTransaction(accountId: Int!, amount: Float!, category: String, date: Int!, merchantName: String!, name: String, userId: Int!): Transaction!
+  createTransaction(accountId: Int, amount: Float!, category: String, date: Int!, merchantName: String!, name: String, plaidId: String!, userId: Int!): Transaction!
   createUser(email: String!, firstName: String, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
   deleteTransaction(id: Int!): Transaction
   deleteUser(id: Int!): User!
   emailSignIn(password: String!, username: String!): User!
-  exchangePublicToken(public_token: String!, userId: String!): AccessToken
+  exchangePublicToken(public_token: String!, userId: Int!): String!
   updateUserDetails(email: String!, firstName: String, id: Int!, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
-  upsertAccount(access_token: String!): Any
+  upsertAccountsFromPlaid(accessToken: String!, userId: Int!): [Account!]!
   upsertTransactions(access_token: String!, accountId: Int, end_date: String!, start_date: String!, userId: Int!): [Transaction!]!
 }
 
@@ -112,7 +109,9 @@ type PersonalFinanceCategory {
 
 type Query {
   allTransactions: [Transaction!]!
-  fetchAccessTokenFromUser(userId: Int!): AccessToken
+  fetchAccessTokenFromUser(userId: Int!): String
+  getAccountsByUserId(userId: Int!): [Account!]!
+  getAllAccounts: [Account!]!
   getTransactionById(id: Int!): Transaction!
   getTransactionsByUserId(userId: Int!): [Transaction!]!
   user(uid: String!): User!
@@ -143,13 +142,15 @@ type TransactionRes {
 }
 
 type User {
+  AccessToken: String
+  Accounts: [[Account!]!]!
+  Transactions: [[Transaction!]!]!
   email: String!
   firstName: String
   id: Int!
   lastName: String
   password: String
   phone: String
-  transactions: [Transaction!]
   uid: String!
   username: String!
 }

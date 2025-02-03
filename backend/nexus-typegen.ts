@@ -37,22 +37,21 @@ export interface NexusGenObjects {
     request_id?: string | null; // String
   }
   Account: { // root type
-    balances: NexusGenRootTypes['Balances']; // Balances!
-    balancesId: number; // Int!
+    Transactions?: NexusGenRootTypes['Transaction'][] | null; // [Transaction!]
+    User: NexusGenRootTypes['User']; // User!
+    available?: number | null; // Float
+    current?: number | null; // Float
     id: string; // String!
+    isoCurrencyCode?: string | null; // String
+    limit?: number | null; // Float
     mask?: string | null; // String
     name: string; // String!
     officialName?: string | null; // String
+    plaidId: string; // String!
     subtype?: string | null; // String
     type: string; // String!
-  }
-  Balances: { // root type
-    available?: number | null; // Float
-    current?: number | null; // Float
-    id: number; // Int!
-    iso_currency_code?: string | null; // String
-    limit?: number | null; // Float
-    unofficial_currency_code?: string | null; // String
+    unofficialCurrencyCode?: string | null; // String
+    userId: number; // Int!
   }
   Counterparty: { // root type
     confidence_level?: string | null; // String
@@ -127,13 +126,15 @@ export interface NexusGenObjects {
     transactions?: Array<NexusGenRootTypes['Transaction'] | null> | null; // [Transaction]
   }
   User: { // root type
+    AccessToken?: string | null; // String
+    Accounts: NexusGenRootTypes['Account'][][]; // [[Account!]!]!
+    Transactions: NexusGenRootTypes['Transaction'][][]; // [[Transaction!]!]!
     email: string; // String!
     firstName?: string | null; // String
     id: number; // Int!
     lastName?: string | null; // String
     password?: string | null; // String
     phone?: string | null; // String
-    transactions?: NexusGenRootTypes['Transaction'][] | null; // [Transaction!]
     uid: string; // String!
     username: string; // String!
   }
@@ -156,22 +157,21 @@ export interface NexusGenFieldTypes {
     request_id: string | null; // String
   }
   Account: { // field return type
-    balances: NexusGenRootTypes['Balances']; // Balances!
-    balancesId: number; // Int!
+    Transactions: NexusGenRootTypes['Transaction'][] | null; // [Transaction!]
+    User: NexusGenRootTypes['User']; // User!
+    available: number | null; // Float
+    current: number | null; // Float
     id: string; // String!
+    isoCurrencyCode: string | null; // String
+    limit: number | null; // Float
     mask: string | null; // String
     name: string; // String!
     officialName: string | null; // String
+    plaidId: string; // String!
     subtype: string | null; // String
     type: string; // String!
-  }
-  Balances: { // field return type
-    available: number | null; // Float
-    current: number | null; // Float
-    id: number; // Int!
-    iso_currency_code: string | null; // String
-    limit: number | null; // Float
-    unofficial_currency_code: string | null; // String
+    unofficialCurrencyCode: string | null; // String
+    userId: number; // Int!
   }
   Counterparty: { // field return type
     confidence_level: string | null; // String
@@ -210,16 +210,15 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     createAccount: NexusGenRootTypes['Account']; // Account!
-    createBalances: NexusGenRootTypes['Balances'] | null; // Balances
     createLinkToken: NexusGenRootTypes['LinkToken'] | null; // LinkToken
     createTransaction: NexusGenRootTypes['Transaction']; // Transaction!
     createUser: NexusGenRootTypes['User']; // User!
     deleteTransaction: NexusGenRootTypes['Transaction'] | null; // Transaction
     deleteUser: NexusGenRootTypes['User']; // User!
     emailSignIn: NexusGenRootTypes['User']; // User!
-    exchangePublicToken: NexusGenRootTypes['AccessToken'] | null; // AccessToken
+    exchangePublicToken: string; // String!
     updateUserDetails: NexusGenRootTypes['User']; // User!
-    upsertAccount: NexusGenScalars['Any'] | null; // Any
+    upsertAccountsFromPlaid: NexusGenRootTypes['Account'][]; // [Account!]!
     upsertTransactions: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
   }
   PaymentMeta: { // field return type
@@ -239,7 +238,9 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     allTransactions: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
-    fetchAccessTokenFromUser: NexusGenRootTypes['AccessToken'] | null; // AccessToken
+    fetchAccessTokenFromUser: string | null; // String
+    getAccountsByUserId: NexusGenRootTypes['Account'][]; // [Account!]!
+    getAllAccounts: NexusGenRootTypes['Account'][]; // [Account!]!
     getTransactionById: NexusGenRootTypes['Transaction']; // Transaction!
     getTransactionsByUserId: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
     user: NexusGenRootTypes['User']; // User!
@@ -267,13 +268,15 @@ export interface NexusGenFieldTypes {
     transactions: Array<NexusGenRootTypes['Transaction'] | null> | null; // [Transaction]
   }
   User: { // field return type
+    AccessToken: string | null; // String
+    Accounts: NexusGenRootTypes['Account'][][]; // [[Account!]!]!
+    Transactions: NexusGenRootTypes['Transaction'][][]; // [[Transaction!]!]!
     email: string; // String!
     firstName: string | null; // String
     id: number; // Int!
     lastName: string | null; // String
     password: string | null; // String
     phone: string | null; // String
-    transactions: NexusGenRootTypes['Transaction'][] | null; // [Transaction!]
     uid: string; // String!
     username: string; // String!
   }
@@ -286,22 +289,21 @@ export interface NexusGenFieldTypeNames {
     request_id: 'String'
   }
   Account: { // field return type name
-    balances: 'Balances'
-    balancesId: 'Int'
+    Transactions: 'Transaction'
+    User: 'User'
+    available: 'Float'
+    current: 'Float'
     id: 'String'
+    isoCurrencyCode: 'String'
+    limit: 'Float'
     mask: 'String'
     name: 'String'
     officialName: 'String'
+    plaidId: 'String'
     subtype: 'String'
     type: 'String'
-  }
-  Balances: { // field return type name
-    available: 'Float'
-    current: 'Float'
-    id: 'Int'
-    iso_currency_code: 'String'
-    limit: 'Float'
-    unofficial_currency_code: 'String'
+    unofficialCurrencyCode: 'String'
+    userId: 'Int'
   }
   Counterparty: { // field return type name
     confidence_level: 'String'
@@ -340,16 +342,15 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     createAccount: 'Account'
-    createBalances: 'Balances'
     createLinkToken: 'LinkToken'
     createTransaction: 'Transaction'
     createUser: 'User'
     deleteTransaction: 'Transaction'
     deleteUser: 'User'
     emailSignIn: 'User'
-    exchangePublicToken: 'AccessToken'
+    exchangePublicToken: 'String'
     updateUserDetails: 'User'
-    upsertAccount: 'Any'
+    upsertAccountsFromPlaid: 'Account'
     upsertTransactions: 'Transaction'
   }
   PaymentMeta: { // field return type name
@@ -369,7 +370,9 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     allTransactions: 'Transaction'
-    fetchAccessTokenFromUser: 'AccessToken'
+    fetchAccessTokenFromUser: 'String'
+    getAccountsByUserId: 'Account'
+    getAllAccounts: 'Account'
     getTransactionById: 'Transaction'
     getTransactionsByUserId: 'Transaction'
     user: 'User'
@@ -397,13 +400,15 @@ export interface NexusGenFieldTypeNames {
     transactions: 'Transaction'
   }
   User: { // field return type name
+    AccessToken: 'String'
+    Accounts: 'Account'
+    Transactions: 'Transaction'
     email: 'String'
     firstName: 'String'
     id: 'Int'
     lastName: 'String'
     password: 'String'
     phone: 'String'
-    transactions: 'Transaction'
     uid: 'String'
     username: 'String'
   }
@@ -412,28 +417,27 @@ export interface NexusGenFieldTypeNames {
 export interface NexusGenArgTypes {
   Mutation: {
     createAccount: { // args
-      balancesId: number; // Int!
-      mask?: string | null; // String
-      name: string; // String!
-      officialName?: string | null; // String
-      subType?: string | null; // String
-      subtype?: string | null; // String
-      type: string; // String!
-    }
-    createBalances: { // args
       available: number; // Float!
       current: number; // Float!
       isoCurrencyCode?: string | null; // String
       limit?: number | null; // Float
+      mask?: string | null; // String
+      name: string; // String!
+      officialName?: string | null; // String
+      plaidId: string; // String!
+      subtype?: string | null; // String
+      type: string; // String!
       unofficialCurrencyCode?: string | null; // String
+      userId: number; // Int!
     }
     createTransaction: { // args
-      accountId: number; // Int!
+      accountId?: number | null; // Int
       amount: number; // Float!
       category?: string | null; // String
       date: number; // Int!
       merchantName: string; // String!
       name?: string | null; // String
+      plaidId: string; // String!
       userId: number; // Int!
     }
     createUser: { // args
@@ -457,7 +461,7 @@ export interface NexusGenArgTypes {
     }
     exchangePublicToken: { // args
       public_token: string; // String!
-      userId: string; // String!
+      userId: number; // Int!
     }
     updateUserDetails: { // args
       email: string; // String!
@@ -469,8 +473,9 @@ export interface NexusGenArgTypes {
       uid: string; // String!
       username: string; // String!
     }
-    upsertAccount: { // args
-      access_token: string; // String!
+    upsertAccountsFromPlaid: { // args
+      accessToken: string; // String!
+      userId: number; // Int!
     }
     upsertTransactions: { // args
       access_token: string; // String!
@@ -482,6 +487,9 @@ export interface NexusGenArgTypes {
   }
   Query: {
     fetchAccessTokenFromUser: { // args
+      userId: number; // Int!
+    }
+    getAccountsByUserId: { // args
       userId: number; // Int!
     }
     getTransactionById: { // args

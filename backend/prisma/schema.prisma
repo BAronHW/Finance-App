@@ -22,7 +22,8 @@ model User {
   password     String?
   uid          String        @unique
   phone        String?
-  transactions Transaction[]
+  Transactions Transaction[]
+  Accounts     Account[]
   AccessToken  String?
 }
 
@@ -37,26 +38,22 @@ model Transaction {
   amount                Float
   date                  Int     @default(0)
   category              String?
-  plaidId               String
+  plaidId               String      @unique
 }
 
 model Account {
   id      Int    @id @default(autoincrement())
-  balancesId   Int      @unique
-  Balances    Balances    @relation(fields: [balancesId], references: [id])
   Transactions    Transaction[]
   mask    String?
   name    String
   officialName    String?
   type    String
-  subType   String?
-}
-
-model Balances {
-  id          Int     @id @default(autoincrement())
-  Account     Account?
-  available   Float
-  current     Float
+  subtype   String?
+  User      User      @relation(fields: [userId], references: [id])
+  userId    Int
+  plaidId   String    @unique
+  available   Float?
+  current     Float?
   isoCurrencyCode   String?  // Going to become a relationally field to Currency
   unofficialCurrencyCode    String?
   limit       Float?
