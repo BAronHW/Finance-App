@@ -16,9 +16,9 @@ export const GET_TRANSACTIONS_BY_USER_ID = gql(`
     }
   `) 
 
-export const UPSERT_TRANSACTIONS = gql(`
-  mutation UpsertTransactions($userId: Int!, $accountId: Int, $access_token: String!, $start_date: String!, $end_date: String!) {
-    upsertTransactions(userId: $userId, access_token: $access_token, start_date: $start_date, end_date: $end_date) {
+export const UPSERT_TRANSACTIONS_FROM_PLAID = gql(`
+  mutation UpsertTransactionsFromPlaid($userId: Int!, $accountId: Int, $accessToken: String!, $startDate: String!, $endDate: String!) {
+    upsertTransactionsFromPlaid(userId: $userId, accountId: $accountId, accessToken: $accessToken, startDate: $startDate, endDate: $endDate) {
       id
       userId
       merchantName

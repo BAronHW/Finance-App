@@ -4,7 +4,7 @@ import Header from "@/components/customComponents/userComponents/Header";
 import { useParams } from "next/navigation";
 import { TransactionsTable } from "@/components/customComponents/userComponents/TransactionsTable";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_TRANSACTIONS_BY_USER_ID } from "@/lib/graphql/Transaction";
+import { GET_TRANSACTIONS_BY_USER_ID, UPSERT_TRANSACTIONS_FROM_PLAID } from "@/lib/graphql/Transaction";
 import { columns } from "@/components/customComponents/userComponents/TransactionsTableColumns";
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
@@ -14,6 +14,7 @@ import { PlaidAuth } from "@/components/PlaidAuth";
 import { FETCH_ACCESS_TOKEN_FROM_USER } from "@/lib/graphql/Users";
 import { useAccessToken } from "@/lib/hooks/useAccessToken";
 import { GET_ACCOUNTS_BY_USER_ID, UPSERT_ACCOUNTS_FROM_PLAID } from "@/lib/graphql/Account";
+import { Account } from "@/__generated__/graphql";
 
 export default function Home() {
   const params = useParams();
@@ -27,13 +28,15 @@ export default function Home() {
   // const [publicToken, setPublicToken] = useState("");
   const [linkToken, setLinkToken] = useState("");
 
-  const { data: accessTokenDataFromUser } = useQuery(FETCH_ACCESS_TOKEN_FROM_USER, {
+  useQuery(FETCH_ACCESS_TOKEN_FROM_USER, {
     variables: {
       userId: userId,
     },
-    onCompleted: () => {
-      if (accessTokenDataFromUser?.accessToken) {
-        setAccessToken(accessTokenDataFromUser.accessToken);
+    onCompleted: (data) => {
+      console.log("FETCH_ACCESS_TOKEN_FROM_USER completed")
+      console.log({data})
+      if (data?.fetchAccessTokenFromUser) {
+        setAccessToken(data.fetchAccessTokenFromUser);
         console.log("user has access token already!");
       }
     },
@@ -48,6 +51,26 @@ export default function Home() {
 
   const [createLinkToken] = useMutation(CREATE_LINKTOKEN);
   const [exchangeToken] = useMutation(EXCHANGE_PUB_TOKEN);
+  const [upsertTransactionsFromPlaid] = useMutation(UPSERT_TRANSACTIONS_FROM_PLAID);
+
+  useEffect(() => {
+    const fetchTransactionsFromPlaid = async (accounts: Account[]) => {
+      await Promise.all(accounts.map((account) => upsertTransactionsFromPlaid({
+        variables: {
+          userId: userId,
+          accountId: account.id,
+          accessToken: accessToken,
+          startDate: "2000-01-01",
+          endDate: "2025-03-01",
+        },
+        refetchQueries: [GET_TRANSACTIONS_BY_USER_ID]
+      })))
+    }
+    if (accessToken && userId && accountData?.getAccountsByUserId) {
+      fetchTransactionsFromPlaid(accountData.getAccountsByUserId)
+      console.log("transactions upserted!")
+    }
+  }, [accessToken, userId, accountData])
 
   useEffect(() => {
     const fetchLinkToken = async () => {
@@ -123,7 +146,7 @@ export default function Home() {
         <div className="mt-6 space-y-4 text-center">
           <TransactionsTable
             columns={columns}
-            data={transactionData.filter((transaction) => transaction !== null)}
+            data={transactionData}
           />
         </div>
       </main>

@@ -4,7 +4,7 @@ import { plaidClient } from "../../config/PlaidConfiguration";
 export const Account = objectType({
   name: "Account",
   definition(t) {
-    t.nonNull.string("id");
+    t.nonNull.int("id");
     t.string("mask");
     t.nonNull.string("name");
     t.string("officialName");
@@ -181,6 +181,22 @@ export const AccountMutations = extendType({
         console.log({newAccounts});
         return newAccounts;
       }
-    },
-  )},
-});
+    });
+    t.nonNull.field("deleteAccount", {
+      type: "Account",
+      args: {
+        id: nonNull(intArg()),
+      },
+      resolve: async (_root, args, ctx) => {
+        const account = await ctx.db.account.delete({
+          where: {
+            id: args.id,
+          }
+        })
+        if (!account) {
+          throw new Error("Account deleted.")
+        }
+        return account;
+      }
+    });
+  }});

@@ -34,3 +34,27 @@ export const UPSERT_ACCOUNTS_FROM_PLAID = gql(`
     }
   }
   `)
+
+export const DELETE_ACCOUNT = gql(`
+  mutation DeleteAccount($id: Int!) {
+    deleteAccount(id: $id) {
+      id
+      mask
+      name
+      officialName
+      subtype
+      type
+      Transactions {
+        userId
+        merchantName
+        amount
+      }
+      plaidId
+      available
+      current
+      isoCurrencyCode
+      unofficialCurrencyCode
+      limit
+    }
+  }
+  `)

@@ -12,13 +12,15 @@ import { plaidClient } from "../config/PlaidConfiguration";
 import dayjs from "dayjs";
 import { Account } from "aws-sdk";
 import { connectAuthEmulator } from "firebase/auth";
+import { TransactionsGetRequest } from "plaid";
+import { AccessToken } from "./plaid";
 
 export const Transaction = objectType({
   name: "Transaction",
   definition(t) {
     t.nonNull.int("id");
-    t.nonNull.int("userId");
-    t.nonNull.field("User", { type: "User" });
+    t.int("userId");
+    t.field("User", { type: "User" });
     t.int("accountId");
     t.field("Account", { type: "Account" });
     t.field("io", {
@@ -138,46 +140,50 @@ export const TransactionMutations = extendType({
      * @param end_date To what date you want to fetch to this should be Date.now() but for now this is okay
      * @returns transactions[] this is an array of transcations basically a bunch of objects that you can refer back to the plaid api if you want more details
      */
-    t.nonNull.list.nonNull.field("upsertTransactions", {
+    t.nonNull.list.nonNull.field("upsertTransactionsFromPlaid", {
       type: "Transaction",
       args: {
-        userId: nonNull(intArg()),
+        userId: intArg(),
         accountId: intArg(),
-        access_token: nonNull(stringArg()),
-        start_date: nonNull(stringArg()),
-        end_date: nonNull(stringArg()),
+        accessToken: nonNull(stringArg()),
+        startDate: nonNull(stringArg()),
+        endDate: nonNull(stringArg()),
       },
       async resolve(_root, args, ctx) {
+        if (!args.userId && !args.accountId) {
+          throw new Error("Transaction need to be associated with an user or an account");
+        };
         const transactionsRequest = {
-          access_token: args.access_token,
-          start_date: args.start_date || "2018-01-01",
-          end_date: args.end_date || "2020-02-01",
+          access_token: args.accessToken,
+          start_date: args.startDate,
+          end_date: args.endDate,
         };
 
-        // // fuck functional programming hahahahahah just joking. I need to change this later but for now this works
-        // let allTransactions: any = [];
-        // let hasMore = true;
-
-        // while (hasMore) {
-        //   const plaidResponse = await plaidClient.transactionsGet(
-        //     transactionsRequest
-        //   );
-        //   const newTransactions = plaidResponse.data.transactions;
-        //   allTransactions = allTransactions.concat(newTransactions);
-
-        //   hasMore =
-        //     allTransactions.length < plaidResponse.data.total_transactions;
-        // }
-
-        //we may want to filter some of the items before returning
         const plaidResponse = await plaidClient.transactionsGet(
           transactionsRequest
         );
 
-        if (!plaidResponse.data.transactions) {
+        const totalTransactionCount = plaidResponse.data.total_transactions;
+        let plaidTransactions = plaidResponse.data.transactions;
+        while (plaidTransactions.length < totalTransactionCount) {
+          const paginatedRequest: TransactionsGetRequest = {
+            access_token: args.accessToken,
+            start_date: args.startDate,
+            end_date: args.endDate,
+            options: {
+              offset: plaidTransactions.length
+            }
+          }
+          const paginatedResponse = await plaidClient.transactionsGet(paginatedRequest);
+          plaidTransactions = plaidTransactions.concat(
+            paginatedResponse.data.transactions,
+          )
+        }
+
+        if (!plaidTransactions) {
           throw new Error("Error whilst fetching transactions from Plaid");
         }
-        const transactions = plaidResponse.data.transactions.map(
+        const transactions = plaidTransactions.map(
           (transaction) => ({
             merchantName: transaction.merchant_name ?? transaction.name,
             amount: transaction.amount,
@@ -210,11 +216,12 @@ export const TransactionMutations = extendType({
               },
               update: {
                 ...transaction,
-                User: {
-                  connect: {
-                    id: args.userId,
-                  },
-                },
+                ...(!args.accountId && {
+                  User: {
+                    connect: {
+                      id: args.userId,
+                    },
+                }}),
                 ...(args.accountId && {
                   Account: {
                     connect: {

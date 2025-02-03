@@ -13,7 +13,7 @@ type Account {
   User: User!
   available: Float
   current: Float
-  id: String!
+  id: Int!
   isoCurrencyCode: String
   limit: Float
   mask: String
@@ -81,13 +81,14 @@ type Mutation {
   createLinkToken: LinkToken
   createTransaction(accountId: Int, amount: Float!, category: String, date: Int!, merchantName: String!, name: String, plaidId: String!, userId: Int!): Transaction!
   createUser(email: String!, firstName: String, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
+  deleteAccount(id: Int!): Account!
   deleteTransaction(id: Int!): Transaction
   deleteUser(id: Int!): User!
   emailSignIn(password: String!, username: String!): User!
   exchangePublicToken(public_token: String!, userId: Int!): String!
   updateUserDetails(email: String!, firstName: String, id: Int!, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
   upsertAccountsFromPlaid(accessToken: String!, userId: Int!): [Account!]!
-  upsertTransactions(access_token: String!, accountId: Int, end_date: String!, start_date: String!, userId: Int!): [Transaction!]!
+  upsertTransactionsFromPlaid(accessToken: String!, accountId: Int, endDate: String!, startDate: String!, userId: Int): [Transaction!]!
 }
 
 type PaymentMeta {
@@ -120,7 +121,7 @@ type Query {
 
 type Transaction {
   Account: Account
-  User: User!
+  User: User
   accountId: Int
   amount: Float!
   category: String
@@ -130,7 +131,7 @@ type Transaction {
   merchantName: String!
   name: String
   plaidId: String!
-  userId: Int!
+  userId: Int
 }
 
 type TransactionRes {
