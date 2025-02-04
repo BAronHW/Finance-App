@@ -3,7 +3,7 @@ import { Transaction } from "@/__generated__/types";
 import { MoreHorizontal } from "lucide-react";
 import { ArrowUpDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-
+import dayjs from "dayjs";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -40,22 +40,27 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "id",
     header: "ID",
+    cell: ({ getValue }) => getValue() ?? "-"
   },
   {
     accessorKey: "accountName",
     header: "Account Name",
+    cell: ({ getValue }) => getValue() ?? "-"
   },
   {
     accessorKey: "io",
     header: "In/Out",
+    cell: ({ getValue }) => getValue() ?? "-"
   },
   {
-    accessorKey: "senderOrRecipientName",
-    header: "Sender",
+    accessorKey: "merchantName",
+    header: "Sender / Recipient",
+    cell: ({ getValue }) => getValue() ?? "-"
   },
   {
     accessorKey: "amount",
     header: "Amount",
+    cell: ({ getValue }) => getValue() ?? "-"
   },
   {
     accessorKey: "date",
@@ -70,14 +75,22 @@ export const columns: ColumnDef<Transaction>[] = [
         </Button>
       );
     },
+    cell: ({ getValue }) => {
+      const value = getValue();
+      if (typeof value === "number") {
+        return dayjs(value).format("DD/MM/YYYY")
+      }
+    }
   },
   {
     accessorKey: "reference",
     header: "Reference",
+    cell: ({ getValue }) => getValue() ?? "-"
   },
   {
     accessorKey: "category",
     header: "Category",
+    cell: ({ getValue }) => getValue() ?? "-"
   },
   {
     id: "actions",
