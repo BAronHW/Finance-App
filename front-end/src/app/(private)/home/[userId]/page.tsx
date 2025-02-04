@@ -67,7 +67,7 @@ export default function Home() {
       })))
     }
     if (accessToken && userId && accountData?.getAccountsByUserId) {
-      fetchTransactionsFromPlaid(accountData.getAccountsByUserId)
+      fetchTransactionsFromPlaid(accountData.getAccountsByUserId ?? [])
       console.log("transactions upserted!")
     }
   }, [accessToken, userId, accountData])

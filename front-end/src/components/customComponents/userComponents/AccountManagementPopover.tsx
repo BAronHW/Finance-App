@@ -41,11 +41,12 @@ const AccountManagementPopover = ({
                 "Deleting Account..."
               ) : (
                 <div className="flex flex-row gap-4 my-4">
-                  <h1 className="flex items-center border rounded-xl px-2">
+                  <h1 className="flex items-center justify-center grow border rounded-xl px-2">
                     {account.name}
                   </h1>
                   <Button
                     size="sm"
+                    className="ml-auto"
                     variant="destructive"
                     onClick={async () => {
                       const { data: deletedAccount } = await deleteAccount({

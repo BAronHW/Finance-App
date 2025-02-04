@@ -42,7 +42,7 @@ export const columns: ColumnDef<Transaction>[] = [
     header: "ID",
   },
   {
-    accessorFn: (transaction) => transaction.Account?.name,
+    accessorFn: (original) => original.Account?.name,
     header: "Account Name",
   },
   {
