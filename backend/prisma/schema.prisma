@@ -22,22 +22,41 @@ model User {
   password     String?
   uid          String        @unique
   phone        String?
-  transactions Transaction[]
+  Transactions Transaction[]
+  Accounts     Account[]
   AccessToken  String?
 }
 
 model Transaction {
   id                    Int     @id @default(autoincrement())
-  user                  User    @relation(fields: [userId], references: [id])
-  userId                Int
-  accountName           String  @unique
-  io                    InOrOut
-  name                  String
-  senderOrRecipientName String
+  userId                Int?
+  User                  User?    @relation(fields: [userId], references: [id])
+  accountId             Int?
+  Account               Account?     @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  name                  String?
+  merchantName          String
   amount                Float
   date                  Int     @default(0)
-  reference             String?
   category              String?
+  plaidId               String      @unique
+}
+
+model Account {
+  id      Int    @id @default(autoincrement())
+  Transactions    Transaction[]
+  mask    String?
+  name    String
+  officialName    String?
+  type    String
+  subtype   String?
+  User      User      @relation(fields: [userId], references: [id])
+  userId    Int
+  plaidId   String    @unique
+  available   Float?
+  current     Float?
+  isoCurrencyCode   String?  // Going to become a relationally field to Currency
+  unofficialCurrencyCode    String?
+  limit       Float?
 }
 
 enum InOrOut {

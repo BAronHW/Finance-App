@@ -22,3 +22,5 @@ export const plaidRequest = {
   redirect_uri: 'http://localhost:3000/', //make sure this is localhost 3000 for the frontend 
   country_codes: ['GB'] as CountryCode[],
 };
+
+export const plaidClient = new PlaidApi(configuration);

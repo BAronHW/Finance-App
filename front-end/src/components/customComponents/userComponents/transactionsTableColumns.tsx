@@ -3,7 +3,7 @@ import { Transaction } from "@/__generated__/types";
 import { MoreHorizontal } from "lucide-react";
 import { ArrowUpDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import dayjs from "dayjs";
+import dayjs from "dayjs"
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -43,7 +43,7 @@ export const columns: ColumnDef<Transaction>[] = [
     cell: ({ getValue }) => getValue() ?? "-"
   },
   {
-    accessorKey: "accountName",
+    accessorFn: (original) => original.Account?.name,
     header: "Account Name",
     cell: ({ getValue }) => getValue() ?? "-"
   },

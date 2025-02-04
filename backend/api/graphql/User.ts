@@ -1,5 +1,4 @@
-import { objectType, extendType, stringArg, nonNull, intArg } from "nexus";
-import { Transaction } from "./Transaction";
+import { objectType, extendType, stringArg, nonNull, intArg, list } from "nexus";
 import bcrypt from "bcrypt";
 
 export const User = objectType({
@@ -13,9 +12,18 @@ export const User = objectType({
     t.string("password"); // Google users don't have a password
     t.string("phone");
     t.nonNull.string("uid");
-    t.nonNull.list.field("transactions", { type: Transaction });
+    t.nonNull.list.nonNull.field("Transactions", { type: nonNull(list(nonNull("Transaction"))) });
+    t.nonNull.list.nonNull.field("Accounts", { type: nonNull(list(nonNull("Account")))});
+    t.string("AccessToken");
   },
 });
+
+export const UID = objectType({
+  name: 'uid',
+  definition(t){
+    t.nonNull.string('uid')
+  },
+})
 
 export const UserQuery = extendType({
   type: "Query",
@@ -25,7 +33,7 @@ export const UserQuery = extendType({
       async resolve(_root, _args, ctx) {
         const users = await ctx.db.user.findMany({
           include: {
-            transactions: true,
+            Transactions: true,
           },
         });
         return users;
@@ -40,7 +48,7 @@ export const UserQuery = extendType({
         const user = await ctx.db.user.findUnique({
           where: { uid: args.uid },
           include: {
-            transactions: true,
+            Transactions: true,
           },
         });
         if (!user) {
@@ -54,8 +62,7 @@ export const UserQuery = extendType({
  * 
  * The idea of this query is to decrease the number of queries that you would need to make to the plaidAPI
  */
-    t.field('fetchAccessTokenFromUser', {
-      type: 'AccessToken',
+    t.string('fetchAccessTokenFromUser', {
       args: {
         userId: nonNull(intArg()),
       },
@@ -70,6 +77,29 @@ export const UserQuery = extendType({
         };
       }
     });
+    t.field('getUserUidFromUserId', {
+      type: "User",
+      args: {
+        userId: nonNull(intArg())
+      },
+      async resolve(_root, args, ctx) {
+        const user = await ctx.db.user.findUnique({
+          where: {
+            id: args.userId
+          }
+        });
+    
+        if (!user) {
+          throw new Error(`No user found with ID ${args.userId}`);
+        }
+    
+        if (!user.uid) {
+          throw new Error(`User ${args.userId} has no UID`);
+        }
+    
+        return user;
+      }
+    })
   },
 });
 
@@ -102,7 +132,7 @@ export const UserMutation = extendType({
             phone: args.phone,
           },
           include: {
-            transactions: true,
+            Transactions: true,
           },
         });
       },
@@ -134,7 +164,7 @@ export const UserMutation = extendType({
             uid: args.uid,
           },
           include: {
-            transactions: true,
+            Transactions: true,
           },
         });
       },
@@ -148,7 +178,7 @@ export const UserMutation = extendType({
         return ctx.db.user.delete({
           where: { id: args.id },
           include: {
-            transactions: true,
+            Transactions: true,
           },
         });
       },
@@ -171,7 +201,7 @@ export const UserMutation = extendType({
             password: true,
             uid: true,
             phone: true,
-            transactions: true,
+            Transactions: true,
           },
         });
 

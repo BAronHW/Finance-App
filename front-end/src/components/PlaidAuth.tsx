@@ -1,50 +1,94 @@
-import { useEffect, useState } from 'react'
-import { EXCHANGE_PUB_TOKEN } from '@/lib/GraphQL/Plaid'
-import { useMutation, gql } from '@apollo/client'
-import { argsToArgsConfig } from 'graphql/type/definition'
-import { AccessToken } from '../../../backend/api/graphql/Plaid'
+import { useEffect, useState } from "react";
+import { EXCHANGE_PUB_TOKEN } from "@/lib/graphql/Plaid";
+import { useMutation, gql } from "@apollo/client";
+import { argsToArgsConfig } from "graphql/type/definition";
+import { AccessToken } from "../../../backend/api/graphql/Plaid";
+import { UPSERT_TRANSACTIONS } from "@/lib/graphql/Transaction";
 
 interface PlaidAuthProps {
-    pubToken: string
-    userId: number
+  pubToken: string;
+  userId: number;
 }
 
 export function PlaidAuth({ pubToken, userId }: PlaidAuthProps) {
-    const [exchangeToken, { data, loading, error }] =
-        useMutation(EXCHANGE_PUB_TOKEN)
+  const [exchangeToken, { data, loading, error }] =
+    useMutation(EXCHANGE_PUB_TOKEN);
 
-    const [accessToken, setAccessToken] = useState('')
+  const [
+    upsertTransactions,
+    {
+      data: transactionData,
+      loading: transactionsLoading,
+      error: transactionsError,
+    },
+  ] = useMutation(UPSERT_TRANSACTIONS, {
+    onCompleted: () => console.log({ transactionData })
+  });
 
-    useEffect(() => {
-        async function exchangePublicToken() {
-            try {
-                // terrible way of doing this tbh it should be an int and not a string
-                const userIdtoStr = userId.toString()
-                const response = await exchangeToken({
-                    variables: {
-                        userId: userIdtoStr,
-                        public_token: pubToken,
-                    },
-                })
+  const [accessToken, setAccessToken] = useState("");
 
-                console.log(
-                    'Access token:',
-                    response.data.exchangePublicToken.accessToken
-                )
+  useEffect(() => {
+    async function exchangePublicToken() {
+      try {
+        // terrible way of doing this tbh it should be an int and not a string
+        const userIdtoStr = userId.toString();
+        const response = await exchangeToken({
+          variables: {
+            userId: userIdtoStr,
+            public_token: pubToken,
+          },
+        });
 
-                setAccessToken(response.data.exchangePublicToken.accessToken)
-            } catch (error) {
-                console.error('Error exchanging token:', error)
-            }
-        }
+        console.log(
+          "Access token:",
+          response.data.exchangePublicToken.accessToken
+        );
 
-        if (pubToken) {
-            exchangePublicToken()
-        }
-    }, [pubToken, userId, exchangeToken])
+        setAccessToken(response.data.exchangePublicToken.accessToken);
+      } catch (error) {
+        console.error("Error exchanging token:", error);
+      }
+    }
 
-    if (loading) return <div>Exchanging token...</div>
-    if (error) return <div>Error: {error.message}</div>
+    if (pubToken) {
+      exchangePublicToken();
+    }
+  }, [pubToken, userId, exchangeToken]);
 
-    return <span>{accessToken}</span>
+  console.log({ accessToken })
+  useEffect(() => {
+    const fetchTransactions = async () => {
+        const startDate = "2000-01-01";
+        const endDate = "2025-02-01";
+        await upsertTransactions({
+        variables: {
+            userId: userId,
+            start_date: startDate,
+            end_date: endDate,
+            access_token: accessToken,
+        },
+        });
+    }
+    if (accessToken.length > 0) {
+        fetchTransactions()
+    }
+  }, [accessToken]);
+  
+  if (transactionsLoading || loading) {
+    return <div>loading...</div>
+  }
+
+  if (transactionsError) {
+    console.log({ transactionsError })
+  }
+
+  if ( error ) {
+    console.log({ error })
+  }
+
+  return (
+    <div>
+      Transactions fetched!
+    </div>
+  )
 }
