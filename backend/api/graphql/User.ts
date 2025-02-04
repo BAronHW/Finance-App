@@ -77,8 +77,8 @@ export const UserQuery = extendType({
         };
       }
     });
-    t.field('getuseruidfromuserid', {
-      type: 'uid',
+    t.field('getUserUidFromUserId', {
+      type: "User",
       args: {
         userId: nonNull(intArg())
       },
@@ -97,9 +97,7 @@ export const UserQuery = extendType({
           throw new Error(`User ${args.userId} has no UID`);
         }
     
-        return {
-          uid: user.uid
-        }
+        return user;
       }
     })
   },

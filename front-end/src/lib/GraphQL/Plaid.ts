@@ -1,5 +1,4 @@
 import { gql } from "@apollo/client";
-import { GET_BALANCE } from './Users';
 
 export const CREATE_LINKTOKEN = gql(`
   mutation CreateLinkToken {

@@ -115,6 +115,7 @@ type Query {
   getAllAccounts: [Account!]!
   getTransactionById(id: Int!): Transaction!
   getTransactionsByUserId(userId: Int!): [Transaction!]!
+  getUserUidFromUserId(userId: Int!): User
   user(uid: String!): User!
   users: [User!]!
 }

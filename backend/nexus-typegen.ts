@@ -247,6 +247,7 @@ export interface NexusGenFieldTypes {
     getAllAccounts: NexusGenRootTypes['Account'][]; // [Account!]!
     getTransactionById: NexusGenRootTypes['Transaction']; // Transaction!
     getTransactionsByUserId: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
+    getUserUidFromUserId: NexusGenRootTypes['User'] | null; // User
     user: NexusGenRootTypes['User']; // User!
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
@@ -383,7 +384,7 @@ export interface NexusGenFieldTypeNames {
     getAllAccounts: 'Account'
     getTransactionById: 'Transaction'
     getTransactionsByUserId: 'Transaction'
-    getuseruidfromuserid: 'uid'
+    getUserUidFromUserId: 'User'
     user: 'User'
     users: 'User'
   }
@@ -513,7 +514,7 @@ export interface NexusGenArgTypes {
     getTransactionsByUserId: { // args
       userId: number; // Int!
     }
-    getuseruidfromuserid: { // args
+    getUserUidFromUserId: { // args
       userId: number; // Int!
     }
     user: { // args
