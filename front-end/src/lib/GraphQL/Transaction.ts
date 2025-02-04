@@ -5,14 +5,28 @@ export const GET_TRANSACTIONS_BY_USER_ID = gql(`
       getTransactionsByUserId(userId: $userId) {
         id
         userId
-        accountName
+        accountId
+        Account {
+          name
+        }
         io
         name
-        senderOrRecipientName
+        merchantName
         amount
-        reference
         category
         date
       }
     }
   `) 
+
+export const UPSERT_TRANSACTIONS_FROM_PLAID = gql(`
+  mutation UpsertTransactionsFromPlaid($userId: Int!, $accountId: Int, $accessToken: String!, $startDate: String!, $endDate: String!) {
+    upsertTransactionsFromPlaid(userId: $userId, accountId: $accountId, accessToken: $accessToken, startDate: $startDate, endDate: $endDate) {
+      id
+      userId
+      merchantName
+      amount
+      date
+      plaidId
+    }}
+  `);

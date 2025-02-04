@@ -11,21 +11,26 @@ export const GET_ALL_USERS = gql(`
       email
       uid
       id
-      transactions {
+      Transactions {
         id
         userId
-        accountName
+        accountId
         io
         name
-        senderOrRecipientName
+        merchantName
         amount
-        reference
         category
         date
       }
     }
   }
 `);
+
+export const FETCH_ACCESS_TOKEN_FROM_USER = gql(`
+  query FetchAccessTokenFromUser($userId: Int!) {
+    fetchAccessTokenFromUser(userId: $userId) 
+  }
+  `) 
 
 export const DELETE_USER = gql(`
   mutation DeleteUser($id: Int!) {
@@ -38,15 +43,14 @@ export const DELETE_USER = gql(`
       phone
       email
       uid
-      transactions {
+      Transactions {
         id
         userId
-        accountName
+        accountId
         io
         name
-        senderOrRecipientName
+        merchantName
         amount
-        reference
         category
         date
       }
@@ -65,15 +69,14 @@ export const GET_SINGLE_USER_BY_UID = gql(`
       phone
       email
       uid
-      transactions {
+      Transactions {
         id
         userId
-        accountName
+        accountId
         io
         name
-        senderOrRecipientName
+        merchantName
         amount
-        reference
         category
         date
       }
@@ -112,25 +115,25 @@ export const CREATE_USER = gql(`
   }
 `);
 
-export const GET_BALANCE = gql`
-  mutation Get_balance($access_token: String!) {
-    get_balance(access_token: $access_token)
-  }
-`
+// export const GET_BALANCE = gql`
+//   mutation Get_balance($access_token: String!) {
+//     get_balance(access_token: $access_token)
+//   }
+// `
 
-export const FETCH_ACCESS_TOKEN_FROM_USER = gql`
-query FetchAccessTokenFromUser($userId: Int!) {
-    fetchAccessTokenFromUser(userId: $userId) {
-        accessToken
-        item_id
-        request_id
-    }
-}
-`
+// export const FETCH_ACCESS_TOKEN_FROM_USER = gql`
+// query FetchAccessTokenFromUser($userId: Int!) {
+//     fetchAccessTokenFromUser(userId: $userId) {
+//         accessToken
+//         item_id
+//         request_id
+//     }
+// }
+// `
 
 export const FETCH_UID_FROM_USER = gql`
-query Getuseruidfromuserid($userId: Int!) {
-    getuseruidfromuserid(userId: $userId) {
+query GetUserUidFromUserId($userId: Int!) {
+    getUserUidFromUserId(userId: $userId) {
         uid
     }
 }

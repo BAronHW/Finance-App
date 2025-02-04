@@ -1,120 +1,155 @@
-'use client'
+"use client";
 
-import Header from '@/components/customComponents/userComponents/Header'
-import { useParams } from 'next/navigation'
-import { TransactionsTable } from '@/components/customComponents/userComponents/transactionsTable'
-import { useAuth } from '@/lib/contexts/authContext'
-import { useMutation, useQuery } from '@apollo/client'
-import { GET_TRANSACTIONS_BY_USER_ID } from '@/lib/GraphQL/Transaction'
-import { columns } from '@/components/customComponents/userComponents/transactionsTableColumns'
-import { useEffect, useState } from 'react'
-import { getAuth } from 'firebase/auth'
-import { CREATE_LINKTOKEN } from '@/lib/GraphQL/Plaid'
-import { PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
-import { PlaidAuth } from '@/components/PlaidAuth'
-import { FETCH_ACCESS_TOKEN_FROM_USER, GET_BALANCE } from '@/lib/GraphQL/Users'
-import { AccessToken } from '../../../../../../backend/api/graphql/Plaid'
+import Header from "@/components/customComponents/userComponents/Header";
+import { useParams } from "next/navigation";
+import { TransactionsTable } from "@/components/customComponents/userComponents/TransactionsTable";
+import { useMutation, useQuery } from "@apollo/client";
+import { GET_TRANSACTIONS_BY_USER_ID, UPSERT_TRANSACTIONS_FROM_PLAID } from "@/lib/graphql/Transaction";
+import { columns } from "@/components/customComponents/userComponents/TransactionsTableColumns";
+import { useEffect, useState } from "react";
+import { getAuth } from "firebase/auth";
+import { CREATE_LINKTOKEN, EXCHANGE_PUB_TOKEN } from "@/lib/graphql/Plaid";
+import { PlaidLinkOnSuccessMetadata, usePlaidLink } from "react-plaid-link";
+import { PlaidAuth } from "@/components/PlaidAuth";
+import { FETCH_ACCESS_TOKEN_FROM_USER } from "@/lib/graphql/Users";
+import { useAccessToken } from "@/lib/hooks/useAccessToken";
+import { GET_ACCOUNTS_BY_USER_ID, UPSERT_ACCOUNTS_FROM_PLAID } from "@/lib/graphql/Account";
+import { Account } from "@/__generated__/graphql";
 
 export default function Home() {
-    const [token, setToken] = useState('')
-    const [publicToken, setPublicToken] = useState('')
-    const params = useParams()
-    const auth = getAuth()
-    const currentUser = auth.currentUser
+  const params = useParams();
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+  const userId = Array.isArray(params?.userId)
+    ? Number(params?.userId[0])
+    : Number(params?.userId);
 
-    const userId = Array.isArray(params?.userId)
-        ? Number(params?.userId[0])
-        : Number(params?.userId)
+  const [accessToken, setAccessToken] = useState("");
+  // const [publicToken, setPublicToken] = useState("");
+  const [linkToken, setLinkToken] = useState("");
 
-    const [createLinkToken, { data, loading, error }] =
-        useMutation(CREATE_LINKTOKEN)
+  useQuery(FETCH_ACCESS_TOKEN_FROM_USER, {
+    variables: {
+      userId: userId,
+    },
+    onCompleted: (data) => {
+      console.log("FETCH_ACCESS_TOKEN_FROM_USER completed")
+      console.log({data})
+      if (data?.fetchAccessTokenFromUser) {
+        setAccessToken(data.fetchAccessTokenFromUser);
+        console.log("user has access token already!");
+      }
+    },
+  });
+  
+  const { data: accountData, loading: accountsLoading } = useQuery(GET_ACCOUNTS_BY_USER_ID, {
+    variables: {
+      userId: userId
+    },
+    onCompleted: (data) => console.log({data})
+  });
 
-    const [getBalance, { data: Balance, error: balanceError }] =
-        useMutation(GET_BALANCE)
+  const [createLinkToken] = useMutation(CREATE_LINKTOKEN);
+  const [exchangeToken] = useMutation(EXCHANGE_PUB_TOKEN);
+  const [upsertTransactionsFromPlaid] = useMutation(UPSERT_TRANSACTIONS_FROM_PLAID);
 
-    const { data: transactionuserdata } = useQuery(
-        GET_TRANSACTIONS_BY_USER_ID,
-        {
-            variables: {
-                userId: userId,
-            },
-        }
-    )
-
-    const { open, ready } = usePlaidLink({
-        token,
-        onSuccess: (
-            public_token: string,
-            metadata: PlaidLinkOnSuccessMetadata
-        ) => {
-            console.log('success', public_token, metadata)
-            setPublicToken(public_token)
+  useEffect(() => {
+    const fetchTransactionsFromPlaid = async (accounts: Account[]) => {
+      await Promise.all(accounts.map((account) => upsertTransactionsFromPlaid({
+        variables: {
+          userId: userId,
+          accountId: account.id,
+          accessToken: accessToken,
+          startDate: "2000-01-01",
+          endDate: "2025-03-01",
         },
-    })
+        refetchQueries: [GET_TRANSACTIONS_BY_USER_ID]
+      })))
+    }
+    if (accessToken && userId && accountData?.getAccountsByUserId) {
+      fetchTransactionsFromPlaid(accountData.getAccountsByUserId ?? [])
+      console.log("transactions upserted!")
+    }
+  }, [accessToken, userId, accountData])
 
-    const { data: AccessToken } = useQuery(FETCH_ACCESS_TOKEN_FROM_USER, {
-        variables: { userId },
-    })
+  useEffect(() => {
+    const fetchLinkToken = async () => {
+      const { data: linkTokenData } = await createLinkToken();
+      if (linkTokenData?.createLinkToken?.link_token) {
+        setLinkToken(linkTokenData.createLinkToken.link_token);
+        console.log({linkToken})
+      }
+    };
 
-    const accessToken = AccessToken?.fetchAccessTokenFromUser?.accessToken ?? ''
+    if (!linkToken) {
+      fetchLinkToken();
+    }
+  });
 
-    const transactionData = transactionuserdata?.getTransactionsByUserId ?? []
+  const [upsertAccountsFromPlaid] = useMutation(UPSERT_ACCOUNTS_FROM_PLAID);
 
-    useEffect(() => {
-        async function fetchLinkToken() {
-            try {
-                console.log('fetching link token')
-                const response = await createLinkToken()
+  const { open: openPlaidLink, ready: plaidLinkReady } = usePlaidLink({
+    token: linkToken,
+    onSuccess: async (
+      public_token: string,
+      metadata: PlaidLinkOnSuccessMetadata
+    ) => {
+      const {
+        data: accessTokenData,
+      } = await exchangeToken({
+        variables: {
+          userId: userId,
+          public_token,
+        },
+      });
+      console.log({accessTokenData})
+      if (accessTokenData?.exchangePublicToken) {
+        setAccessToken(accessTokenData.exchangePublicToken);
+        console.log({accessToken: accessTokenData.exchangePublicToken})
+        const { data: upsertAccountsData } = await upsertAccountsFromPlaid({
+          variables: {
+            userId: userId,
+            accessToken: accessTokenData.exchangePublicToken,
+          },
+          refetchQueries: [GET_ACCOUNTS_BY_USER_ID],
+        })
 
-                if (response.data?.createLinkToken?.link_token) {
-                    console.log(response.data.createLinkToken?.link_token)
-                    setToken(response.data.createLinkToken.link_token)
-                }
-            } catch (err) {
-                console.error('Error fetching link token:', err)
-            }
-        }
+        console.log({ upsertAccountsData })
+      }
+    },
+  });
 
-        if (currentUser && !token) {
-            fetchLinkToken()
-        }
 
-        if (accessToken) {
-            getBalance({ variables: { access_token: accessToken } })
-        }
-    }, [currentUser, accessToken])
+  const { data: transactionuserdata } = useQuery(GET_TRANSACTIONS_BY_USER_ID, {
+    variables: {
+      userId: userId,
+    },
+  });
 
-    const balance = Balance?.get_balance.accounts_arr[0].balances.current ?? ''
+  const transactionData = transactionuserdata?.getTransactionsByUserId ?? [];
 
-    console.log(balance)
-
-    return (
-        <div className="flex flex-col min-h-screen">
-            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <Header
-                    name={currentUser?.displayName ?? ''}
-                    appMoto="Manage your student funds"
-                    accBal={balance}
-                />
-            </div>
-            <main className="flex-grow flex items-center justify-center flex-col gap-10 m-7">
-                <div className="mt-6 space-y-4 text-center">
-                    <TransactionsTable
-                        columns={columns}
-                        data={transactionData.filter(
-                            (transaction: any) => transaction !== null
-                        )}
-                    />
-                </div>
-                <button
-                    onClick={() => open()}
-                    disabled={!ready}
-                    className="button primary"
-                >
-                    Connect a bank account
-                </button>
-                <PlaidAuth pubToken={publicToken} userId={userId}></PlaidAuth>
-            </main>
+  return (
+    <div className="flex flex-col min-h-screen">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Header
+          name={currentUser?.displayName ?? ""}
+          appMoto="Manage your student funds"
+          accBal={10}
+          accounts={accountData?.getAccountsByUserId ?? []}
+          accountsLoading={accountsLoading}
+          userId={userId}
+          openPlaidLink={openPlaidLink}
+          plaidLinkReady={plaidLinkReady}
+        />
+      </div>
+      <main className="flex-grow flex items-center justify-center flex-col gap-10 m-7">
+        <div className="mt-6 space-y-4 text-center">
+          <TransactionsTable
+            columns={columns}
+            data={transactionData}
+          />
         </div>
-    )
+      </main>
+    </div>
+  );
 }
