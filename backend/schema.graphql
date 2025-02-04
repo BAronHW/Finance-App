@@ -155,3 +155,7 @@ type User {
   uid: String!
   username: String!
 }
+
+type uid {
+  uid: String!
+}

@@ -138,6 +138,9 @@ export interface NexusGenObjects {
     uid: string; // String!
     username: string; // String!
   }
+  uid: { // root type
+    uid: string; // String!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -281,6 +284,9 @@ export interface NexusGenFieldTypes {
     uid: string; // String!
     username: string; // String!
   }
+  uid: { // field return type
+    uid: string; // String!
+  }
 }
 
 export interface NexusGenFieldTypeNames {
@@ -377,6 +383,7 @@ export interface NexusGenFieldTypeNames {
     getAllAccounts: 'Account'
     getTransactionById: 'Transaction'
     getTransactionsByUserId: 'Transaction'
+    getuseruidfromuserid: 'uid'
     user: 'User'
     users: 'User'
   }
@@ -413,6 +420,9 @@ export interface NexusGenFieldTypeNames {
     phone: 'String'
     uid: 'String'
     username: 'String'
+  }
+  uid: { // field return type name
+    uid: 'String'
   }
 }
 
@@ -501,6 +511,9 @@ export interface NexusGenArgTypes {
       id: number; // Int!
     }
     getTransactionsByUserId: { // args
+      userId: number; // Int!
+    }
+    getuseruidfromuserid: { // args
       userId: number; // Int!
     }
     user: { // args

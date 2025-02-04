@@ -27,7 +27,7 @@ import {
 import { Account } from "@/__generated__/graphql";
 import AccountManagementPopover from "./AccountManagementPopover";
 
-ChartJS.register(ArcElement, ChartTooltip, Legend);
+ChartJS.register(ArcElement, ChartTooltip, Legend)
 
 interface Props {
   name: string;
@@ -59,16 +59,16 @@ function Header({ name, appMoto, accBal, avatarUrl, accounts, accountsLoading, o
     ],
   };
 
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-    borderRadius: 20,
-  };
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false,
+            },
+        },
+        borderRadius: 20,
+    }
 
   return (
     <Card className="w-full bg-white/80 backdrop-blur-sm z-50 shadow-lg">

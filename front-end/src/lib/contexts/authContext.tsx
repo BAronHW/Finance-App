@@ -5,7 +5,9 @@ import { auth } from '@/lib/Firebase/Firebase'
 import React from 'react'
 import { onAuthStateChanged, signOut, User } from 'firebase/auth'
 import { LogOut } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
+import { useQuery } from '@apollo/client'
+import { FETCH_UID_FROM_USER } from '../GraphQL/Users'
 
 export interface AuthContextType {
     currentUser: User | null
@@ -35,6 +37,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [userLoggedIn, setUserLoggedIn] = useState(false)
     const [loading, setLoading] = useState(true)
     const router = useRouter()
+    const params = useParams()
+    const userId = params.userId
+
+    // const { data, error, refetch } = useQuery(FETCH_UID_FROM_USER, {
+    //     variables: { userId },
+    // })
+
+    // const [currentUserUid, setcurrentUserUid] = useState(data)
 
     useEffect(() => {
         onAuthStateChanged(auth, initialiseUser)
@@ -47,8 +57,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         } else {
             setCurrentUser(null)
             setUserLoggedIn(false)
+            router.push('/sign-in')
         }
         setLoading(false)
+    }
+
+    const compareIdToCurrentUser = (currUser: string, currUserId: number) => {
+        // fetch the uid of the given curruserid
+        // if the uid fetched doesnt match the uid of the currentuser.uid then redirect to /
     }
 
     const logOut = async (): Promise<void> => {
