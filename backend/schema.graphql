@@ -110,7 +110,6 @@ type PersonalFinanceCategory {
 
 type Query {
   allTransactions: [Transaction!]!
-  fetchAccessTokenFromUser(userId: Int!): String
   getAccountsByUserId(userId: Int!): [Account!]!
   getAllAccounts: [Account!]!
   getTransactionById(id: Int!): Transaction!

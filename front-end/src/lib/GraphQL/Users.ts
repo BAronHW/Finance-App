@@ -27,8 +27,10 @@ export const GET_ALL_USERS = gql(`
 `);
 
 export const FETCH_ACCESS_TOKEN_FROM_USER = gql(`
-  query FetchAccessTokenFromUser($userId: Int!) {
-    fetchAccessTokenFromUser(userId: $userId) 
+  query GetUserbyId($userId: Int!) {
+    getUserbyId(userId: $userId) {
+      accessToken
+    }
   }
   `) 
 
