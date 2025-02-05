@@ -40,22 +40,27 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "id",
     header: "ID",
+    cell: ({ getValue }) => getValue() ?? "-"
   },
   {
     accessorFn: (original) => original.Account?.name,
     header: "Account Name",
+    cell: ({ getValue }) => getValue() ?? "-"
   },
   {
     accessorKey: "io",
     header: "In/Out",
+    cell: ({ getValue }) => getValue() ?? "-"
   },
   {
     accessorKey: "merchantName",
     header: "Sender / Recipient",
+    cell: ({ getValue }) => getValue() ?? "-"
   },
   {
     accessorKey: "amount",
     header: "Amount",
+    cell: ({ getValue }) => getValue() ?? "-"
   },
   {
     accessorKey: "date",
@@ -70,15 +75,22 @@ export const columns: ColumnDef<Transaction>[] = [
         </Button>
       );
     },
-    cell: ({ getValue }) => dayjs(getValue()).format("DD/MM/YYYY")
+    cell: ({ getValue }) => {
+      const value = getValue();
+      if (typeof value === "number") {
+        return dayjs(value).format("DD/MM/YYYY")
+      }
+    }
   },
   {
     accessorKey: "reference",
     header: "Reference",
+    cell: ({ getValue }) => getValue() ?? "-"
   },
   {
     accessorKey: "category",
     header: "Category",
+    cell: ({ getValue }) => getValue() ?? "-"
   },
   {
     id: "actions",

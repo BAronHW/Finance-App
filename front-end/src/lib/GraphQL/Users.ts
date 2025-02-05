@@ -27,8 +27,10 @@ export const GET_ALL_USERS = gql(`
 `);
 
 export const FETCH_ACCESS_TOKEN_FROM_USER = gql(`
-  query FetchAccessTokenFromUser($userId: Int!) {
-    fetchAccessTokenFromUser(userId: $userId) 
+  query GetUserbyId($userId: Int!) {
+    getUserbyId(userId: $userId) {
+      accessToken
+    }
   }
   `) 
 
@@ -60,7 +62,7 @@ export const DELETE_USER = gql(`
 
 export const GET_SINGLE_USER_BY_UID = gql(`
   query User($uid: String!) {
-    user (uid: $uid) {
+    getUserByUid (uid: $uid) {
       id
       firstName
       lastName
@@ -115,25 +117,9 @@ export const CREATE_USER = gql(`
   }
 `);
 
-// export const GET_BALANCE = gql`
-//   mutation Get_balance($access_token: String!) {
-//     get_balance(access_token: $access_token)
-//   }
-// `
-
-// export const FETCH_ACCESS_TOKEN_FROM_USER = gql`
-// query FetchAccessTokenFromUser($userId: Int!) {
-//     fetchAccessTokenFromUser(userId: $userId) {
-//         accessToken
-//         item_id
-//         request_id
-//     }
-// }
-// `
-
 export const FETCH_UID_FROM_USER = gql`
 query GetUserUidFromUserId($userId: Int!) {
-    getUserUidFromUserId(userId: $userId) {
+    getUserbyId(userId: $userId) {
         uid
     }
 }

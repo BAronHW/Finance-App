@@ -25,7 +25,6 @@ export default function Home() {
     : Number(params?.userId);
 
   const [accessToken, setAccessToken] = useState("");
-  // const [publicToken, setPublicToken] = useState("");
   const [linkToken, setLinkToken] = useState("");
 
   useQuery(FETCH_ACCESS_TOKEN_FROM_USER, {
@@ -35,8 +34,8 @@ export default function Home() {
     onCompleted: (data) => {
       console.log("FETCH_ACCESS_TOKEN_FROM_USER completed")
       console.log({data})
-      if (data?.fetchAccessTokenFromUser) {
-        setAccessToken(data.fetchAccessTokenFromUser);
+      if (data?.fetchAccessTokenFromUser.accessToken) {
+        setAccessToken(data.fetchAccessTokenFromUser.accessToken);
         console.log("user has access token already!");
       }
     },
@@ -143,7 +142,7 @@ export default function Home() {
         />
       </div>
       <main className="flex-grow flex items-center justify-center flex-col gap-10 m-7">
-        <div className="mt-6 space-y-4 text-center">
+        <div className="mt-6 space-y-4 text-center w-full">
           <TransactionsTable
             columns={columns}
             data={transactionData}

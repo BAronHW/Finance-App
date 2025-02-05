@@ -119,26 +119,6 @@ export const TransactionRes = objectType({
  * The idea of this query is to decrease the number of queries that you would need to make to the plaidAPI
  */
 
-export const PlaidQueries = extendType({
-  type: "Query",
-  definition(t) {
-    t.string("fetchAccessTokenFromUser", {
-      args: {
-        userId: nonNull(intArg()),
-      },
-      async resolve(_root, args, ctx) {
-        const user = await ctx.db.user.findUnique({
-          where: {
-            id: args.userId,
-          },
-        });
-
-        return user?.AccessToken ?? null;
-      }
-    });
-  },
-});
-
 export const PlaidMutations = extendType({
   type: "Mutation",
   definition(t) {

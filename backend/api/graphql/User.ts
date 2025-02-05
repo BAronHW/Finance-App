@@ -1,4 +1,10 @@
-import { objectType, extendType, stringArg, nonNull, intArg, list } from "nexus";
+import {
+  objectType,
+  extendType,
+  stringArg,
+  nonNull,
+  intArg,
+} from "nexus";
 import bcrypt from "bcrypt";
 
 export const User = objectType({
@@ -9,21 +15,21 @@ export const User = objectType({
     t.string("lastName");
     t.nonNull.string("username");
     t.nonNull.string("email");
-    t.string("password"); // Google users don't have a password
+    t.string("password");
     t.string("phone");
     t.nonNull.string("uid");
-    t.nonNull.list.nonNull.field("Transactions", { type: nonNull(list(nonNull("Transaction"))) });
-    t.nonNull.list.nonNull.field("Accounts", { type: nonNull(list(nonNull("Account")))});
+    t.list.nonNull.field("Transactions", { type: "Transaction" });
+    t.list.nonNull.field("Accounts", { type: "Account" });
     t.string("AccessToken");
   },
 });
 
 export const UID = objectType({
-  name: 'uid',
-  definition(t){
-    t.nonNull.string('uid')
+  name: "uid",
+  definition(t) {
+    t.nonNull.string("uid");
   },
-})
+});
 
 export const UserQuery = extendType({
   type: "Query",
@@ -34,12 +40,13 @@ export const UserQuery = extendType({
         const users = await ctx.db.user.findMany({
           include: {
             Transactions: true,
+            Accounts: true,
           },
         });
         return users;
       },
     });
-    t.nonNull.field("user", {
+    t.nonNull.field("getUserByUid", {
       type: "User",
       args: {
         uid: nonNull(stringArg()),
@@ -49,6 +56,7 @@ export const UserQuery = extendType({
           where: { uid: args.uid },
           include: {
             Transactions: true,
+            Accounts: true,
           },
         });
         if (!user) {
@@ -58,48 +66,28 @@ export const UserQuery = extendType({
       },
     });
     /**
- * @param userId : an Integer that is the id of the user you wish to get access token for
- * 
- * The idea of this query is to decrease the number of queries that you would need to make to the plaidAPI
- */
-    t.string('fetchAccessTokenFromUser', {
+     * @param userId : an Integer that is the id of the user you wish to get access token for
+     *
+     * The idea of this query is to decrease the number of queries that you would need to make to the plaidAPI
+     */
+    t.field("getUserById", {
+      type: "User",
       args: {
         userId: nonNull(intArg()),
       },
       async resolve(_root, args, ctx) {
         const user = await ctx.db.user.findUnique({
           where: {
-            id: args.userId
-          }
+            id: args.userId,
+          },
         });
-        return {
-          accessToken: user?.AccessToken
-        };
-      }
-    });
-    t.field('getUserUidFromUserId', {
-      type: "User",
-      args: {
-        userId: nonNull(intArg())
-      },
-      async resolve(_root, args, ctx) {
-        const user = await ctx.db.user.findUnique({
-          where: {
-            id: args.userId
-          }
-        });
-    
+
         if (!user) {
           throw new Error(`No user found with ID ${args.userId}`);
         }
-    
-        if (!user.uid) {
-          throw new Error(`User ${args.userId} has no UID`);
-        }
-    
         return user;
-      }
-    })
+      },
+    });
   },
 });
 

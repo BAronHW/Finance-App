@@ -10,7 +10,7 @@ type AccessToken {
 
 type Account {
   Transactions: [Transaction!]
-  User: User!
+  User: User
   available: Float
   current: Float
   id: Int!
@@ -19,11 +19,11 @@ type Account {
   mask: String
   name: String!
   officialName: String
-  plaidId: String!
+  plaidId: String
   subtype: String
-  type: String!
+  type: String
   unofficialCurrencyCode: String
-  userId: Int!
+  userId: Int
 }
 
 """For anything to not lock yourself in strict types"""
@@ -110,13 +110,12 @@ type PersonalFinanceCategory {
 
 type Query {
   allTransactions: [Transaction!]!
-  fetchAccessTokenFromUser(userId: Int!): String
   getAccountsByUserId(userId: Int!): [Account!]!
   getAllAccounts: [Account!]!
   getTransactionById(id: Int!): Transaction!
   getTransactionsByUserId(userId: Int!): [Transaction!]!
-  getUserUidFromUserId(userId: Int!): User
-  user(uid: String!): User!
+  getUserById(userId: Int!): User
+  getUserByUid(uid: String!): User!
   users: [User!]!
 }
 
@@ -145,8 +144,8 @@ type TransactionRes {
 
 type User {
   AccessToken: String
-  Accounts: [[Account!]!]!
-  Transactions: [[Transaction!]!]!
+  Accounts: [Account!]
+  Transactions: [Transaction!]
   email: String!
   firstName: String
   id: Int!

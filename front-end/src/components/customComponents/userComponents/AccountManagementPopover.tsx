@@ -1,13 +1,8 @@
 import { Account } from "@/__generated__/graphql";
 import { Button } from "@/components/ui/button";
 import { DELETE_ACCOUNT, GET_ACCOUNTS_BY_USER_ID } from "@/lib/graphql/Account";
-import { CREATE_LINKTOKEN, EXCHANGE_PUB_TOKEN } from "@/lib/graphql/Plaid";
-import { FETCH_ACCESS_TOKEN_FROM_USER } from "@/lib/graphql/Users";
-import { useAccessToken } from "@/lib/hooks/useAccessToken";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { Plus } from "lucide-react";
-import { useEffect, useState } from "react";
-import { PlaidLinkOnSuccessMetadata, usePlaidLink } from "react-plaid-link";
 
 type Props = {
   accounts: Account[];
@@ -54,7 +49,7 @@ const AccountManagementPopover = ({
                           id: Number(account.id),
                         },
                       });
-                      console.log({deleteAccount})
+                      console.log({deletedAccount})
                     }}
                   >
                     Delete

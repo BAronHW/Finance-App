@@ -9,11 +9,15 @@ export const Account = objectType({
     t.nonNull.string("name");
     t.string("officialName");
     t.string("subtype");
-    t.nonNull.string("type");
-    t.list.nonNull.field("Transactions", { type: "Transaction" });
-    t.nonNull.int("userId");
-    t.nonNull.field("User", { type: nonNull("User") });
-    t.nonNull.string("plaidId");
+    t.string("type");
+    t.list.nonNull.field("Transactions", {
+      type: "Transaction",
+    });
+    t.int("userId");
+    t.field("User", {
+      type: "User"
+    });
+    t.string("plaidId");
     t.float("available");
     t.float("current");
     t.string("isoCurrencyCode");
@@ -34,9 +38,12 @@ export const AccountQueries = extendType({
         const accounts = await ctx.db.account.findMany({
           where: {
             userId: args.userId,
+          },
+          include: {
+            User: true,
+            Transactions: true,
           }
         })
-        console.log({accounts})
         if (!accounts) {
           throw new Error(`Error: unable find accounts associated with user with id ${args.userId}.`)
         }
@@ -46,7 +53,12 @@ export const AccountQueries = extendType({
     t.nonNull.list.nonNull.field("getAllAccounts", {
       type: "Account",
       resolve: async (_root, _args, ctx) => {
-        const accounts = await ctx.db.account.findMany();
+        const accounts = await ctx.db.account.findMany({
+          include: {
+            User: true,
+            Transactions: true,
+          }
+        });
         if (!accounts) {
           throw new Error("Error whilst fetching all accounts")
         }
@@ -103,6 +115,9 @@ export const AccountMutations = extendType({
             unofficialCurrencyCode: args.unofficialCurrencyCode,
             limit: args.limit,
           },
+          include: {
+            User: true,
+          }
         });
         if (!account) {
           throw new Error("Error while creating account");
@@ -126,11 +141,8 @@ export const AccountMutations = extendType({
         const accounts = plaidResponse.data.accounts;
 
         if (!accounts) {
-          console.error("Unable to get accounts from Plaid")
-          return false
+          throw new Error("Error: Unable to fetch account data from Plaid")
         }
-
-        console.log({ accounts })
 
         const newAccounts = await Promise.all(accounts.map((account) => {
           return ctx.db.account.upsert({
@@ -178,7 +190,6 @@ export const AccountMutations = extendType({
           throw new Error("Error whilst upserting account");
         }
 
-        console.log({newAccounts});
         return newAccounts;
       }
     });
