@@ -142,7 +142,7 @@ export default function Home() {
         />
       </div>
       <main className="flex-grow flex items-center justify-center flex-col gap-10 m-7">
-        <div className="mt-6 space-y-4 text-center">
+        <div className="mt-6 space-y-4 text-center w-full">
           <TransactionsTable
             columns={columns}
             data={transactionData}
