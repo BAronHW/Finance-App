@@ -189,12 +189,13 @@ export function TransactionsTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex">
-        <div className="absolute left-1/2 transform -translate-x-1/2 text-sm text-muted-foreground mt-6 text-lg">
+      <div className="flex place-content-between">
+        <div></div>
+        <div className="text-sm text-muted-foreground mt-6 text-lg">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
-        <div className="ml-auto items-end space-x-2 py-4">
+        <div className="space-x-2 py-4">
           <Button
             variant="outline"
             size="sm"
