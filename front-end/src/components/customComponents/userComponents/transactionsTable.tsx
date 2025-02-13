@@ -10,6 +10,7 @@ import {
   getFilteredRowModel,
   VisibilityState,
   AccessorFn,
+  Row,
 } from "@tanstack/react-table";
 
 import {
@@ -32,18 +33,40 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
-import { InOrOutEnum } from "@/__generated__/graphql"
+import { Account, InOrOutEnum, Transaction } from "@/__generated__/graphql";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface TransactionsTable<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  accounts: Account[];
+  accountsLoading: boolean;
 }
+
+// type TransactionTableType = {
+//   id: number;
+//   userId?: number | null;
+//   accountId?: number | null;
+//   Account?: {
+//     name: string;
+//   } | null;
+//   io: InOrOutEnum;
+//   name: string;
+//   merchantName: string;
+//   category?: string;
+//   date?: number;
+//   amount: number;
+// };
+
+export type TransactionRow = Row<Transaction>;
 
 export function TransactionsTable<TData, TValue>({
   columns,
   data,
+  accounts,
+  accountsLoading,
 }: TransactionsTable<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -61,6 +84,14 @@ export function TransactionsTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    // initialState: {
+    //   columnFilters: [
+    //     {
+    //       id: "account",
+    //       value: accounts.map(account => account.name)
+    //     }
+    //   ]
+    // },
     state: {
       sorting,
       columnFilters,
@@ -71,22 +102,27 @@ export function TransactionsTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex py-4">
-        <div className="flex-1">
+      <div className="flex place-content-between py-4">
+        <div className="">
           <Input
-            placeholder="Filter by transaction name..."
-            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+            placeholder="Filter by Merchant Name..."
+            value={
+              (table.getColumn("merchantName")?.getFilterValue() as string) ??
+              ""
+            }
             onChange={(event) =>
-              table.getColumn("name")?.setFilterValue(event.target.value)
+              table
+                .getColumn("merchantName")
+                ?.setFilterValue(event.target.value)
             }
             className="inline-block max-w-sm"
           />
         </div>
-        <div className="flex-1">
+        <div className="">
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Button variant="outline" className="font-normal text-slate-500">
-                Filter by In/Out
+                Filter by In / Out
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -96,7 +132,7 @@ export function TransactionsTable<TData, TValue>({
                   table.getColumn("io")?.setFilterValue(InOrOutEnum.Out)
                 }
               >
-                Sent
+                In
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -105,17 +141,29 @@ export function TransactionsTable<TData, TValue>({
                   table.getColumn("io")?.setFilterValue(InOrOutEnum.In)
                 }
               >
-                Received
+                Out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className="items-end">
+        <div>
+          <Popover>
+            <PopoverTrigger>
+              <Button
+                variant="secondary"
+              >
+                Filter by Date
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              
+            </PopoverContent>
+          </Popover>
+        </div>
+        <div className="">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                Column Visibility
-              </Button>
+              <Button variant="secondary">Column Visibility</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {table
@@ -135,6 +183,49 @@ export function TransactionsTable<TData, TValue>({
                     </DropdownMenuCheckboxItem>
                   );
                 })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary">Filter by Account</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {accounts.map((account) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    className="capitalize"
+                    checked={
+                      !!(
+                        table.getColumn("account")?.getFilterValue() as string[]
+                      ) // can try think of an alternative to type assertions
+                        ?.includes(account.name)
+                    }
+                    onCheckedChange={(checked) => {
+                      const filterValue: string[] =
+                        (table
+                          .getColumn("account")
+                          ?.getFilterValue() as string[]) ?? [];
+                      if (!checked) {
+                        table
+                          .getColumn("account")
+                          ?.setFilterValue(
+                            filterValue.filter(
+                              (value) => value !== account.name
+                            )
+                          );
+                      } else {
+                        table
+                          .getColumn("account")
+                          ?.setFilterValue([...filterValue, account.name]);
+                      }
+                    }}
+                  >
+                    {account.name}
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

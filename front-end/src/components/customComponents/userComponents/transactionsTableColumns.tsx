@@ -1,4 +1,4 @@
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Row } from "@tanstack/react-table";
 import { Transaction } from "@/__generated__/types";
 import { MoreHorizontal } from "lucide-react";
 import { ArrowUpDown } from "lucide-react";
@@ -13,8 +13,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Account } from "@/__generated__/graphql";
+import { TransactionRow } from "./TransactionsTable";
 
-export const columns: ColumnDef<Transaction>[] = [
+export const TransactionsTableColumns: ColumnDef<Transaction>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -44,8 +46,16 @@ export const columns: ColumnDef<Transaction>[] = [
   },
   {
     accessorFn: (original) => original.Account?.name,
+    accessorKey: "account",
     header: "Account Name",
-    cell: ({ getValue }) => getValue() ?? "-"
+    cell: ({ getValue }) => getValue() ?? "-",
+    filterFn: (row: TransactionRow, _columnId: string, filterValue: string[]): boolean => {
+      const value = row.getValue("account");
+      if (typeof value !== "string") {
+        return false;
+      }
+      return filterValue.includes(value);
+    }
   },
   {
     accessorKey: "io",
@@ -78,7 +88,7 @@ export const columns: ColumnDef<Transaction>[] = [
     cell: ({ getValue }) => {
       const value = getValue();
       if (typeof value === "number") {
-        return dayjs(value).format("DD/MM/YYYY")
+        return dayjs(1000 * value).format("DD/MM/YYYY")
       }
     }
   },
