@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { TransactionsTable } from "@/components/customComponents/userComponents/TransactionsTable";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_TRANSACTIONS_BY_USER_ID, UPSERT_TRANSACTIONS_FROM_PLAID } from "@/lib/graphql/Transaction";
-import { columns } from "@/components/customComponents/userComponents/TransactionsTableColumns";
+import { TransactionsTableColumns } from "@/components/customComponents/userComponents/TransactionsTableColumns";
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { CREATE_LINKTOKEN, EXCHANGE_PUB_TOKEN } from "@/lib/graphql/Plaid";
@@ -119,13 +119,13 @@ export default function Home() {
   });
 
 
-  const { data: transactionuserdata } = useQuery(GET_TRANSACTIONS_BY_USER_ID, {
+  const { data: transactionsByUserData } = useQuery(GET_TRANSACTIONS_BY_USER_ID, {
     variables: {
       userId: userId,
     },
   });
 
-  const transactionData = transactionuserdata?.getTransactionsByUserId ?? [];
+  const transactionData = transactionsByUserData?.getTransactionsByUserId ?? [];
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -144,8 +144,10 @@ export default function Home() {
       <main className="flex-grow flex items-center justify-center flex-col gap-10 m-7">
         <div className="mt-6 space-y-4 text-center w-full">
           <TransactionsTable
-            columns={columns}
+            columns={TransactionsTableColumns}
             data={transactionData}
+            accounts={accountData?.getAccountsByUserId ?? []}
+            accountsLoading={accountsLoading}
           />
         </div>
       </main>

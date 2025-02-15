@@ -17,7 +17,7 @@ export const GET_TRANSACTIONS_BY_USER_ID = gql(`
         date
       }
     }
-  `) 
+  `)
 
 export const UPSERT_TRANSACTIONS_FROM_PLAID = gql(`
   mutation UpsertTransactionsFromPlaid($userId: Int!, $accountId: Int, $accessToken: String!, $startDate: String!, $endDate: String!) {
