@@ -36,7 +36,14 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { Account, InOrOutEnum, Transaction } from "@/__generated__/graphql";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { DatePicker } from "./DatePicker";
+import { DatePickerWithRange } from "./DatePickerWithRange";
+import { Filter } from "lucide-react";
 
 interface TransactionsTable<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -84,14 +91,6 @@ export function TransactionsTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    // initialState: {
-    //   columnFilters: [
-    //     {
-    //       id: "account",
-    //       value: accounts.map(account => account.name)
-    //     }
-    //   ]
-    // },
     state: {
       sorting,
       columnFilters,
@@ -100,12 +99,25 @@ export function TransactionsTable<TData, TValue>({
     },
   });
 
+  const categories = [
+    {
+      name: "Cat 1",
+    },
+    {
+      name: "Cat 2",
+    },
+    {
+      name: "Cat 3",
+    },
+  ];
+
   return (
     <div>
       <div className="flex place-content-between py-4">
-        <div className="">
+        <div className="flex items-center gap-1">
+          <Filter />
           <Input
-            placeholder="Filter by Merchant Name..."
+            placeholder={"Filter by Merchant Name..."}
             value={
               (table.getColumn("merchantName")?.getFilterValue() as string) ??
               ""
@@ -115,119 +127,192 @@ export function TransactionsTable<TData, TValue>({
                 .getColumn("merchantName")
                 ?.setFilterValue(event.target.value)
             }
-            className="inline-block max-w-sm"
           />
         </div>
         <div className="">
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Button variant="outline" className="font-normal text-slate-500">
-                Filter by In / Out
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem
-                className="text-center"
-                onClick={(event) =>
-                  table.getColumn("io")?.setFilterValue(InOrOutEnum.Out)
-                }
-              >
-                In
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="text-center"
-                onClick={(event) =>
-                  table.getColumn("io")?.setFilterValue(InOrOutEnum.In)
-                }
-              >
-                Out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center gap-1">
+            <Filter />
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button
+                  variant="outline"
+                  className="font-normal text-slate-500"
+                >
+                  Filter by In / Out
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem
+                  className="text-center"
+                  onClick={(event) =>
+                    table.getColumn("io")?.setFilterValue(InOrOutEnum.Out)
+                  }
+                >
+                  In
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="text-center"
+                  onClick={(event) =>
+                    table.getColumn("io")?.setFilterValue(InOrOutEnum.In)
+                  }
+                >
+                  Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
         <div>
-          <Popover>
-            <PopoverTrigger>
-              <Button
-                variant="secondary"
-              >
-                Filter by Date
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent>
-              
-            </PopoverContent>
-          </Popover>
+          <div className="flex items-center gap-1">
+            <Filter />
+            <Popover>
+              <PopoverTrigger>
+                <Button variant="outline">Filter by Date</Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-fit">
+                <DatePickerWithRange />
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
         <div className="">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="secondary">Column Visibility</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
+          <div className="flex items-center gap-1">
+            <Filter />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">Column Visibility</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+        <div>
+          <div className="flex items-center gap-1">
+            <Filter />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">Filter by Account</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {accounts.map((account) => {
                   return (
                     <DropdownMenuCheckboxItem
-                      key={column.id}
                       className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
+                      checked={
+                        !(
+                          table
+                            .getColumn("account")
+                            ?.getFilterValue() as string[]
+                        ) // can try think of an alternative to type assertions
+                          ?.includes(account.name)
                       }
+                      onCheckedChange={(checked) => {
+                        const filterValue: string[] =
+                          (table
+                            .getColumn("account")
+                            ?.getFilterValue() as string[]) ?? [];
+                        if (checked) {
+                          table
+                            .getColumn("account")
+                            ?.setFilterValue(
+                              filterValue.filter(
+                                (value) => value !== account.name
+                              )
+                            );
+                        } else {
+                          table
+                            .getColumn("account")
+                            ?.setFilterValue([...filterValue, account.name]);
+                        }
+                      }}
                     >
-                      {column.id}
+                      {account.name}
                     </DropdownMenuCheckboxItem>
                   );
                 })}
-            </DropdownMenuContent>
-          </DropdownMenu>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+        <div className="">
+          <div className="flex items-center gap-1">
+            <Filter />
+            <Input
+              placeholder="Filter by Reference..."
+              value={(table.getColumn("")?.getFilterValue() as string) ?? ""}
+              onChange={(event) =>
+                table.getColumn("reference")?.setFilterValue(event.target.value)
+              }
+              className="inline-block max-w-sm"
+            />
+          </div>
         </div>
         <div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="secondary">Filter by Account</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {accounts.map((account) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    className="capitalize"
-                    checked={
-                      !!(
-                        table.getColumn("account")?.getFilterValue() as string[]
-                      ) // can try think of an alternative to type assertions
-                        ?.includes(account.name)
-                    }
-                    onCheckedChange={(checked) => {
-                      const filterValue: string[] =
-                        (table
-                          .getColumn("account")
-                          ?.getFilterValue() as string[]) ?? [];
-                      if (!checked) {
-                        table
-                          .getColumn("account")
-                          ?.setFilterValue(
-                            filterValue.filter(
-                              (value) => value !== account.name
-                            )
-                          );
-                      } else {
-                        table
-                          .getColumn("account")
-                          ?.setFilterValue([...filterValue, account.name]);
+          <div className="flex items-center gap-1">
+            <Filter />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">Filter by Category</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {categories.map((category) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      className="capitalize"
+                      checked={
+                        !!(
+                          table
+                            .getColumn("category")
+                            ?.getFilterValue() as string[]
+                        ) // can try think of an alternative to type assertions
+                          ?.includes(category.name)
                       }
-                    }}
-                  >
-                    {account.name}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-            </DropdownMenuContent>
-          </DropdownMenu>
+                      onCheckedChange={(checked) => {
+                        const filterValue: string[] =
+                          (table
+                            .getColumn("category")
+                            ?.getFilterValue() as string[]) ?? [];
+                        if (!checked) {
+                          table
+                            .getColumn("category")
+                            ?.setFilterValue(
+                              filterValue.filter(
+                                (value) => value !== category.name
+                              )
+                            );
+                        } else {
+                          table
+                            .getColumn("category")
+                            ?.setFilterValue([...filterValue, category.name]);
+                        }
+                      }}
+                    >
+                      {category.name}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </div>
       <div className="rounded-md border">

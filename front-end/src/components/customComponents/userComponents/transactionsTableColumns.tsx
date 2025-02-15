@@ -13,7 +13,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Account } from "@/__generated__/graphql";
 import { TransactionRow } from "./TransactionsTable";
 
 export const TransactionsTableColumns: ColumnDef<Transaction>[] = [
@@ -52,9 +51,9 @@ export const TransactionsTableColumns: ColumnDef<Transaction>[] = [
     filterFn: (row: TransactionRow, _columnId: string, filterValue: string[]): boolean => {
       const value = row.getValue("account");
       if (typeof value !== "string") {
-        return false;
+        return true;
       }
-      return filterValue.includes(value);
+      return !(filterValue.includes(value));
     }
   },
   {
