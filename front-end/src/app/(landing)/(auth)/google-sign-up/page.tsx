@@ -7,7 +7,7 @@ import { GoogleSignUpForm } from '@/components/customComponents/authComponents/G
 import { z } from 'zod'
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@apollo/client'
-import { CREATE_USER } from '@/lib/GraphQL/Users'
+import { CREATE_USER } from '@/lib/graphql/Users'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CustomError } from '@/lib/utils'

@@ -41,6 +41,12 @@ type Counterparty {
 """For representing data in ISO format"""
 scalar Date
 
+type Document {
+  key: String!
+  name: Int!
+  size: String!
+}
+
 enum InOrOutEnum {
   IN
   OUT
@@ -87,6 +93,7 @@ type Mutation {
   emailSignIn(password: String!, username: String!): User!
   exchangePublicToken(public_token: String!, userId: Int!): String!
   updateUserDetails(email: String!, firstName: String, id: Int!, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
+  uploadPdf(file: String!, name: String!, size: Int!): Any
   upsertAccountsFromPlaid(accessToken: String!, userId: Int!): [Account!]!
   upsertTransactionsFromPlaid(accessToken: String!, accountId: Int, endDate: String!, startDate: String!, userId: Int): [Transaction!]!
 }
@@ -112,6 +119,7 @@ type Query {
   allTransactions: [Transaction!]!
   getAccountsByUserId(userId: Int!): [Account!]!
   getAllAccounts: [Account!]!
+  getPdfUrlByKey(key: String!): Any
   getTransactionById(id: Int!): Transaction!
   getTransactionsByUserId(userId: Int!): [Transaction!]!
   getUserById(userId: Int!): User

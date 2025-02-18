@@ -28,35 +28,41 @@ model User {
 }
 
 model Transaction {
-  id                    Int     @id @default(autoincrement())
-  userId                Int?
-  User                  User?    @relation(fields: [userId], references: [id])
-  accountId             Int?
-  Account               Account?     @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  name                  String?
-  merchantName          String
-  amount                Float
-  date                  Int     @default(0)
-  category              String?
-  plaidId               String      @unique
+  id           Int      @id @default(autoincrement())
+  userId       Int?
+  User         User?    @relation(fields: [userId], references: [id])
+  accountId    Int?
+  Account      Account? @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  name         String?
+  merchantName String
+  amount       Float
+  date         Int      @default(0)
+  category     String?
+  plaidId      String   @unique
+}
+
+model Document {
+  key  String  @unique
+  size Int
+  name String?
 }
 
 model Account {
-  id      Int    @id @default(autoincrement())
-  Transactions    Transaction[]
-  mask    String?
-  name    String
-  officialName    String?
-  type    String
-  subtype   String?
-  User      User      @relation(fields: [userId], references: [id])
-  userId    Int
-  plaidId   String    @unique
-  available   Float?
-  current     Float?
-  isoCurrencyCode   String?  // Going to become a relationally field to Currency
-  unofficialCurrencyCode    String?
-  limit       Float?
+  id                     Int           @id @default(autoincrement())
+  Transactions           Transaction[]
+  mask                   String?
+  name                   String
+  officialName           String?
+  type                   String
+  subtype                String?
+  User                   User          @relation(fields: [userId], references: [id])
+  userId                 Int
+  plaidId                String        @unique
+  available              Float?
+  current                Float?
+  isoCurrencyCode        String? // Going to become a relationally field to Currency
+  unofficialCurrencyCode String?
+  limit                  Float?
 }
 
 enum InOrOut {
