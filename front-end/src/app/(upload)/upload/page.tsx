@@ -4,9 +4,11 @@ import React, { useState } from 'react'
 import { auth } from '@/lib/firebase/firebase'
 import { UPLOAD_PDF } from '@/lib/graphql/Documents'
 import { useMutation } from '@apollo/client'
+import { AuthContext, useAuth } from '../../../lib/contexts/authContext'
 
 export default function PDFUploader() {
     const firebaseCurrentUser = auth.currentUser
+    const authContext = useAuth()
     const [pdfFile, setPdfFile] = useState<File | null>(null)
     const [uploadPdfFunction, { data, loading, error }] =
         useMutation(UPLOAD_PDF)
@@ -26,6 +28,8 @@ export default function PDFUploader() {
         reader.readAsDataURL(pdfFile)
         reader.onload = async () => {
             const base64String = (reader.result as string).split(',')[1]
+            const uid = authContext.currentUser?.uid
+            console.log(uid?.toString())
 
             try {
                 const result = await uploadPdfFunction({
@@ -33,6 +37,7 @@ export default function PDFUploader() {
                         name: pdfFile.name,
                         size: pdfFile.size,
                         file: base64String,
+                        uid: uid?.toString(),
                     },
                 })
                 console.log('Upload successful:', result)

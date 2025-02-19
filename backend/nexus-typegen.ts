@@ -65,6 +65,7 @@ export interface NexusGenObjects {
     key: string; // String!
     name: number; // Int!
     size: string; // String!
+    uid: string; // String!
   }
   Item: { // root type
     auth_method?: string | null; // String
@@ -193,6 +194,7 @@ export interface NexusGenFieldTypes {
     key: string; // String!
     name: number; // Int!
     size: string; // String!
+    uid: string; // String!
   }
   Item: { // field return type
     auth_method: string | null; // String
@@ -336,6 +338,7 @@ export interface NexusGenFieldTypeNames {
     key: 'String'
     name: 'Int'
     size: 'String'
+    uid: 'String'
   }
   Item: { // field return type name
     auth_method: 'String'
@@ -510,6 +513,7 @@ export interface NexusGenArgTypes {
       file: string; // String!
       name: string; // String!
       size: number; // Int!
+      uid: string; // String!
     }
     upsertAccountsFromPlaid: { // args
       accessToken: string; // String!

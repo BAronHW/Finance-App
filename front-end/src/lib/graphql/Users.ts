@@ -86,6 +86,14 @@ export const GET_SINGLE_USER_BY_UID = gql(`
   }
 `);
 
+export const GET_SINGLE_USERID_BY_UID = gql(`
+  query User($uid: String!) {
+    getUserByUid (uid: $uid) {
+      id
+    }
+  }
+`);
+
 export const CREATE_USER = gql(`
   mutation CreateUser(
     $firstName: String

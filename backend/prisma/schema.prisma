@@ -25,6 +25,7 @@ model User {
   Transactions Transaction[]
   Accounts     Account[]
   AccessToken  String?
+  Document     Document?
 }
 
 model Transaction {
@@ -42,9 +43,12 @@ model Transaction {
 }
 
 model Document {
-  key  String  @unique
-  size Int
-  name String?
+  key     String    @unique
+  size    Int
+  name    String?
+  user    User      @relation(fields: [uid], references: [uid])
+  uid     String    @unique
+  Account Account[]
 }
 
 model Account {
@@ -63,6 +67,8 @@ model Account {
   isoCurrencyCode        String? // Going to become a relationally field to Currency
   unofficialCurrencyCode String?
   limit                  Float?
+  Document               Document?     @relation(fields: [documentKey], references: [key])
+  documentKey            String?
 }
 
 enum InOrOut {

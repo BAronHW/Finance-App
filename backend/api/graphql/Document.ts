@@ -11,7 +11,6 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { s3 } from "../config/S3Bucket"
 import * as crypto from 'crypto'
 import dotenv from 'dotenv'
-import * as fs from 'fs'
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 dotenv.config()
 
@@ -23,6 +22,7 @@ export const Document = objectType({
         t.nonNull.string("key");
         t.nonNull.int("name");
         t.nonNull.string("size");
+        t.nonNull.string('uid')
     },
 })
 
@@ -35,6 +35,7 @@ export const Muation = extendType({
                 name: nonNull(stringArg()),
                 size: nonNull(intArg()),
                 file: nonNull(stringArg()),
+                uid: nonNull(stringArg()),
             },
             async resolve(_root, args, ctx){
                 const buffer = Buffer.from(args.file, 'base64');
@@ -60,6 +61,7 @@ export const Muation = extendType({
                         key: uniqueName,
                         name:  args.name,
                         size: args.size,
+                        uid: args.uid,
                     }
                 })
 

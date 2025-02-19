@@ -45,6 +45,7 @@ type Document {
   key: String!
   name: Int!
   size: String!
+  uid: String!
 }
 
 enum InOrOutEnum {
@@ -93,7 +94,7 @@ type Mutation {
   emailSignIn(password: String!, username: String!): User!
   exchangePublicToken(public_token: String!, userId: Int!): String!
   updateUserDetails(email: String!, firstName: String, id: Int!, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
-  uploadPdf(file: String!, name: String!, size: Int!): Any
+  uploadPdf(file: String!, name: String!, size: Int!, uid: String!): Any
   upsertAccountsFromPlaid(accessToken: String!, userId: Int!): [Account!]!
   upsertTransactionsFromPlaid(accessToken: String!, accountId: Int, endDate: String!, startDate: String!, userId: Int): [Transaction!]!
 }
