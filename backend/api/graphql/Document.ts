@@ -7,8 +7,8 @@
  */
 
 import { extendType, intArg, objectType, stringArg, nonNull, list } from 'nexus';
-import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
-import { s3 } from "../config/S3Bucket"
+import { DeleteObjectCommand, DeleteObjectsCommand, PutObjectCommand, waitUntilBucketNotExists, waitUntilObjectNotExists } from "@aws-sdk/client-s3";
+import { s3 } from '../config/S3Bucket';
 import * as crypto from 'crypto'
 import dotenv from 'dotenv'
 import { GetObjectCommand } from "@aws-sdk/client-s3";
@@ -112,6 +112,61 @@ export const Muation = extendType({
                     throw new Error('unable to delete the associated pdf record from postgres')
                 }
             }
+        });
+        t.field('deleteAllDocumentsAssociatedWithUserInBucketByUid', {
+            type: 'Boolean',
+            args:{
+                uid: nonNull(stringArg())
+            },
+            async resolve(_root, args, ctx) {
+
+                try{
+
+                    const documentArray = await ctx.db.document.findMany({
+                        where:{
+                            uid: args.uid
+                        },
+                    })
+
+                    if(!documentArray || documentArray.length == 0){
+                        return false
+                    }
+    
+                    const { Deleted } = await s3.send(
+                        new DeleteObjectsCommand({
+                            Bucket: bucketName,
+                            Delete: {
+                                Objects: documentArray.map((document) => ({ Key: document.key })),
+                            },
+                        }),
+                    );
+
+                    if(!Deleted || Deleted.length == 0){
+                        return false
+                    }
+    
+                    for (const document of documentArray) {
+                        await waitUntilObjectNotExists(
+                            {
+                                client: s3,
+                                maxWaitTime: 60
+                            },
+                            {
+                                Bucket: bucketName,
+                                Key: document.key
+                            }
+                        );
+                    }
+    
+                    return true;
+
+                }catch(err){
+                    throw new Error('unable to delete objects')
+                }
+                
+
+            }
+
         })
     },
 })
