@@ -25,7 +25,7 @@ model User {
   Transactions Transaction[]
   Accounts     Account[]
   AccessToken  String?
-  Document     Document?
+  Document     Document[]
 }
 
 model Transaction {
@@ -43,11 +43,12 @@ model Transaction {
 }
 
 model Document {
+  id      Int       @id @default(autoincrement())
   key     String    @unique
   size    Int
   name    String?
-  user    User      @relation(fields: [uid], references: [uid])
-  uid     String    @unique
+  user    User      @relation(fields: [uid], references: [uid]) // Many-to-One with User
+  uid     String
   Account Account[]
 }
 

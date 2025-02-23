@@ -43,8 +43,8 @@ scalar Date
 
 type Document {
   key: String!
-  name: Int!
-  size: String!
+  name: String
+  size: Int!
   uid: String!
 }
 
@@ -120,6 +120,7 @@ type Query {
   allTransactions: [Transaction!]!
   getAccountsByUserId(userId: Int!): [Account!]!
   getAllAccounts: [Account!]!
+  getAllPdfBelongingToUserByUid(uid: String!): [Document!]!
   getPdfUrlByKey(key: String!): Any
   getTransactionById(id: Int!): Transaction!
   getTransactionsByUserId(userId: Int!): [Transaction!]!

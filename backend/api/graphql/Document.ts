@@ -6,8 +6,8 @@
  * 
  */
 
-import { extendType, intArg, objectType, stringArg, nonNull } from 'nexus';
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { extendType, intArg, objectType, stringArg, nonNull, list } from 'nexus';
+import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { s3 } from "../config/S3Bucket"
 import * as crypto from 'crypto'
 import dotenv from 'dotenv'
@@ -20,11 +20,18 @@ export const Document = objectType({
     name: "Document",
     definition(t) {
         t.nonNull.string("key");
-        t.nonNull.int("name");
-        t.nonNull.string("size");
+        t.nonNull.int("size");
+        t.string("name");
         t.nonNull.string('uid')
     },
 })
+
+interface DocumentInterface{
+    key: string,
+    size: number,
+    name: string | null,
+    uid: string
+}
 
 export const Muation = extendType({
     type: 'Mutation',
@@ -38,6 +45,7 @@ export const Muation = extendType({
                 uid: nonNull(stringArg()),
             },
             async resolve(_root, args, ctx){
+                console.log(args.uid)
                 const buffer = Buffer.from(args.file, 'base64');
 
                 const randomName = (bytes = 32) => {
@@ -67,6 +75,42 @@ export const Muation = extendType({
 
                 return uploadDocument;
 
+            }
+        });
+        t.field('deleteDocumentByKey', {
+            type: 'Boolean',
+            args: {
+                documentKey: nonNull(stringArg())
+            },
+            async resolve(_root, args, ctx) {
+
+                const getObjectParams = {
+                    Bucket: bucketName,
+                    Key: args.key,
+                };
+
+                try{
+                    const deleteDataFromS3 = await s3.send(new DeleteObjectCommand(getObjectParams))
+                }catch (error){
+                    throw new Error('unable to delete document from s3 bucket')
+                }
+
+                try{
+                    const pdfToDelete = await ctx.db.document.delete({
+                        where:{
+                            key: args.documentKey
+                        }
+                    })
+                    
+                    if(!pdfToDelete){
+                        return false;
+                    }
+                    
+                    return true;
+
+                }catch(err){
+                    throw new Error('unable to delete the associated pdf record from postgres')
+                }
             }
         })
     },
@@ -99,8 +143,6 @@ export const Queries = extendType({
                 const command = new GetObjectCommand(getObjectParams);
                 const response = await s3.send(command);
 
-                console.log(response.Body)
-
                 if (!response.Body){
                     throw new Error("Unable to retrieve s3 object")
                 }
@@ -117,6 +159,20 @@ export const Queries = extendType({
             };
             }
         });
+        t.field('getAllPdfBelongingToUserByUid', {
+            type: nonNull(list(nonNull('Document'))),
+            args: {
+                uid: nonNull(stringArg())
+            },
+            async resolve(_root, args, ctx): Promise<DocumentInterface[]>{
+                const pdf = await ctx.db.document.findMany({
+                    where: {
+                        uid: args.uid
+                    }
+                })
+                return pdf
+            }
+        })
     },
 })
 

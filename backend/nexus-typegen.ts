@@ -63,8 +63,8 @@ export interface NexusGenObjects {
   }
   Document: { // root type
     key: string; // String!
-    name: number; // Int!
-    size: string; // String!
+    name?: string | null; // String
+    size: number; // Int!
     uid: string; // String!
   }
   Item: { // root type
@@ -192,8 +192,8 @@ export interface NexusGenFieldTypes {
   }
   Document: { // field return type
     key: string; // String!
-    name: number; // Int!
-    size: string; // String!
+    name: string | null; // String
+    size: number; // Int!
     uid: string; // String!
   }
   Item: { // field return type
@@ -257,6 +257,7 @@ export interface NexusGenFieldTypes {
     allTransactions: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
     getAccountsByUserId: NexusGenRootTypes['Account'][]; // [Account!]!
     getAllAccounts: NexusGenRootTypes['Account'][]; // [Account!]!
+    getAllPdfBelongingToUserByUid: NexusGenRootTypes['Document'][]; // [Document!]!
     getPdfUrlByKey: NexusGenScalars['Any'] | null; // Any
     getTransactionById: NexusGenRootTypes['Transaction']; // Transaction!
     getTransactionsByUserId: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
@@ -336,8 +337,8 @@ export interface NexusGenFieldTypeNames {
   }
   Document: { // field return type name
     key: 'String'
-    name: 'Int'
-    size: 'String'
+    name: 'String'
+    size: 'Int'
     uid: 'String'
   }
   Item: { // field return type name
@@ -401,6 +402,7 @@ export interface NexusGenFieldTypeNames {
     allTransactions: 'Transaction'
     getAccountsByUserId: 'Account'
     getAllAccounts: 'Account'
+    getAllPdfBelongingToUserByUid: 'Document'
     getPdfUrlByKey: 'Any'
     getTransactionById: 'Transaction'
     getTransactionsByUserId: 'Transaction'
@@ -530,6 +532,9 @@ export interface NexusGenArgTypes {
   Query: {
     getAccountsByUserId: { // args
       userId: number; // Int!
+    }
+    getAllPdfBelongingToUserByUid: { // args
+      uid: string; // String!
     }
     getPdfUrlByKey: { // args
       key: string; // String!
