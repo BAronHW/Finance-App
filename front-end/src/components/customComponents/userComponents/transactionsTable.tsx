@@ -69,7 +69,7 @@ interface TransactionsTable<TData, TValue> {
 
 export type TransactionRow = Row<Transaction>;
 
-export function TransactionsTable<TData, TValue>({
+function TransactionsTable<TData, TValue>({
   columns,
   data,
   accounts,
@@ -258,7 +258,7 @@ export function TransactionsTable<TData, TValue>({
             <Filter />
             <Input
               placeholder="Filter by Reference..."
-              value={(table.getColumn("")?.getFilterValue() as string) ?? ""}
+              value={(table.getColumn("reference")?.getFilterValue() as string) ?? ""}
               onChange={(event) =>
                 table.getColumn("reference")?.setFilterValue(event.target.value)
               }
@@ -393,3 +393,5 @@ export function TransactionsTable<TData, TValue>({
     </div>
   );
 }
+
+export default TransactionsTable;

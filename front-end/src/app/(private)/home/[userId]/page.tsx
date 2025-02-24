@@ -2,17 +2,15 @@
 
 import Header from "@/components/customComponents/userComponents/Header";
 import { useParams } from "next/navigation";
-import { TransactionsTable } from "@/components/customComponents/userComponents/TransactionsTable";
+import TransactionsTableColumns from "@/components/customComponents/userComponents/TransactionsTableColumns";
+import TransactionsTable from "@/components/customComponents/userComponents/TransactionsTable";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_TRANSACTIONS_BY_USER_ID, UPSERT_TRANSACTIONS_FROM_PLAID } from "@/lib/graphql/Transaction";
-import { TransactionsTableColumns } from "@/components/customComponents/userComponents/TransactionsTableColumns";
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { CREATE_LINKTOKEN, EXCHANGE_PUB_TOKEN } from "@/lib/graphql/Plaid";
 import { PlaidLinkOnSuccessMetadata, usePlaidLink } from "react-plaid-link";
-import { PlaidAuth } from "@/components/PlaidAuth";
-import { FETCH_ACCESS_TOKEN_FROM_USER } from "@/lib/graphql/Users";
-import { useAccessToken } from "@/lib/hooks/useAccessToken";
+import { GET_USER_BY_ID } from "@/lib/graphql/Users";
 import { GET_ACCOUNTS_BY_USER_ID, UPSERT_ACCOUNTS_FROM_PLAID } from "@/lib/graphql/Account";
 import { Account } from "@/__generated__/graphql";
 
@@ -27,12 +25,12 @@ export default function Home() {
   const [accessToken, setAccessToken] = useState("");
   const [linkToken, setLinkToken] = useState("");
 
-  useQuery(FETCH_ACCESS_TOKEN_FROM_USER, {
+  useQuery(GET_USER_BY_ID, {
     variables: {
       userId: userId,
     },
     onCompleted: (data) => {
-      console.log("FETCH_ACCESS_TOKEN_FROM_USER completed")
+      console.log("GET_USER_BY_ID completed")
       console.log({data})
       if (data?.fetchAccessTokenFromUser.accessToken) {
         setAccessToken(data.fetchAccessTokenFromUser.accessToken);
@@ -86,7 +84,7 @@ export default function Home() {
   });
 
   const [upsertAccountsFromPlaid] = useMutation(UPSERT_ACCOUNTS_FROM_PLAID);
-
+  
   const { open: openPlaidLink, ready: plaidLinkReady } = usePlaidLink({
     token: linkToken,
     onSuccess: async (

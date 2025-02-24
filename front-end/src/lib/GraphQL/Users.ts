@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const GET_ALL_USERS = gql(`
-  query Users {
-    users {
+  query GetAllUsers {
+    getAllUsers {
       firstName
       lastName
       username
@@ -19,16 +19,15 @@ export const GET_ALL_USERS = gql(`
         name
         merchantName
         amount
-        category
         date
       }
     }
   }
 `);
 
-export const FETCH_ACCESS_TOKEN_FROM_USER = gql(`
+export const GET_USER_BY_ID = gql(`
   query GetUserbyId($userId: Int!) {
-    getUserbyId(userId: $userId) {
+    getUserById(userId: $userId) {
       accessToken
     }
   }
@@ -53,7 +52,6 @@ export const DELETE_USER = gql(`
         name
         merchantName
         amount
-        category
         date
       }
     }
@@ -79,7 +77,6 @@ export const GET_SINGLE_USER_BY_UID = gql(`
         name
         merchantName
         amount
-        category
         date
       }
     }
@@ -119,7 +116,7 @@ export const CREATE_USER = gql(`
 
 export const FETCH_UID_FROM_USER = gql`
 query GetUserUidFromUserId($userId: Int!) {
-    getUserbyId(userId: $userId) {
+    getUserById(userId: $userId) {
         uid
     }
 }

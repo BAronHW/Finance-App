@@ -36,7 +36,10 @@ export const Transaction = objectType({
     t.nonNull.string("merchantName");
     t.nonNull.float("amount");
     t.nonNull.int("date");
-    t.string("category");
+    t.int("categoryId");
+    t.field("Category", {
+      type: "Category"
+    });
     t.nonNull.string("plaidId");
   },
 });
@@ -235,7 +238,6 @@ export const TransactionMutations = extendType({
         merchantName: nonNull(stringArg()),
         amount: nonNull(floatArg()),
         date: nonNull(intArg()),
-        category: stringArg(),
         plaidId: nonNull(stringArg()),
       },
       resolve: async (_root, args, ctx) => {
@@ -257,7 +259,6 @@ export const TransactionMutations = extendType({
             merchantName: args.merchantName,
             amount: args.amount,
             date: args.date,
-            category: args.category,
             plaidId: args.plaidId,
           },
         });

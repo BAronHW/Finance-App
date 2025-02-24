@@ -13,7 +13,11 @@ export const GET_TRANSACTIONS_BY_USER_ID = gql(`
         name
         merchantName
         amount
-        category
+        Category {
+          id
+          name
+          colour
+        }
         date
       }
     }
