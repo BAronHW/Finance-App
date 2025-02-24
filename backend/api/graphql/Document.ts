@@ -26,6 +26,19 @@ export const Document = objectType({
     },
 })
 
+export const s3Object = objectType({
+    name: "s3Object",
+    definition(t) {
+        t.nonNull.string("key");
+        t.nonNull.string("name");
+        t.nonNull.int("size");
+        t.nonNull.string('uid');
+        t.nonNull.string('file');
+        t.string('contentType');
+        t.string('lastModified');
+    },
+});
+
 interface DocumentInterface{
     key: string,
     size: number,
@@ -86,7 +99,7 @@ export const Muation = extendType({
 
                 const getObjectParams = {
                     Bucket: bucketName,
-                    Key: args.key,
+                    Key: args.documentKey,
                 };
 
                 try{
@@ -120,7 +133,12 @@ export const Muation = extendType({
             },
             async resolve(_root, args, ctx) {
 
+                // TODO:
+                // this works but for some reason keeps timing out
+
                 try{
+
+                    console.log('here')
 
                     const documentArray = await ctx.db.document.findMany({
                         where:{
@@ -131,6 +149,7 @@ export const Muation = extendType({
                     if(!documentArray || documentArray.length == 0){
                         return false
                     }
+
     
                     const { Deleted } = await s3.send(
                         new DeleteObjectsCommand({
@@ -141,26 +160,37 @@ export const Muation = extendType({
                         }),
                     );
 
+                    console.log(Deleted)
+
+
                     if(!Deleted || Deleted.length == 0){
                         return false
                     }
     
-                    for (const document of documentArray) {
+                    for (const document in documentArray) {
+                        console.log(document)
                         await waitUntilObjectNotExists(
                             {
                                 client: s3,
-                                maxWaitTime: 60
+                                maxWaitTime: 30
                             },
                             {
                                 Bucket: bucketName,
-                                Key: document.key
+                                Key: documentArray[document].key
                             }
                         );
                     }
+
+                    await ctx.db.document.deleteMany({
+                        where:{
+                            uid: args.uid
+                        }
+                    })
     
                     return true;
 
                 }catch(err){
+                    console.log(err)
                     throw new Error('unable to delete objects')
                 }
                 
@@ -226,6 +256,54 @@ export const Queries = extendType({
                     }
                 })
                 return pdf
+            }
+        })
+        t.field('getAllPdfBuffersByUid', {
+            type: list(nonNull('Any')),
+            args:{
+                uid: nonNull(stringArg())
+            },
+            async resolve(_root, args, ctx){
+                const pdfBufferArray = await ctx.db.document.findMany({
+                    where:{
+                        uid: args.uid
+                    }
+                })
+                interface s3ObjInterface {
+                    file: string,
+                    name: string | null,
+                    size: number,
+                    contentType: string | undefined,
+                    lastModified: Date | undefined,
+                }
+
+                const returnBufferArray = await Promise.all(pdfBufferArray.map( async (document) => {
+
+                    const getObjectParams = {
+                        Bucket: bucketName,
+                        Key: document.key
+                    }
+
+                    const command = new GetObjectCommand(getObjectParams);
+                    const response = await s3.send(command);
+
+                    if (!response.Body){
+                        throw new Error("Unable to retrieve s3 object")
+                    }
+
+                    const arrayBuffer = await response.Body.transformToByteArray();
+                    const buffer = Buffer.from(arrayBuffer);
+
+                    return {
+                        file: buffer.toString('base64'),
+                        name: document.name,
+                        size: document.size,
+                        contentType: response.ContentType,
+                        lastModified: response.LastModified
+                    };
+
+                }))
+                return returnBufferArray;
             }
         })
     },

@@ -89,6 +89,8 @@ type Mutation {
   createTransaction(accountId: Int, amount: Float!, category: String, date: Int!, merchantName: String!, name: String, plaidId: String!, userId: Int!): Transaction!
   createUser(email: String!, firstName: String, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
   deleteAccount(id: Int!): Account!
+  deleteAllDocumentsAssociatedWithUserInBucketByUid(uid: String!): Boolean
+  deleteDocumentByKey(documentKey: String!): Boolean
   deleteTransaction(id: Int!): Transaction
   deleteUser(id: Int!): User!
   emailSignIn(password: String!, username: String!): User!
@@ -121,6 +123,7 @@ type Query {
   getAccountsByUserId(userId: Int!): [Account!]!
   getAllAccounts: [Account!]!
   getAllPdfBelongingToUserByUid(uid: String!): [Document!]!
+  getAllPdfBuffersByUid(uid: String!): [Any!]
   getPdfUrlByKey(key: String!): Any
   getTransactionById(id: Int!): Transaction!
   getTransactionsByUserId(userId: Int!): [Transaction!]!
@@ -164,6 +167,16 @@ type User {
   phone: String
   uid: String!
   username: String!
+}
+
+type s3Object {
+  contentType: String
+  file: String!
+  key: String!
+  lastModified: String
+  name: String!
+  size: Int!
+  uid: String!
 }
 
 type uid {
