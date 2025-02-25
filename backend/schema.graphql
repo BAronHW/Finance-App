@@ -29,6 +29,16 @@ type Account {
 """For anything to not lock yourself in strict types"""
 scalar Any
 
+type Category {
+  Transactions: [Transaction!]
+  User: User
+  colour: String
+  description: String
+  id: Int!
+  name: String!
+  userId: Int
+}
+
 type Counterparty {
   confidence_level: String
   entity_id: String
@@ -40,12 +50,6 @@ type Counterparty {
 
 """For representing data in ISO format"""
 scalar Date
-
-type Document {
-  key: String!
-  name: Int!
-  size: String!
-}
 
 enum InOrOutEnum {
   IN
@@ -84,16 +88,19 @@ type Location {
 
 type Mutation {
   createAccount(available: Float!, current: Float!, isoCurrencyCode: String, limit: Float, mask: String, name: String!, officialName: String, plaidId: String!, subtype: String, type: String!, unofficialCurrencyCode: String, userId: Int!): Account!
+  createCategory(description: String, name: String!, userId: Int!): Category!
   createLinkToken: LinkToken
-  createTransaction(accountId: Int, amount: Float!, category: String, date: Int!, merchantName: String!, name: String, plaidId: String!, userId: Int!): Transaction!
+  createTransaction(accountId: Int, amount: Float!, date: Int!, merchantName: String!, name: String, plaidId: String!, userId: Int!): Transaction!
   createUser(email: String!, firstName: String, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
   deleteAccount(id: Int!): Account!
+  deleteCategory(id: Int!): Category!
   deleteTransaction(id: Int!): Transaction
   deleteUser(id: Int!): User!
   emailSignIn(password: String!, username: String!): User!
   exchangePublicToken(public_token: String!, userId: Int!): String!
+  updateCategory(colour: String, description: String, id: Int!, name: String): Category!
+  updateTransaction(categoryId: Int, id: Int!, merchantName: String, name: String): Transaction
   updateUserDetails(email: String!, firstName: String, id: Int!, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
-  uploadPdf(file: String!, name: String!, size: Int!): Any
   upsertAccountsFromPlaid(accessToken: String!, userId: Int!): [Account!]!
   upsertTransactionsFromPlaid(accessToken: String!, accountId: Int, endDate: String!, startDate: String!, userId: Int): [Transaction!]!
 }
@@ -119,20 +126,22 @@ type Query {
   allTransactions: [Transaction!]!
   getAccountsByUserId(userId: Int!): [Account!]!
   getAllAccounts: [Account!]!
-  getPdfUrlByKey(key: String!): Any
+  getAllUsers: [User!]!
+  getCategoriesByUserId(userId: Int!): [Category!]!
+  getCategoryById(id: Int!): Category!
   getTransactionById(id: Int!): Transaction!
   getTransactionsByUserId(userId: Int!): [Transaction!]!
   getUserById(userId: Int!): User
   getUserByUid(uid: String!): User!
-  users: [User!]!
 }
 
 type Transaction {
   Account: Account
+  Category: Category
   User: User
   accountId: Int
   amount: Float!
-  category: String
+  categoryId: Int
   date: Int!
   id: Int!
   io: InOrOutEnum
@@ -151,9 +160,9 @@ type TransactionRes {
 }
 
 type User {
-  AccessToken: String
   Accounts: [Account!]
   Transactions: [Transaction!]
+  accessToken: String
   email: String!
   firstName: String
   id: Int!
@@ -162,8 +171,4 @@ type User {
   phone: String
   uid: String!
   username: String!
-}
-
-type uid {
-  uid: String!
 }

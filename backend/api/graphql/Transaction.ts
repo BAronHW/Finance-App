@@ -7,7 +7,6 @@ import {
   enumType,
   floatArg,
 } from "nexus";
-import TransactionData from "../../sample-data/dummy-transactions.json";
 import { plaidClient } from "../config/PlaidConfiguration";
 import dayjs from "dayjs";
 import { TransactionsGetRequest } from "plaid";
@@ -36,7 +35,10 @@ export const Transaction = objectType({
     t.nonNull.string("merchantName");
     t.nonNull.float("amount");
     t.nonNull.int("date");
-    t.string("category");
+    t.int("categoryId");
+    t.field("Category", {
+      type: "Category"
+    });
     t.nonNull.string("plaidId");
   },
 });
@@ -69,6 +71,13 @@ export const TransactionQuery = extendType({
               select: {
                 id: true,
                 name: true,
+              }
+            },
+            Category: {
+              select: {
+                id: true,
+                name: true,
+                colour: true,
               }
             }
           }
@@ -235,7 +244,6 @@ export const TransactionMutations = extendType({
         merchantName: nonNull(stringArg()),
         amount: nonNull(floatArg()),
         date: nonNull(intArg()),
-        category: stringArg(),
         plaidId: nonNull(stringArg()),
       },
       resolve: async (_root, args, ctx) => {
@@ -257,7 +265,6 @@ export const TransactionMutations = extendType({
             merchantName: args.merchantName,
             amount: args.amount,
             date: args.date,
-            category: args.category,
             plaidId: args.plaidId,
           },
         });
@@ -267,6 +274,45 @@ export const TransactionMutations = extendType({
         return transaction;
       },
     });
+    t.field("updateTransaction", {
+      type: "Transaction",
+      args: {
+        id: nonNull(intArg()),
+        name: stringArg(),
+        merchantName: stringArg(),
+        categoryId: intArg(),
+      },
+      resolve: async (_root, args, ctx) => {
+        return await ctx.db.transaction.update({
+          where: {
+            id: args.id,
+          },
+          data: {
+            ...(args.name && {
+              name: args.name,
+            }),
+            ...(args.merchantName && {
+              merchantName: args.merchantName,
+            }),
+            ...(args.categoryId && {
+              Category: {
+                connect: {
+                  id: args.categoryId,
+                }
+              }
+            }),
+            ...((!args.categoryId && !args.merchantName && !args.name) && {
+              Category: {
+                disconnect: true,
+              }
+            }),
+          },
+          include: {
+            Category: true,
+          }
+        })
+      }
+    })
     t.field("deleteTransaction", {
       type: "Transaction",
       args: {

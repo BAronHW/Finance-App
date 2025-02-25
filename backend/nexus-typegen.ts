@@ -53,6 +53,15 @@ export interface NexusGenObjects {
     unofficialCurrencyCode?: string | null; // String
     userId?: number | null; // Int
   }
+  Category: { // root type
+    Transactions?: NexusGenRootTypes['Transaction'][] | null; // [Transaction!]
+    User?: NexusGenRootTypes['User'] | null; // User
+    colour?: string | null; // String
+    description?: string | null; // String
+    id: number; // Int!
+    name: string; // String!
+    userId?: number | null; // Int
+  }
   Counterparty: { // root type
     confidence_level?: string | null; // String
     entity_id?: string | null; // String
@@ -112,10 +121,11 @@ export interface NexusGenObjects {
   Query: {};
   Transaction: { // root type
     Account?: NexusGenRootTypes['Account'] | null; // Account
+    Category?: NexusGenRootTypes['Category'] | null; // Category
     User?: NexusGenRootTypes['User'] | null; // User
     accountId?: number | null; // Int
     amount: number; // Float!
-    category?: string | null; // String
+    categoryId?: number | null; // Int
     date: number; // Int!
     id: number; // Int!
     merchantName: string; // String!
@@ -131,9 +141,9 @@ export interface NexusGenObjects {
     transactions?: Array<NexusGenRootTypes['Transaction'] | null> | null; // [Transaction]
   }
   User: { // root type
-    AccessToken?: string | null; // String
     Accounts?: NexusGenRootTypes['Account'][] | null; // [Account!]
     Transactions?: NexusGenRootTypes['Transaction'][] | null; // [Transaction!]
+    accessToken?: string | null; // String
     email: string; // String!
     firstName?: string | null; // String
     id: number; // Int!
@@ -142,9 +152,6 @@ export interface NexusGenObjects {
     phone?: string | null; // String
     uid: string; // String!
     username: string; // String!
-  }
-  uid: { // root type
-    uid: string; // String!
   }
 }
 
@@ -179,6 +186,15 @@ export interface NexusGenFieldTypes {
     subtype: string | null; // String
     type: string | null; // String
     unofficialCurrencyCode: string | null; // String
+    userId: number | null; // Int
+  }
+  Category: { // field return type
+    Transactions: NexusGenRootTypes['Transaction'][] | null; // [Transaction!]
+    User: NexusGenRootTypes['User'] | null; // User
+    colour: string | null; // String
+    description: string | null; // String
+    id: number; // Int!
+    name: string; // String!
     userId: number | null; // Int
   }
   Counterparty: { // field return type
@@ -223,14 +239,18 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     createAccount: NexusGenRootTypes['Account']; // Account!
+    createCategory: NexusGenRootTypes['Category']; // Category!
     createLinkToken: NexusGenRootTypes['LinkToken'] | null; // LinkToken
     createTransaction: NexusGenRootTypes['Transaction']; // Transaction!
     createUser: NexusGenRootTypes['User']; // User!
     deleteAccount: NexusGenRootTypes['Account']; // Account!
+    deleteCategory: NexusGenRootTypes['Category']; // Category!
     deleteTransaction: NexusGenRootTypes['Transaction'] | null; // Transaction
     deleteUser: NexusGenRootTypes['User']; // User!
     emailSignIn: NexusGenRootTypes['User']; // User!
     exchangePublicToken: string; // String!
+    updateCategory: NexusGenRootTypes['Category']; // Category!
+    updateTransaction: NexusGenRootTypes['Transaction'] | null; // Transaction
     updateUserDetails: NexusGenRootTypes['User']; // User!
     uploadPdf: NexusGenScalars['Any'] | null; // Any
     upsertAccountsFromPlaid: NexusGenRootTypes['Account'][]; // [Account!]!
@@ -255,19 +275,22 @@ export interface NexusGenFieldTypes {
     allTransactions: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
     getAccountsByUserId: NexusGenRootTypes['Account'][]; // [Account!]!
     getAllAccounts: NexusGenRootTypes['Account'][]; // [Account!]!
+    getAllUsers: NexusGenRootTypes['User'][]; // [User!]!
+    getCategoriesByUserId: NexusGenRootTypes['Category'][]; // [Category!]!
+    getCategoryById: NexusGenRootTypes['Category']; // Category!
     getPdfUrlByKey: NexusGenScalars['Any'] | null; // Any
     getTransactionById: NexusGenRootTypes['Transaction']; // Transaction!
     getTransactionsByUserId: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
     getUserById: NexusGenRootTypes['User'] | null; // User
     getUserByUid: NexusGenRootTypes['User']; // User!
-    users: NexusGenRootTypes['User'][]; // [User!]!
   }
   Transaction: { // field return type
     Account: NexusGenRootTypes['Account'] | null; // Account
+    Category: NexusGenRootTypes['Category'] | null; // Category
     User: NexusGenRootTypes['User'] | null; // User
     accountId: number | null; // Int
     amount: number; // Float!
-    category: string | null; // String
+    categoryId: number | null; // Int
     date: number; // Int!
     id: number; // Int!
     io: NexusGenEnums['InOrOutEnum'] | null; // InOrOutEnum
@@ -284,9 +307,9 @@ export interface NexusGenFieldTypes {
     transactions: Array<NexusGenRootTypes['Transaction'] | null> | null; // [Transaction]
   }
   User: { // field return type
-    AccessToken: string | null; // String
     Accounts: NexusGenRootTypes['Account'][] | null; // [Account!]
     Transactions: NexusGenRootTypes['Transaction'][] | null; // [Transaction!]
+    accessToken: string | null; // String
     email: string; // String!
     firstName: string | null; // String
     id: number; // Int!
@@ -295,9 +318,6 @@ export interface NexusGenFieldTypes {
     phone: string | null; // String
     uid: string; // String!
     username: string; // String!
-  }
-  uid: { // field return type
-    uid: string; // String!
   }
 }
 
@@ -322,6 +342,15 @@ export interface NexusGenFieldTypeNames {
     subtype: 'String'
     type: 'String'
     unofficialCurrencyCode: 'String'
+    userId: 'Int'
+  }
+  Category: { // field return type name
+    Transactions: 'Transaction'
+    User: 'User'
+    colour: 'String'
+    description: 'String'
+    id: 'Int'
+    name: 'String'
     userId: 'Int'
   }
   Counterparty: { // field return type name
@@ -366,14 +395,18 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     createAccount: 'Account'
+    createCategory: 'Category'
     createLinkToken: 'LinkToken'
     createTransaction: 'Transaction'
     createUser: 'User'
     deleteAccount: 'Account'
+    deleteCategory: 'Category'
     deleteTransaction: 'Transaction'
     deleteUser: 'User'
     emailSignIn: 'User'
     exchangePublicToken: 'String'
+    updateCategory: 'Category'
+    updateTransaction: 'Transaction'
     updateUserDetails: 'User'
     uploadPdf: 'Any'
     upsertAccountsFromPlaid: 'Account'
@@ -398,19 +431,22 @@ export interface NexusGenFieldTypeNames {
     allTransactions: 'Transaction'
     getAccountsByUserId: 'Account'
     getAllAccounts: 'Account'
+    getAllUsers: 'User'
+    getCategoriesByUserId: 'Category'
+    getCategoryById: 'Category'
     getPdfUrlByKey: 'Any'
     getTransactionById: 'Transaction'
     getTransactionsByUserId: 'Transaction'
     getUserById: 'User'
     getUserByUid: 'User'
-    users: 'User'
   }
   Transaction: { // field return type name
     Account: 'Account'
+    Category: 'Category'
     User: 'User'
     accountId: 'Int'
     amount: 'Float'
-    category: 'String'
+    categoryId: 'Int'
     date: 'Int'
     id: 'Int'
     io: 'InOrOutEnum'
@@ -427,9 +463,9 @@ export interface NexusGenFieldTypeNames {
     transactions: 'Transaction'
   }
   User: { // field return type name
-    AccessToken: 'String'
     Accounts: 'Account'
     Transactions: 'Transaction'
+    accessToken: 'String'
     email: 'String'
     firstName: 'String'
     id: 'Int'
@@ -438,9 +474,6 @@ export interface NexusGenFieldTypeNames {
     phone: 'String'
     uid: 'String'
     username: 'String'
-  }
-  uid: { // field return type name
-    uid: 'String'
   }
 }
 
@@ -460,10 +493,14 @@ export interface NexusGenArgTypes {
       unofficialCurrencyCode?: string | null; // String
       userId: number; // Int!
     }
+    createCategory: { // args
+      description?: string | null; // String
+      name: string; // String!
+      userId: number; // Int!
+    }
     createTransaction: { // args
       accountId?: number | null; // Int
       amount: number; // Float!
-      category?: string | null; // String
       date: number; // Int!
       merchantName: string; // String!
       name?: string | null; // String
@@ -482,6 +519,9 @@ export interface NexusGenArgTypes {
     deleteAccount: { // args
       id: number; // Int!
     }
+    deleteCategory: { // args
+      id: number; // Int!
+    }
     deleteTransaction: { // args
       id: number; // Int!
     }
@@ -495,6 +535,18 @@ export interface NexusGenArgTypes {
     exchangePublicToken: { // args
       public_token: string; // String!
       userId: number; // Int!
+    }
+    updateCategory: { // args
+      colour?: string | null; // String
+      description?: string | null; // String
+      id: number; // Int!
+      name?: string | null; // String
+    }
+    updateTransaction: { // args
+      categoryId?: number | null; // Int
+      id: number; // Int!
+      merchantName?: string | null; // String
+      name?: string | null; // String
     }
     updateUserDetails: { // args
       email: string; // String!
@@ -526,6 +578,12 @@ export interface NexusGenArgTypes {
   Query: {
     getAccountsByUserId: { // args
       userId: number; // Int!
+    }
+    getCategoriesByUserId: { // args
+      userId: number; // Int!
+    }
+    getCategoryById: { // args
+      id: number; // Int!
     }
     getPdfUrlByKey: { // args
       key: string; // String!

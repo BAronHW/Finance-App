@@ -20,21 +20,14 @@ export const User = objectType({
     t.nonNull.string("uid");
     t.list.nonNull.field("Transactions", { type: "Transaction" });
     t.list.nonNull.field("Accounts", { type: "Account" });
-    t.string("AccessToken");
-  },
-});
-
-export const UID = objectType({
-  name: "uid",
-  definition(t) {
-    t.nonNull.string("uid");
+    t.string("accessToken");
   },
 });
 
 export const UserQuery = extendType({
   type: "Query",
   definition(t) {
-    t.nonNull.list.nonNull.field("users", {
+    t.nonNull.list.nonNull.field("getAllUsers", {
       type: "User",
       async resolve(_root, _args, ctx) {
         const users = await ctx.db.user.findMany({
