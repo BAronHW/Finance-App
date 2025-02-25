@@ -38,7 +38,6 @@ import {
 import CategoryForm from "./CategoryForm";
 import { DEFAULT_COLOUR } from "@/lib/constants";
 import { ColourPickerPopover } from "./ColourPickerPopover";
-import { TypographyH3, TypographyH4 } from "@/components/ui/typography";
 
 ChartJS.register(ArcElement, ChartTooltip, Legend);
 
@@ -162,10 +161,7 @@ function Header({
                   {!categoriesLoading &&
                   categoriesData?.getCategoriesByUserId.length
                     ? categoriesData.getCategoriesByUserId.map((category) => (
-                        <div
-                          key={category.id}
-                          className="flex items-center"
-                        >
+                        <div key={category.id} className="flex items-center">
                           <h4 className="text-xl font-semibold m-auto">
                             {category.name}
                           </h4>

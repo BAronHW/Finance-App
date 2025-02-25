@@ -7,13 +7,9 @@ import {
   enumType,
   floatArg,
 } from "nexus";
-import TransactionData from "../../sample-data/dummy-transactions.json";
 import { plaidClient } from "../config/PlaidConfiguration";
 import dayjs from "dayjs";
-import { TransactionsGetRequest, TransferDocumentPurpose } from "plaid";
-import { disconnect } from "process";
-import { Category } from "./Category";
-import { connect } from "http2";
+import { TransactionsGetRequest } from "plaid";
 
 export const Transaction = objectType({
   name: "Transaction",

@@ -5,26 +5,15 @@ import {
   DropdownMenuContent,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { DEFAULT_COLOUR } from "@/lib/constants";
-import {
-  GET_CATEGORIES_BY_USER_ID_FOR_CATEGORY_COLUMN,
-  GET_CATEGORY_BY_ID,
-  UPDATE_CATEGORY,
-} from "@/lib/graphql/Category";
+import { GET_CATEGORIES_BY_USER_ID_FOR_CATEGORY_COLUMN } from "@/lib/graphql/Category";
 import {
   GET_TRANSACTIONS_BY_USER_ID,
   UPDATE_TRANSACTION,
 } from "@/lib/graphql/Transaction";
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { FilePenLine } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
 
 type Props = {
   value: string;
@@ -43,15 +32,6 @@ export const TransactionCategoryButton = ({
   const userId = Array.isArray(params?.userId)
     ? Number(params?.userId[0])
     : Number(params?.userId);
-  const { data: categoryData, loading: categoryLoading } = useQuery(
-    GET_CATEGORY_BY_ID,
-    {
-      variables: {
-        id: categoryId,
-      },
-      skip: !categoryId,
-    }
-  );
 
   const [updateTransaction] = useMutation(UPDATE_TRANSACTION, {
     refetchQueries: [GET_TRANSACTIONS_BY_USER_ID],
@@ -63,11 +43,7 @@ export const TransactionCategoryButton = ({
     variables: {
       userId,
     },
-    onCompleted: (data) => console.log("fired!"),
   });
-  useEffect(() => {
-    console.log("Updated categoriesData:", categoriesData);
-  }, [categoriesData]);
 
   return (
     <DropdownMenu
@@ -91,17 +67,16 @@ export const TransactionCategoryButton = ({
           categoriesData?.getCategoriesByUserId?.map((category) => (
             <div className="flex w-full">
               <DropdownMenuCheckboxItem
-                className="grow-8"
+                className="w-full"
                 checked={category.id === categoryId}
                 onCheckedChange={async (checked) => {
                   if (checked) {
-                    const { data: updatedTransactionData } =
-                      await updateTransaction({
-                        variables: {
-                          id: transactionId,
-                          categoryId: category.id,
-                        },
-                      });
+                    await updateTransaction({
+                      variables: {
+                        id: transactionId,
+                        categoryId: category.id,
+                      },
+                    });
                   }
                 }}
               >
@@ -109,9 +84,8 @@ export const TransactionCategoryButton = ({
               </DropdownMenuCheckboxItem>
               <div
                 style={{ backgroundColor: category.colour }}
-                className="w-8 grow-1 ml-auto"
+                className="w-8 ml-auto"
               />
-
               <DropdownMenuSeparator />
             </div>
           ))}
