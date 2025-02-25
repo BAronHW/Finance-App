@@ -152,12 +152,7 @@ const TransactionsTableColumns: ColumnDef<Transaction>[] = [
             )
         },
     },
-<<<<<<< HEAD
-  },
 ];
 
 export default TransactionsTableColumns;
 
-=======
-]
->>>>>>> origin/main
