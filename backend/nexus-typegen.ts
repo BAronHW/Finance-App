@@ -60,7 +60,7 @@ export interface NexusGenObjects {
     description?: string | null; // String
     id: number; // Int!
     name: string; // String!
-    userId: number; // Int!
+    userId?: number | null; // Int
   }
   Counterparty: { // root type
     confidence_level?: string | null; // String
@@ -190,7 +190,7 @@ export interface NexusGenFieldTypes {
     description: string | null; // String
     id: number; // Int!
     name: string; // String!
-    userId: number; // Int!
+    userId: number | null; // Int
   }
   Counterparty: { // field return type
     confidence_level: string | null; // String
@@ -240,6 +240,7 @@ export interface NexusGenFieldTypes {
     emailSignIn: NexusGenRootTypes['User']; // User!
     exchangePublicToken: string; // String!
     updateCategory: NexusGenRootTypes['Category']; // Category!
+    updateTransaction: NexusGenRootTypes['Transaction'] | null; // Transaction
     updateUserDetails: NexusGenRootTypes['User']; // User!
     upsertAccountsFromPlaid: NexusGenRootTypes['Account'][]; // [Account!]!
     upsertTransactionsFromPlaid: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
@@ -388,6 +389,7 @@ export interface NexusGenFieldTypeNames {
     emailSignIn: 'User'
     exchangePublicToken: 'String'
     updateCategory: 'Category'
+    updateTransaction: 'Transaction'
     updateUserDetails: 'User'
     upsertAccountsFromPlaid: 'Account'
     upsertTransactionsFromPlaid: 'Transaction'
@@ -519,6 +521,12 @@ export interface NexusGenArgTypes {
       colour?: string | null; // String
       description?: string | null; // String
       id: number; // Int!
+      name?: string | null; // String
+    }
+    updateTransaction: { // args
+      categoryId?: number | null; // Int
+      id: number; // Int!
+      merchantName?: string | null; // String
       name?: string | null; // String
     }
     updateUserDetails: { // args

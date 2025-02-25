@@ -6,7 +6,7 @@ export const Category = objectType({
     t.nonNull.int("id");
     t.nonNull.string("name");
     t.string("description");
-    t.nonNull.int("userId");
+    t.int("userId");
     t.field("User", {
       type: "User",
     });

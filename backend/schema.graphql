@@ -36,7 +36,7 @@ type Category {
   description: String
   id: Int!
   name: String!
-  userId: Int!
+  userId: Int
 }
 
 type Counterparty {
@@ -99,6 +99,7 @@ type Mutation {
   emailSignIn(password: String!, username: String!): User!
   exchangePublicToken(public_token: String!, userId: Int!): String!
   updateCategory(colour: String, description: String, id: Int!, name: String): Category!
+  updateTransaction(categoryId: Int, id: Int!, merchantName: String, name: String): Transaction
   updateUserDetails(email: String!, firstName: String, id: Int!, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
   upsertAccountsFromPlaid(accessToken: String!, userId: Int!): [Account!]!
   upsertTransactionsFromPlaid(accessToken: String!, accountId: Int, endDate: String!, startDate: String!, userId: Int): [Transaction!]!

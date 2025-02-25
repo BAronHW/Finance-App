@@ -10,7 +10,10 @@ import {
 import TransactionData from "../../sample-data/dummy-transactions.json";
 import { plaidClient } from "../config/PlaidConfiguration";
 import dayjs from "dayjs";
-import { TransactionsGetRequest } from "plaid";
+import { TransactionsGetRequest, TransferDocumentPurpose } from "plaid";
+import { disconnect } from "process";
+import { Category } from "./Category";
+import { connect } from "http2";
 
 export const Transaction = objectType({
   name: "Transaction",
@@ -72,6 +75,13 @@ export const TransactionQuery = extendType({
               select: {
                 id: true,
                 name: true,
+              }
+            },
+            Category: {
+              select: {
+                id: true,
+                name: true,
+                colour: true,
               }
             }
           }
@@ -268,6 +278,45 @@ export const TransactionMutations = extendType({
         return transaction;
       },
     });
+    t.field("updateTransaction", {
+      type: "Transaction",
+      args: {
+        id: nonNull(intArg()),
+        name: stringArg(),
+        merchantName: stringArg(),
+        categoryId: intArg(),
+      },
+      resolve: async (_root, args, ctx) => {
+        return await ctx.db.transaction.update({
+          where: {
+            id: args.id,
+          },
+          data: {
+            ...(args.name && {
+              name: args.name,
+            }),
+            ...(args.merchantName && {
+              merchantName: args.merchantName,
+            }),
+            ...(args.categoryId && {
+              Category: {
+                connect: {
+                  id: args.categoryId,
+                }
+              }
+            }),
+            ...((!args.categoryId && !args.merchantName && !args.name) && {
+              Category: {
+                disconnect: true,
+              }
+            }),
+          },
+          include: {
+            Category: true,
+          }
+        })
+      }
+    })
     t.field("deleteTransaction", {
       type: "Transaction",
       args: {

@@ -9,7 +9,6 @@ import {
   ColumnFiltersState,
   getFilteredRowModel,
   VisibilityState,
-  AccessorFn,
   Row,
 } from "@tanstack/react-table";
 
@@ -33,7 +32,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { Account, InOrOutEnum, Transaction } from "@/__generated__/graphql";
 import {
@@ -41,7 +40,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { DatePicker } from "./DatePicker";
 import { DatePickerWithRange } from "./DatePickerWithRange";
 import { Filter } from "lucide-react";
 

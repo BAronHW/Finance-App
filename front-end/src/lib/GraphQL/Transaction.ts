@@ -13,6 +13,7 @@ export const GET_TRANSACTIONS_BY_USER_ID = gql(`
         name
         merchantName
         amount
+        categoryId
         Category {
           id
           name
@@ -34,3 +35,19 @@ export const UPSERT_TRANSACTIONS_FROM_PLAID = gql(`
       plaidId
     }}
   `);
+
+
+export const UPDATE_TRANSACTION = gql(`
+  mutation UpdateTransaction($id: Int!, $name: String, $merchantName: String, $categoryId: Int) {
+    updateTransaction(id: $id, name: $name, merchantName: $merchantName, categoryId: $categoryId) {
+      id
+      name
+      merchantName
+      Category {
+        id
+        name
+        colour
+      }
+    }
+  }
+  `)

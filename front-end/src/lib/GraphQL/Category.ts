@@ -1,5 +1,15 @@
 import { gql } from "@apollo/client"
 
+export const GET_CATEGORIES_BY_USER_ID_FOR_CATEGORY_COLUMN = gql(`
+  query GetCategoriesByUserIdForCategoryColumn($userId: Int!) {
+    getCategoriesByUserId(userId: $userId) {
+      id
+      name
+      colour
+    }
+  }
+`);
+
 export const GET_CATEGORIES_BY_USER_ID = gql(`
   query GetCategoriesByUserId($userId: Int!) {
     getCategoriesByUserId(userId: $userId) {

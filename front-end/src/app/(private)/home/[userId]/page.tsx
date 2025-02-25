@@ -124,6 +124,11 @@ export default function Home() {
   });
 
   const transactionData = transactionsByUserData?.getTransactionsByUserId ?? [];
+  // transactionData.forEach(element => {
+  //   if (element.id === 716 ) {
+  //     console.log({element})
+  //   }
+  // });
 
   return (
     <div className="flex flex-col min-h-screen">
