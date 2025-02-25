@@ -126,31 +126,38 @@ const TransactionsTableColumns: ColumnDef<Transaction>[] = [
     cell: ({ row }) => {
       const transaction = row.original;
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open Menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() =>
-                navigator.clipboard.writeText(transaction.id.toString())
-              }
-            >
-              Copy Transaction ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Delete Transaction</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+            return (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open Menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem
+                            onClick={() =>
+                                navigator.clipboard.writeText(
+                                    transaction.id.toString()
+                                )
+                            }
+                        >
+                            Copy Transaction ID
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>Delete Transaction</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            )
+        },
     },
+<<<<<<< HEAD
   },
 ];
 
 export default TransactionsTableColumns;
 
+=======
+]
+>>>>>>> origin/main

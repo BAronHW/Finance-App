@@ -1,13 +1,13 @@
 'use client'
 
 import { ReactNode, useContext, useEffect, useState } from 'react'
-import { auth } from '@/lib/Firebase/Firebase'
+import { auth } from '@/lib/firebase/firebase'
 import React from 'react'
 import { onAuthStateChanged, signOut, User } from 'firebase/auth'
 import { LogOut } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 import { useQuery } from '@apollo/client'
-import { FETCH_UID_FROM_USER } from '../GraphQL/Users'
+import { FETCH_UID_FROM_USER } from '../graphql/Users'
 
 export interface AuthContextType {
     currentUser: User | null
