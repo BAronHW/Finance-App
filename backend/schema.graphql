@@ -120,6 +120,7 @@ type PersonalFinanceCategory {
 
 type Query {
   allTransactions: [Transaction!]!
+  getALLPDFUURLBelongingToUserByUid(uid: String!): [String!]!
   getAccountsByUserId(userId: Int!): [Account!]!
   getAllAccounts: [Account!]!
   getAllPdfBelongingToUserByUid(uid: String!): [Document!]!

@@ -12,6 +12,7 @@ import { s3 } from '../config/S3Bucket';
 import * as crypto from 'crypto'
 import dotenv from 'dotenv'
 import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 dotenv.config()
 
 const bucketName = process.env.BUCKET_NAME
@@ -244,13 +245,43 @@ export const Queries = extendType({
             };
             }
         });
+        t.field('getALLPDFUURLBelongingToUserByUid', {
+            type: nonNull(list(nonNull('String'))),
+            args:{
+                uid: nonNull(stringArg())
+            },
+            async resolve(_root, args, ctx){
+                const keysArr = await ctx.db.document.findMany({
+                    where:{
+                        uid: args.uid
+                    }
+                })
+                const commandArray = await Promise.all(keysArr.map((key) =>{
+                    const command = new GetObjectCommand({
+                        Bucket: bucketName,
+                        Key: key.key,
+                        ResponseContentDisposition: 'inline',
+                        ResponseContentType: 'application/pdf',
+                    })
+                    return command
+                }))
+                
+
+                const urlArray = Promise.all(commandArray.map(async(command)=>{
+                    const url = await getSignedUrl(s3, command, { expiresIn: 3000 });
+                    return url
+                }))
+
+                return urlArray;
+            }
+        })
         t.field('getAllPdfBelongingToUserByUid', {
             type: nonNull(list(nonNull('Document'))),
             args: {
                 uid: nonNull(stringArg())
             },
             async resolve(_root, args, ctx): Promise<DocumentInterface[]>{
-                const pdf = await ctx.db.document.findMany({
+                const pdf: DocumentInterface[] = await ctx.db.document.findMany({
                     where: {
                         uid: args.uid
                     }
@@ -277,7 +308,7 @@ export const Queries = extendType({
                     lastModified: Date | undefined,
                 }
 
-                const returnBufferArray = await Promise.all(pdfBufferArray.map( async (document) => {
+                const returnBufferArray: s3ObjInterface[] = await Promise.all(pdfBufferArray.map( async (document) => {
 
                     const getObjectParams = {
                         Bucket: bucketName,

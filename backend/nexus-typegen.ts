@@ -266,6 +266,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     allTransactions: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
+    getALLPDFUURLBelongingToUserByUid: string[]; // [String!]!
     getAccountsByUserId: NexusGenRootTypes['Account'][]; // [Account!]!
     getAllAccounts: NexusGenRootTypes['Account'][]; // [Account!]!
     getAllPdfBelongingToUserByUid: NexusGenRootTypes['Document'][]; // [Document!]!
@@ -423,6 +424,7 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     allTransactions: 'Transaction'
+    getALLPDFUURLBelongingToUserByUid: 'String'
     getAccountsByUserId: 'Account'
     getAllAccounts: 'Account'
     getAllPdfBelongingToUserByUid: 'Document'
@@ -569,6 +571,9 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    getALLPDFUURLBelongingToUserByUid: { // args
+      uid: string; // String!
+    }
     getAccountsByUserId: { // args
       userId: number; // Int!
     }
