@@ -245,7 +245,7 @@ export const Queries = extendType({
             };
             }
         });
-        t.field('getALLPDFUURLBelongingToUserByUid', {
+        t.field('getALLPDFURLBelongingToUserByUid', {
             type: nonNull(list(nonNull('String'))),
             args:{
                 uid: nonNull(stringArg())

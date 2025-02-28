@@ -8,3 +8,11 @@ export const UPLOAD_PDF = gql(
 
     `
 )
+
+export const GET_ALL_PDF_URL_FROM_USER = gql(
+    `
+    query getALLPDFURLBelongingToUserByUid($uid: String!) {
+    getALLPDFURLBelongingToUserByUid(uid: $uid)
+    }
+    `
+)
