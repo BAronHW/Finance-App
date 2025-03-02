@@ -47,6 +47,14 @@ interface DocumentInterface{
     uid: string
 }
 
+interface Document{
+    file: string,
+    name: string,
+    size: number,
+    contentType: string,
+    lastModified: Date
+}
+
 export const Muation = extendType({
     type: 'Mutation',
     definition(t) {
@@ -194,10 +202,7 @@ export const Muation = extendType({
                     console.log(err)
                     throw new Error('unable to delete objects')
                 }
-                
-
             }
-
         })
     },
 })
@@ -216,7 +221,7 @@ export const Queries = extendType({
                         key: args.key
                     },
                 });
-        
+
                 if (!document) {
                     throw new Error('Document not found');
                 }
@@ -340,3 +345,8 @@ export const Queries = extendType({
     },
 })
 
+// TODO:
+// 1. create a pipeline to turn pdf into markdown file
+// 2. given the key of a pdf document get its buffer then convert it to 
+// 2. extract text from markdown files then 
+// 3. chunk and rag the documents into vector db for RAG applications
