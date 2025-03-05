@@ -55,7 +55,7 @@ interface Document{
     lastModified: Date
 }
 
-export const Muation = extendType({
+export const DocumentMutation = extendType({
     type: 'Mutation',
     definition(t) {
         t.field('uploadPdf', {
@@ -207,7 +207,7 @@ export const Muation = extendType({
     },
 })
 
-export const Queries = extendType({
+export const DocumentQueries = extendType({
     type: 'Query',
     definition(t) {
         t.field('getPdfUrlByKey', {
