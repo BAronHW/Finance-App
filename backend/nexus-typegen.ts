@@ -62,12 +62,15 @@ export interface NexusGenObjects {
     website?: string | null; // String
   }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   Document: { // root type
     key: string; // String!
     name?: string | null; // String
     size: number; // Int!
     uid: string; // String!
   }
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
   Item: { // root type
@@ -203,12 +206,15 @@ export interface NexusGenFieldTypes {
     website: string | null; // String
   }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   Document: { // field return type
     key: string; // String!
     name: string | null; // String
     size: number; // Int!
     uid: string; // String!
   }
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
   Item: { // field return type
@@ -282,6 +288,9 @@ export interface NexusGenFieldTypes {
     getAllUsers: NexusGenRootTypes['User'][]; // [User!]!
     getCategoriesByUserId: NexusGenRootTypes['Category'][]; // [Category!]!
     getCategoryById: NexusGenRootTypes['Category']; // Category!
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     getTransactionById: NexusGenRootTypes['Transaction']; // Transaction!
     getTransactionsByUserId: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
@@ -369,12 +378,15 @@ export interface NexusGenFieldTypeNames {
     website: 'String'
   }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   Document: { // field return type name
     key: 'String'
     name: 'String'
     size: 'Int'
     uid: 'String'
   }
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
   Item: { // field return type name
@@ -448,6 +460,9 @@ export interface NexusGenFieldTypeNames {
     getAllUsers: 'User'
     getCategoriesByUserId: 'Category'
     getCategoryById: 'Category'
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     getTransactionById: 'Transaction'
     getTransactionsByUserId: 'Transaction'
@@ -572,12 +587,15 @@ export interface NexusGenArgTypes {
       username: string; // String!
     }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     uploadPdf: { // args
       file: string; // String!
       name: string; // String!
       size: number; // Int!
       uid: string; // String!
     }
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     upsertAccountsFromPlaid: { // args
@@ -602,8 +620,13 @@ export interface NexusGenArgTypes {
     getAllPdfBelongingToUserByUid: { // args
       uid: string; // String!
     }
+<<<<<<< Updated upstream
     getAllPdfBuffersByUid: { // args
       uid: string; // String!
+=======
+    getCategoryById: { // args
+      id: number; // Int!
+>>>>>>> Stashed changes
     }
     getTransactionById: { // args
       id: number; // Int!

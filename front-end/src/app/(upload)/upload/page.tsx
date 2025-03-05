@@ -19,7 +19,6 @@ export default function PDFDropzone() {
     const [uploadError, setUploadError] = useState<string | null>(null)
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
-        // Only accept the first file if multiple files are dropped
         const selectedFile = acceptedFiles[0]
 
         if (selectedFile && selectedFile.type === 'application/pdf') {
@@ -64,7 +63,7 @@ export default function PDFDropzone() {
                 })
                 console.log('Upload successful:', result)
                 setUploadSuccess(true)
-                setPdfFile(null) // Reset for next upload
+                setPdfFile(null)
             } catch (err) {
                 console.error('Upload failed:', err)
                 setUploadError('Upload failed. Please try again.')
