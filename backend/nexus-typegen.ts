@@ -61,12 +61,15 @@ export interface NexusGenObjects {
     type?: string | null; // String
     website?: string | null; // String
   }
+<<<<<<< Updated upstream
   Document: { // root type
     key: string; // String!
     name?: string | null; // String
     size: number; // Int!
     uid: string; // String!
   }
+=======
+>>>>>>> Stashed changes
   Item: { // root type
     auth_method?: string | null; // String
     available_products?: Array<string | null> | null; // [String]
@@ -199,12 +202,15 @@ export interface NexusGenFieldTypes {
     type: string | null; // String
     website: string | null; // String
   }
+<<<<<<< Updated upstream
   Document: { // field return type
     key: string; // String!
     name: string | null; // String
     size: number; // Int!
     uid: string; // String!
   }
+=======
+>>>>>>> Stashed changes
   Item: { // field return type
     auth_method: string | null; // String
     available_products: Array<string | null> | null; // [String]
@@ -245,7 +251,6 @@ export interface NexusGenFieldTypes {
     emailSignIn: NexusGenRootTypes['User']; // User!
     exchangePublicToken: string; // String!
     updateUserDetails: NexusGenRootTypes['User']; // User!
-    uploadPdf: NexusGenScalars['Any'] | null; // Any
     upsertAccountsFromPlaid: NexusGenRootTypes['Account'][]; // [Account!]!
     upsertTransactionsFromPlaid: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
   }
@@ -269,9 +274,15 @@ export interface NexusGenFieldTypes {
     getALLPDFURLBelongingToUserByUid: string[]; // [String!]!
     getAccountsByUserId: NexusGenRootTypes['Account'][]; // [Account!]!
     getAllAccounts: NexusGenRootTypes['Account'][]; // [Account!]!
+<<<<<<< Updated upstream
     getAllPdfBelongingToUserByUid: NexusGenRootTypes['Document'][]; // [Document!]!
     getAllPdfBuffersByUid: NexusGenScalars['Any'][] | null; // [Any!]
     getPdfUrlByKey: NexusGenScalars['Any'] | null; // Any
+=======
+    getAllUsers: NexusGenRootTypes['User'][]; // [User!]!
+    getCategoriesByUserId: NexusGenRootTypes['Category'][]; // [Category!]!
+    getCategoryById: NexusGenRootTypes['Category']; // Category!
+>>>>>>> Stashed changes
     getTransactionById: NexusGenRootTypes['Transaction']; // Transaction!
     getTransactionsByUserId: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
     getUserById: NexusGenRootTypes['User'] | null; // User
@@ -357,12 +368,15 @@ export interface NexusGenFieldTypeNames {
     type: 'String'
     website: 'String'
   }
+<<<<<<< Updated upstream
   Document: { // field return type name
     key: 'String'
     name: 'String'
     size: 'Int'
     uid: 'String'
   }
+=======
+>>>>>>> Stashed changes
   Item: { // field return type name
     auth_method: 'String'
     available_products: 'String'
@@ -403,7 +417,6 @@ export interface NexusGenFieldTypeNames {
     emailSignIn: 'User'
     exchangePublicToken: 'String'
     updateUserDetails: 'User'
-    uploadPdf: 'Any'
     upsertAccountsFromPlaid: 'Account'
     upsertTransactionsFromPlaid: 'Transaction'
   }
@@ -427,9 +440,15 @@ export interface NexusGenFieldTypeNames {
     getALLPDFURLBelongingToUserByUid: 'String'
     getAccountsByUserId: 'Account'
     getAllAccounts: 'Account'
+<<<<<<< Updated upstream
     getAllPdfBelongingToUserByUid: 'Document'
     getAllPdfBuffersByUid: 'Any'
     getPdfUrlByKey: 'Any'
+=======
+    getAllUsers: 'User'
+    getCategoriesByUserId: 'Category'
+    getCategoryById: 'Category'
+>>>>>>> Stashed changes
     getTransactionById: 'Transaction'
     getTransactionsByUserId: 'Transaction'
     getUserById: 'User'
@@ -552,12 +571,15 @@ export interface NexusGenArgTypes {
       uid: string; // String!
       username: string; // String!
     }
+<<<<<<< Updated upstream
     uploadPdf: { // args
       file: string; // String!
       name: string; // String!
       size: number; // Int!
       uid: string; // String!
     }
+=======
+>>>>>>> Stashed changes
     upsertAccountsFromPlaid: { // args
       accessToken: string; // String!
       userId: number; // Int!
@@ -582,9 +604,6 @@ export interface NexusGenArgTypes {
     }
     getAllPdfBuffersByUid: { // args
       uid: string; // String!
-    }
-    getPdfUrlByKey: { // args
-      key: string; // String!
     }
     getTransactionById: { // args
       id: number; // Int!
