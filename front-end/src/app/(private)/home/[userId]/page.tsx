@@ -83,7 +83,6 @@ export default function Home() {
             const { data: linkTokenData } = await createLinkToken()
             if (linkTokenData?.createLinkToken?.link_token) {
                 setLinkToken(linkTokenData.createLinkToken.link_token)
-                console.log({ linkToken })
             }
         }
 

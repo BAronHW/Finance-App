@@ -6,8 +6,6 @@ import { ApolloError, useLazyQuery } from "@apollo/client";
 import { GET_SINGLE_USER_BY_UID } from "@/lib/graphql/Users";
 import { User } from "@/__generated__/graphql";
 import { auth } from "@/lib/firebase/firebase"
-import { CustomError } from "../utils";
-import { useAuth } from "../contexts/authContext";
 
 const provider = new GoogleAuthProvider();
 
@@ -27,12 +25,13 @@ export const useGoogleSignIn = (): {
   const googleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
+      console.log(result)
       const firebaseUser = result.user;
       const { data } = await getUserByUid({
         variables: { uid: firebaseUser.uid },
       });
       return {
-        user: data?.user || null,
+        user: data?.getUserByUid || null,
         errorCode: null,
         errorMessage: null,
       };

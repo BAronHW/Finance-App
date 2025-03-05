@@ -26,6 +26,7 @@ model User {
   Accounts     Account[]
   Categories   Category[]
   AccessToken  String?
+  Document     Document[]
 }
 
 model Transaction {
@@ -43,6 +44,36 @@ model Transaction {
   plaidId               String      @unique
 }
 
+
+model Document {
+  id      Int       @id @default(autoincrement())
+  key     String    @unique
+  size    Int
+  name    String?
+  user    User      @relation(fields: [uid], references: [uid]) // Many-to-One with User
+  uid     String
+  Account Account[]
+}
+
+model Account {
+  id                     Int           @id @default(autoincrement())
+  Transactions           Transaction[]
+  mask                   String?
+  name                   String
+  officialName           String?
+  type                   String
+  subtype                String?
+  User                   User          @relation(fields: [userId], references: [id])
+  userId                 Int
+  plaidId                String        @unique
+  available              Float?
+  current                Float?
+  isoCurrencyCode        String? // Going to become a relationally field to Currency
+  unofficialCurrencyCode String?
+  limit                  Float?
+  Document               Document?     @relation(fields: [documentKey], references: [key])
+  documentKey            String?
+  
 model Account {
   id      Int    @id @default(autoincrement())
   Transactions    Transaction[]

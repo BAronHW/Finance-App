@@ -30,9 +30,6 @@ const GoogleSignIn = ({ signUp }: { signUp: boolean }): ReactElement => {
                         const { user, errorCode, errorMessage } =
                             await googleSignIn()
 
-                        console.log('googleSignIn response object:')
-                        console.log(user, errorCode, errorMessage)
-
                         if (errorCode && errorMessage) {
                             setErrorCode(errorCode)
                             setErrorMessage(errorMessage)

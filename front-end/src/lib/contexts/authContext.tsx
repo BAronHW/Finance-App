@@ -1,18 +1,24 @@
 'use client'
-
-import { ReactNode, useContext, useEffect, useState } from 'react'
+import { ReactNode, useContext, useEffect, useCallback } from 'react'
 import { auth } from '@/lib/firebase/firebase'
-import React from 'react'
+import React, { useState } from 'react'
 import { onAuthStateChanged, signOut, User } from 'firebase/auth'
-import { LogOut } from 'lucide-react'
-import { useParams, useRouter } from 'next/navigation'
-import { useQuery } from '@apollo/client'
-import { FETCH_UID_FROM_USER } from '../graphql/Users'
+import { useRouter } from 'next/navigation'
+import { GET_SINGLE_USERID_BY_UID } from '../graphql/Users'
+import { useLazyQuery } from '@apollo/client'
+
+interface UserQueryResponse {
+    getUserByUid: {
+        id: number
+        __typename: string
+    }
+}
 
 export interface AuthContextType {
     currentUser: User | null
     userLoggedIn: boolean
     loading: boolean
+    userId: number | null
     logOut(): Promise<void>
 }
 
@@ -36,45 +42,62 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [currentUser, setCurrentUser] = useState<User | null>(null)
     const [userLoggedIn, setUserLoggedIn] = useState(false)
     const [loading, setLoading] = useState(true)
+    const [userId, setUserId] = useState<number | null>(null)
     const router = useRouter()
-    const params = useParams()
-    const userId = params.userId
 
-    // const { data, error, refetch } = useQuery(FETCH_UID_FROM_USER, {
-    //     variables: { userId },
-    // })
+    const [getSingleUserIdByUid] = useLazyQuery<UserQueryResponse>(
+        GET_SINGLE_USERID_BY_UID,
+        {
+            onCompleted: (data) => {
+                if (data?.getUserByUid?.id) {
+                    setUserId(data.getUserByUid.id)
+                }
+            },
+            onError: (error) => {
+                console.error('Error fetching user ID:', error)
+            },
+        }
+    )
 
-    // const [currentUserUid, setcurrentUserUid] = useState(data)
+    const initialiseUser = useCallback(
+        async (user: User | null) => {
+            setLoading(true)
+            try {
+                if (user) {
+                    setCurrentUser(user)
+                    setUserLoggedIn(true)
+                    await getSingleUserIdByUid({
+                        variables: { uid: user.uid },
+                    })
+                } else {
+                    setCurrentUser(null)
+                    setUserLoggedIn(false)
+                    setUserId(null)
+                    router.replace('/sign-in')
+                }
+            } catch (error) {
+                console.error('Error initializing user:', error)
+            } finally {
+                setLoading(false)
+            }
+        },
+        [router, getSingleUserIdByUid]
+    )
 
     useEffect(() => {
-        onAuthStateChanged(auth, initialiseUser)
-    }, [])
-    const initialiseUser = (user: User | null) => {
-        setLoading(true)
-        if (user) {
-            setCurrentUser(user)
-            setUserLoggedIn(true)
-        } else {
-            setCurrentUser(null)
-            setUserLoggedIn(false)
-            router.push('/sign-in')
-        }
-        setLoading(false)
-    }
-
-    const compareIdToCurrentUser = (currUser: string, currUserId: number) => {
-        // fetch the uid of the given curruserid
-        // if the uid fetched doesnt match the uid of the currentuser.uid then redirect to /
-    }
+        const unsubscribe = onAuthStateChanged(auth, initialiseUser)
+        return () => unsubscribe()
+    }, [initialiseUser])
 
     const logOut = async (): Promise<void> => {
         try {
             await signOut(auth)
             setCurrentUser(null)
             setUserLoggedIn(false)
-            router.push('/')
+            setUserId(null)
+            router.replace('/')
         } catch (err) {
-            console.log(err)
+            console.error('Error during logout:', err)
         }
     }
 
@@ -82,14 +105,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         currentUser,
         userLoggedIn,
         loading,
+        userId,
         logOut,
     }
-
-    /**
-     * Todo:
-     * 1. either make a new wrapper component (HOC higher order component) that checks if the user is signed in or not
-     * or modify this component to make it so that it wraps around root layout.tsx and does the checking
-     */
 
     return (
         <AuthContext.Provider value={value}>
