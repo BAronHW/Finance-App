@@ -30,20 +30,19 @@ model User {
 }
 
 model Transaction {
-  id                    Int     @id @default(autoincrement())
-  userId                Int?
-  User                  User?    @relation(fields: [userId], references: [id])
-  accountId             Int?
-  Account               Account?     @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  name                  String?
-  merchantName          String
-  amount                Float
-  date                  Int     @default(0)
-  Category              Category?    @relation(fields: [categoryId], references: [id])
-  categoryId            Int?
-  plaidId               String      @unique
+  id           Int       @id @default(autoincrement())
+  userId       Int?
+  User         User?     @relation(fields: [userId], references: [id])
+  accountId    Int?
+  Account      Account?  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  name         String?
+  merchantName String
+  amount       Float
+  date         Int       @default(0)
+  Category     Category? @relation(fields: [categoryId], references: [id])
+  categoryId   Int?
+  plaidId      String    @unique
 }
-
 
 model Document {
   id      Int       @id @default(autoincrement())
@@ -68,38 +67,21 @@ model Account {
   plaidId                String        @unique
   available              Float?
   current                Float?
-  isoCurrencyCode        String? // Going to become a relationally field to Currency
+  isoCurrencyCode        String?
   unofficialCurrencyCode String?
   limit                  Float?
   Document               Document?     @relation(fields: [documentKey], references: [key])
   documentKey            String?
-  
-model Account {
-  id      Int    @id @default(autoincrement())
-  Transactions    Transaction[]
-  mask    String?
-  name    String
-  officialName    String?
-  type    String
-  subtype   String?
-  User      User      @relation(fields: [userId], references: [id])
-  userId    Int
-  plaidId   String    @unique
-  available   Float?
-  current     Float?
-  isoCurrencyCode   String?  // Going to become a relationally field to Currency
-  unofficialCurrencyCode    String?
-  limit       Float?
 }
 
 model Category {
-  id              Int     @id @default(autoincrement())
-  name            String
-  User            User    @relation(fields: [userId], references: [id])
-  userId          Int
-  description     String?
-  colour          String    @default("#ffffff")
-  Transactions    Transaction[]
+  id           Int           @id @default(autoincrement())
+  name         String
+  User         User          @relation(fields: [userId], references: [id])
+  userId       Int
+  description  String?
+  colour       String        @default("#ffffff")
+  Transactions Transaction[]
 }
 
 enum InOrOut {

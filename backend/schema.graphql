@@ -51,14 +51,6 @@ type Counterparty {
 """For representing data in ISO format"""
 scalar Date
 
-type Document {
-  key: String!
-  name: String
-  size: Int!
-  uid: String!
-}
-
-
 enum InOrOutEnum {
   IN
   OUT
@@ -101,8 +93,6 @@ type Mutation {
   createTransaction(accountId: Int, amount: Float!, date: Int!, merchantName: String!, name: String, plaidId: String!, userId: Int!): Transaction!
   createUser(email: String!, firstName: String, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
   deleteAccount(id: Int!): Account!
-  deleteAllDocumentsAssociatedWithUserInBucketByUid(uid: String!): Boolean
-  deleteDocumentByKey(documentKey: String!): Boolean
   deleteCategory(id: Int!): Category!
   deleteTransaction(id: Int!): Transaction
   deleteUser(id: Int!): User!
@@ -111,7 +101,6 @@ type Mutation {
   updateCategory(colour: String, description: String, id: Int!, name: String): Category!
   updateTransaction(categoryId: Int, id: Int!, merchantName: String, name: String): Transaction
   updateUserDetails(email: String!, firstName: String, id: Int!, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
-  uploadPdf(file: String!, name: String!, size: Int!, uid: String!): Any
   upsertAccountsFromPlaid(accessToken: String!, userId: Int!): [Account!]!
   upsertTransactionsFromPlaid(accessToken: String!, accountId: Int, endDate: String!, startDate: String!, userId: Int): [Transaction!]!
 }
@@ -135,12 +124,8 @@ type PersonalFinanceCategory {
 
 type Query {
   allTransactions: [Transaction!]!
-  getALLPDFURLBelongingToUserByUid(uid: String!): [String!]!
   getAccountsByUserId(userId: Int!): [Account!]!
   getAllAccounts: [Account!]!
-  getAllPdfBelongingToUserByUid(uid: String!): [Document!]!
-  getAllPdfBuffersByUid(uid: String!): [Any!]
-  getPdfUrlByKey(key: String!): Any
   getAllUsers: [User!]!
   getCategoriesByUserId(userId: Int!): [Category!]!
   getCategoryById(id: Int!): Category!
@@ -186,18 +171,4 @@ type User {
   phone: String
   uid: String!
   username: String!
-}
-
-type s3Object {
-  contentType: String
-  file: String!
-  key: String!
-  lastModified: String
-  name: String!
-  size: Int!
-  uid: String!
-}
-
-type uid {
-  uid: String!
 }

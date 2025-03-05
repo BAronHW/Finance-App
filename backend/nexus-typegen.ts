@@ -70,12 +70,6 @@ export interface NexusGenObjects {
     type?: string | null; // String
     website?: string | null; // String
   }
-  Document: { // root type
-    key: string; // String!
-    name?: string | null; // String
-    size: number; // Int!
-    uid: string; // String!
-  }
   Item: { // root type
     auth_method?: string | null; // String
     available_products?: Array<string | null> | null; // [String]
@@ -154,18 +148,6 @@ export interface NexusGenObjects {
     uid: string; // String!
     username: string; // String!
   }
-  s3Object: { // root type
-    contentType?: string | null; // String
-    file: string; // String!
-    key: string; // String!
-    lastModified?: string | null; // String
-    name: string; // String!
-    size: number; // Int!
-    uid: string; // String!
-  }
-  uid: { // root type
-    uid: string; // String!
-  }
 }
 
 export interface NexusGenInterfaces {
@@ -218,13 +200,6 @@ export interface NexusGenFieldTypes {
     type: string | null; // String
     website: string | null; // String
   }
-
-  Document: { // field return type
-    key: string; // String!
-    name: string | null; // String
-    size: number; // Int!
-    uid: string; // String!
-  }
   Item: { // field return type
     auth_method: string | null; // String
     available_products: Array<string | null> | null; // [String]
@@ -259,8 +234,6 @@ export interface NexusGenFieldTypes {
     createTransaction: NexusGenRootTypes['Transaction']; // Transaction!
     createUser: NexusGenRootTypes['User']; // User!
     deleteAccount: NexusGenRootTypes['Account']; // Account!
-    deleteAllDocumentsAssociatedWithUserInBucketByUid: boolean | null; // Boolean
-    deleteDocumentByKey: boolean | null; // Boolean
     deleteCategory: NexusGenRootTypes['Category']; // Category!
     deleteTransaction: NexusGenRootTypes['Transaction'] | null; // Transaction
     deleteUser: NexusGenRootTypes['User']; // User!
@@ -289,15 +262,8 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     allTransactions: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
-    getALLPDFURLBelongingToUserByUid: string[]; // [String!]!
     getAccountsByUserId: NexusGenRootTypes['Account'][]; // [Account!]!
     getAllAccounts: NexusGenRootTypes['Account'][]; // [Account!]!
-    getAllPdfBelongingToUserByUid: NexusGenRootTypes['Document'][]; // [Document!]!
-    getAllPdfBuffersByUid: NexusGenScalars['Any'][] | null; // [Any!]
-    getAllUsers: NexusGenRootTypes['User'][]; // [User!]!
-    getCategoriesByUserId: NexusGenRootTypes['Category'][]; // [Category!]!
-    getCategoryById: NexusGenRootTypes['Category']; // Category!
-    getPdfUrlByKey: NexusGenScalars['Any'] | null; // Any
     getAllUsers: NexusGenRootTypes['User'][]; // [User!]!
     getCategoriesByUserId: NexusGenRootTypes['Category'][]; // [Category!]!
     getCategoryById: NexusGenRootTypes['Category']; // Category!
@@ -341,18 +307,6 @@ export interface NexusGenFieldTypes {
     uid: string; // String!
     username: string; // String!
   }
-  s3Object: { // field return type
-    contentType: string | null; // String
-    file: string; // String!
-    key: string; // String!
-    lastModified: string | null; // String
-    name: string; // String!
-    size: number; // Int!
-    uid: string; // String!
-  }
-  uid: { // field return type
-    uid: string; // String!
-  }
 }
 
 export interface NexusGenFieldTypeNames {
@@ -395,12 +349,6 @@ export interface NexusGenFieldTypeNames {
     type: 'String'
     website: 'String'
   }
-  Document: { // field return type name
-    key: 'String'
-    name: 'String'
-    size: 'Int'
-    uid: 'String'
-  }
   Item: { // field return type name
     auth_method: 'String'
     available_products: 'String'
@@ -435,8 +383,6 @@ export interface NexusGenFieldTypeNames {
     createTransaction: 'Transaction'
     createUser: 'User'
     deleteAccount: 'Account'
-    deleteAllDocumentsAssociatedWithUserInBucketByUid: 'Boolean'
-    deleteDocumentByKey: 'Boolean'
     deleteCategory: 'Category'
     deleteTransaction: 'Transaction'
     deleteUser: 'User'
@@ -465,15 +411,8 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     allTransactions: 'Transaction'
-    getALLPDFURLBelongingToUserByUid: 'String'
     getAccountsByUserId: 'Account'
     getAllAccounts: 'Account'
-    getAllPdfBelongingToUserByUid: 'Document'
-    getAllPdfBuffersByUid: 'Any'
-    getAllUsers: 'User'
-    getCategoriesByUserId: 'Category'
-    getCategoryById: 'Category'
-    getPdfUrlByKey: 'Any'
     getAllUsers: 'User'
     getCategoriesByUserId: 'Category'
     getCategoryById: 'Category'
@@ -516,18 +455,6 @@ export interface NexusGenFieldTypeNames {
     phone: 'String'
     uid: 'String'
     username: 'String'
-  }
-  s3Object: { // field return type name
-    contentType: 'String'
-    file: 'String'
-    key: 'String'
-    lastModified: 'String'
-    name: 'String'
-    size: 'Int'
-    uid: 'String'
-  }
-  uid: { // field return type name
-    uid: 'String'
   }
 }
 
@@ -573,11 +500,6 @@ export interface NexusGenArgTypes {
     deleteAccount: { // args
       id: number; // Int!
     }
-    deleteAllDocumentsAssociatedWithUserInBucketByUid: { // args
-      uid: string; // String!
-    }
-    deleteDocumentByKey: { // args
-      documentKey: string; // String!
     deleteCategory: { // args
       id: number; // Int!
     }
@@ -617,12 +539,6 @@ export interface NexusGenArgTypes {
       uid: string; // String!
       username: string; // String!
     }
-    uploadPdf: { // args
-      file: string; // String!
-      name: string; // String!
-      size: number; // Int!
-      uid: string; // String!
-    }
     upsertAccountsFromPlaid: { // args
       accessToken: string; // String!
       userId: number; // Int!
@@ -636,31 +552,14 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
-    getALLPDFURLBelongingToUserByUid: { // args
-      uid: string; // String!
-    }
     getAccountsByUserId: { // args
       userId: number; // Int!
     }
-
-    getAllPdfBelongingToUserByUid: { // args
-      uid: string; // String!
-    }
-    
-    getAllPdfBuffersByUid: { // args
-      uid: string; // String!
-      
-    getCategoryById: { // args
-      id: number; // Int!
-
     getCategoriesByUserId: { // args
       userId: number; // Int!
     }
     getCategoryById: { // args
       id: number; // Int!
-    }
-    getPdfUrlByKey: { // args
-      key: string; // String!
     }
     getTransactionById: { // args
       id: number; // Int!
