@@ -16,23 +16,31 @@ import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { useAuth } from '@/lib/contexts/authContext'
 
-const menuItems = [
-    { id: 1, label: 'Dashboard', icon: Home, link: '/' },
-    { id: 2, label: 'Analytics', icon: Users, link: '/analytics' },
-    { id: 3, label: 'Documents', icon: FileText, link: '/documents' },
-    { id: 4, label: 'Upload', icon: Upload, link: '/upload' },
-    { id: 5, label: 'Settings', icon: Settings, link: '/settings' },
-]
-
 function Sidebar() {
     const pathname = usePathname()
     const auth = useAuth()
+
+    const currentUserId = auth.userId
+    console.log(currentUserId)
 
     const logOut = () => {
         auth.logOut()
         console.log(auth.currentUser)
         console.log(auth.userLoggedIn)
     }
+
+    const menuItems = [
+        {
+            id: 1,
+            label: 'Dashboard',
+            icon: Home,
+            link: `/home/${currentUserId}`,
+        },
+        { id: 2, label: 'Analytics', icon: Users, link: '/analytics' },
+        { id: 3, label: 'Documents', icon: FileText, link: '/documents' },
+        { id: 4, label: 'Upload', icon: Upload, link: '/upload' },
+        { id: 5, label: 'Settings', icon: Settings, link: '/settings' },
+    ]
 
     return (
         <Sheet>

@@ -176,9 +176,6 @@ export const PlaidMutations = extendType({
         const itemId = plaidResponse.data.item_id;
         const requestId = plaidResponse.data.request_id;
 
-        // console.log(accessToken);
-
-        // store the accesstoken in the db
         await ctx.db.user.update({
           where: {
             id: args.userId,
@@ -187,9 +184,7 @@ export const PlaidMutations = extendType({
             AccessToken: accessToken,
           },
         });
-
-        console.log({ accessToken });
-
+        
         return accessToken;
       },
     });
