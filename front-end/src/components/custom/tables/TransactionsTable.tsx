@@ -23,13 +23,12 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import {
-  Account,
-  Transaction,
-} from "@/__generated__/graphql";
-import { useQuery } from "@apollo/client";
+import { Account, Transaction } from "@/__generated__/graphql";
+import { useMutation, useQuery } from "@apollo/client";
 import { GET_CATEGORIES_BY_USER_ID_FOR_TABLE } from "@/lib/graphql/Category";
 import { TransactionTableFilters } from "./TransactionTableFilters";
+import { AutoCategoriseWithAiPopover } from "../popovers/AutoCategoriseWithAiPopover";
+import { CATEGORISE_TRANSACTIONS_WITH_AI } from "@/lib/graphql/Transaction";
 
 interface TransactionsTable {
   columns: ColumnDef<Transaction>[];
@@ -81,10 +80,27 @@ function TransactionsTable({
     }
   );
 
+  const [categoriseTransactionsWithAi] = useMutation(
+    CATEGORISE_TRANSACTIONS_WITH_AI
+  );
+
   console.log({ categoriesData });
 
   return (
     <div>
+      <AutoCategoriseWithAiPopover
+        onRunAutoCategorise={() => {
+          const selectedIds = table
+            .getFilteredSelectedRowModel()
+            .rows.map((row) => row.original.id);
+          console.log({ selectedIds });
+          categoriseTransactionsWithAi({
+            variables: {
+              ids: selectedIds,
+            },
+          });
+        }}
+      />
       <TransactionTableFilters
         table={table}
         categories={categoriesData?.getCategoriesByUserId ?? []}
@@ -171,7 +187,8 @@ function TransactionsTable({
 
 export default TransactionsTable;
 
-      {/* <div className="flex place-content-between py-4">
+{
+  /* <div className="flex place-content-between py-4">
         <div className="flex items-center gap-1 border border-slate-200 rounded-md">
           <Filter height={16} className="ml-2 text-slate-500" />
           <Input
@@ -402,4 +419,5 @@ export default TransactionsTable;
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </div> */}
+      </div> */
+}
