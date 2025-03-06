@@ -49,7 +49,7 @@ model Document {
   key     String    @unique
   size    Int
   name    String?
-  user    User      @relation(fields: [uid], references: [uid]) // Many-to-One with User
+  user    User      @relation(fields: [uid], references: [uid])
   uid     String
   Account Account[]
 }

@@ -8,6 +8,7 @@ import { auth } from '@/lib/firebase/firebase'
 import { UPLOAD_PDF } from '@/lib/graphql/Documents'
 import { useMutation } from '@apollo/client'
 import { useAuth } from '../../../lib/contexts/authContext'
+import { Upload, UploadCloudIcon, UploadIcon } from 'lucide-react'
 
 export default function PDFDropzone() {
     const firebaseCurrentUser = auth.currentUser
@@ -75,12 +76,13 @@ export default function PDFDropzone() {
         <div className="max-w-xl mx-auto p-4">
             {firebaseCurrentUser && (
                 <div className="mb-4 p-3 bg-gray-100 rounded-lg">
+                    <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+                        Welcome {firebaseCurrentUser.displayName} upload any
+                        documents you would like to store
+                    </h2>
                     <p className="text-sm">
                         <span className="font-medium">User:</span>{' '}
                         {firebaseCurrentUser.email}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                        ID: {firebaseCurrentUser.uid}
                     </p>
                 </div>
             )}
@@ -94,7 +96,10 @@ export default function PDFDropzone() {
                             : 'border-gray-300 hover:border-gray-400'
                     }`}
             >
-                <input {...getInputProps()} />
+                <div className="flex flex-col items-center ">
+                    <UploadCloudIcon size={50}></UploadCloudIcon>
+                    <input {...getInputProps()} />
+                </div>
 
                 {isDragActive ? (
                     <p className="text-blue-500">Drop your PDF here...</p>
