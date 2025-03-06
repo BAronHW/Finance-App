@@ -22,8 +22,6 @@ import { Account } from "@/__generated__/graphql";
 
 export default function Home() {
   const params = useParams();
-  const auth = getAuth();
-  const currentUser = auth.currentUser;
   const userId = Array.isArray(params?.userId)
     ? Number(params?.userId[0])
     : Number(params?.userId);
