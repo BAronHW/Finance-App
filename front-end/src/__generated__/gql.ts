@@ -17,12 +17,14 @@ const documents = {
     "\n  query GetAccountsByUserId($userId: Int!) {\n    getAccountsByUserId(userId: $userId) {\n      id\n      mask\n      name\n      officialName\n      subtype\n      type\n      Transactions {\n        userId\n        merchantName\n        amount\n      }\n      plaidId\n      available\n      current\n      isoCurrencyCode\n      unofficialCurrencyCode\n      limit\n    }\n  }\n  ": types.GetAccountsByUserIdDocument,
     "\n  mutation UpsertAccountsFromPlaid($userId: Int!, $accessToken: String!) {\n    upsertAccountsFromPlaid(userId: $userId, accessToken: $accessToken) {\n      id\n      name\n      plaidId\n    }\n  }\n  ": types.UpsertAccountsFromPlaidDocument,
     "\n  mutation DeleteAccount($id: Int!) {\n    deleteAccount(id: $id) {\n      id\n      mask\n      name\n      officialName\n      subtype\n      type\n      Transactions {\n        userId\n        merchantName\n        amount\n      }\n      plaidId\n      available\n      current\n      isoCurrencyCode\n      unofficialCurrencyCode\n      limit\n    }\n  }\n  ": types.DeleteAccountDocument,
-    "\n  query GetCategoriesByUserIdForCategoryColumn($userId: Int!) {\n    getCategoriesByUserId(userId: $userId) {\n      id\n      name\n      colour\n    }\n  }\n": types.GetCategoriesByUserIdForCategoryColumnDocument,
+    "\n  query GetCategoriesByUserIdForTable($userId: Int!) {\n    getCategoriesByUserId(userId: $userId) {\n      id\n      name\n      colour\n    }\n  }\n": types.GetCategoriesByUserIdForTableDocument,
     "\n  query GetCategoriesByUserId($userId: Int!) {\n    getCategoriesByUserId(userId: $userId) {\n      id\n      name\n      description\n      userId\n      colour\n      User {\n        username\n        firstName\n        lastName\n        email\n        uid\n      }\n      Transactions {\n        id\n        date\n        amount\n        merchantName\n      }\n    }\n  }\n": types.GetCategoriesByUserIdDocument,
     "\n  query GetCategoryById($id: Int!) {\n    getCategoryById(id: $id) {\n      name\n      colour\n    }\n  }\n  ": types.GetCategoryByIdDocument,
     "\n  mutation CreateCategory($name: String!, $userId: Int!, $description: String) {\n    createCategory(name: $name, userId: $userId, description: $description) {\n      id\n      name\n      description\n      userId\n      colour\n      User {\n        username\n        firstName\n        lastName\n        email\n        uid\n      }\n    }\n  }\n": types.CreateCategoryDocument,
     "\n  mutation DeleteCategory($id: Int!) {\n    deleteCategory(id: $id) {\n      id\n      name\n      description\n      userId\n      User {\n        username\n        firstName\n        lastName\n        email\n        uid\n      }\n    }\n  }\n  ": types.DeleteCategoryDocument,
     "\n  mutation UpdateCategory($id: Int!, $name: String, $description: String, $colour: String) {\n    updateCategory(id: $id, name: $name, description: $description, colour: $colour) {\n      id\n      name\n      description\n      userId\n      colour\n      User {\n        username\n        firstName\n        lastName\n        email\n        uid\n      }\n    }\n  }\n  ": types.UpdateCategoryDocument,
+    "\n    mutation uploadPdf($name: String!, $size: Int!, $file: String!, $uid: String!) {\n    uploadPdf(name: $name, size: $size, file: $file, uid: $uid)\n    }\n\n    ": types.UploadPdfDocument,
+    "\n    query getALLPDFURLBelongingToUserByUid($uid: String!) {\n    getALLPDFURLBelongingToUserByUid(uid: $uid)\n    }\n    ": types.GetAllpdfurlBelongingToUserByUidDocument,
     "\n  mutation CreateLinkToken {\n    createLinkToken {\n      link_token\n      expiration\n      request_id\n    }\n  }\n": types.CreateLinkTokenDocument,
     "\n  mutation ExchangePublicToken($userId: Int!, $public_token: String!) {\n    exchangePublicToken(userId: $userId, public_token: $public_token)\n  }\n": types.ExchangePublicTokenDocument,
     "\n    query GetTransactionsByUserId($userId: Int!) {\n      getTransactionsByUserId(userId: $userId) {\n        id\n        userId\n        accountId\n        Account {\n          name\n        }\n        io\n        name\n        merchantName\n        amount\n        categoryId\n        Category {\n          id\n          name\n          colour\n        }\n        date\n      }\n    }\n  ": types.GetTransactionsByUserIdDocument,
@@ -31,7 +33,8 @@ const documents = {
     "\n  query GetAllUsers {\n    getAllUsers {\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      id\n      Transactions {\n        id\n        userId\n        accountId\n        io\n        name\n        merchantName\n        amount\n        date\n      }\n    }\n  }\n": types.GetAllUsersDocument,
     "\n  query GetUserbyId($userId: Int!) {\n    getUserById(userId: $userId) {\n      accessToken\n    }\n  }\n  ": types.GetUserbyIdDocument,
     "\n  mutation DeleteUser($id: Int!) {\n    deleteUser(id: $id) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      Transactions {\n        id\n        userId\n        accountId\n        io\n        name\n        merchantName\n        amount\n        date\n      }\n    }\n  }\n": types.DeleteUserDocument,
-    "\n  query User($uid: String!) {\n    getUserByUid (uid: $uid) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      Transactions {\n        id\n        userId\n        accountId\n        io\n        name\n        merchantName\n        amount\n        date\n      }\n    }\n  }\n": types.UserDocument,
+    "\n  query GetSingleUserByUid($uid: String!) {\n    getUserByUid (uid: $uid) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      Transactions {\n        id\n        userId\n        accountId\n        io\n        name\n        merchantName\n        amount\n        date\n      }\n    }\n  }\n": types.GetSingleUserByUidDocument,
+    "\n  query GetUserIdByUid($uid: String!) {\n    getUserByUid (uid: $uid) {\n      id\n    }\n  }\n": types.GetUserIdByUidDocument,
     "\n  mutation CreateUser(\n    $firstName: String\n    $lastName: String\n    $username: String!\n    $password: String\n    $email: String!\n    $uid: String!\n    $phone: String\n  ) {\n    createUser(\n      firstName: $firstName\n      lastName: $lastName\n      username: $username\n      password: $password\n      email: $email\n      uid: $uid\n      phone: $phone\n    ) {\n      id\n      firstName\n      lastName\n      username\n      password\n      email\n      uid\n      phone\n    }\n  }\n": types.CreateUserDocument,
     "\nquery GetUserUidFromUserId($userId: Int!) {\n    getUserById(userId: $userId) {\n        uid\n    }\n}\n": types.GetUserUidFromUserIdDocument,
 };
@@ -65,7 +68,7 @@ export function gql(source: "\n  mutation DeleteAccount($id: Int!) {\n    delete
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query GetCategoriesByUserIdForCategoryColumn($userId: Int!) {\n    getCategoriesByUserId(userId: $userId) {\n      id\n      name\n      colour\n    }\n  }\n"): (typeof documents)["\n  query GetCategoriesByUserIdForCategoryColumn($userId: Int!) {\n    getCategoriesByUserId(userId: $userId) {\n      id\n      name\n      colour\n    }\n  }\n"];
+export function gql(source: "\n  query GetCategoriesByUserIdForTable($userId: Int!) {\n    getCategoriesByUserId(userId: $userId) {\n      id\n      name\n      colour\n    }\n  }\n"): (typeof documents)["\n  query GetCategoriesByUserIdForTable($userId: Int!) {\n    getCategoriesByUserId(userId: $userId) {\n      id\n      name\n      colour\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -86,6 +89,14 @@ export function gql(source: "\n  mutation DeleteCategory($id: Int!) {\n    delet
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation UpdateCategory($id: Int!, $name: String, $description: String, $colour: String) {\n    updateCategory(id: $id, name: $name, description: $description, colour: $colour) {\n      id\n      name\n      description\n      userId\n      colour\n      User {\n        username\n        firstName\n        lastName\n        email\n        uid\n      }\n    }\n  }\n  "): (typeof documents)["\n  mutation UpdateCategory($id: Int!, $name: String, $description: String, $colour: String) {\n    updateCategory(id: $id, name: $name, description: $description, colour: $colour) {\n      id\n      name\n      description\n      userId\n      colour\n      User {\n        username\n        firstName\n        lastName\n        email\n        uid\n      }\n    }\n  }\n  "];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    mutation uploadPdf($name: String!, $size: Int!, $file: String!, $uid: String!) {\n    uploadPdf(name: $name, size: $size, file: $file, uid: $uid)\n    }\n\n    "): (typeof documents)["\n    mutation uploadPdf($name: String!, $size: Int!, $file: String!, $uid: String!) {\n    uploadPdf(name: $name, size: $size, file: $file, uid: $uid)\n    }\n\n    "];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    query getALLPDFURLBelongingToUserByUid($uid: String!) {\n    getALLPDFURLBelongingToUserByUid(uid: $uid)\n    }\n    "): (typeof documents)["\n    query getALLPDFURLBelongingToUserByUid($uid: String!) {\n    getALLPDFURLBelongingToUserByUid(uid: $uid)\n    }\n    "];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -121,7 +132,11 @@ export function gql(source: "\n  mutation DeleteUser($id: Int!) {\n    deleteUse
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query User($uid: String!) {\n    getUserByUid (uid: $uid) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      Transactions {\n        id\n        userId\n        accountId\n        io\n        name\n        merchantName\n        amount\n        date\n      }\n    }\n  }\n"): (typeof documents)["\n  query User($uid: String!) {\n    getUserByUid (uid: $uid) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      Transactions {\n        id\n        userId\n        accountId\n        io\n        name\n        merchantName\n        amount\n        date\n      }\n    }\n  }\n"];
+export function gql(source: "\n  query GetSingleUserByUid($uid: String!) {\n    getUserByUid (uid: $uid) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      Transactions {\n        id\n        userId\n        accountId\n        io\n        name\n        merchantName\n        amount\n        date\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetSingleUserByUid($uid: String!) {\n    getUserByUid (uid: $uid) {\n      id\n      firstName\n      lastName\n      username\n      password\n      phone\n      email\n      uid\n      Transactions {\n        id\n        userId\n        accountId\n        io\n        name\n        merchantName\n        amount\n        date\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query GetUserIdByUid($uid: String!) {\n    getUserByUid (uid: $uid) {\n      id\n    }\n  }\n"): (typeof documents)["\n  query GetUserIdByUid($uid: String!) {\n    getUserByUid (uid: $uid) {\n      id\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
