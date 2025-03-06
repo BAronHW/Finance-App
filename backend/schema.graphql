@@ -94,6 +94,7 @@ type Location {
 }
 
 type Mutation {
+  categoriseTransactionsWithAi(ids: [Int!]!, overwrite: Boolean): [Transaction]!
   createAccount(available: Float!, current: Float!, isoCurrencyCode: String, limit: Float, mask: String, name: String!, officialName: String, plaidId: String!, subtype: String, type: String!, unofficialCurrencyCode: String, userId: Int!): Account!
   createCategory(description: String, name: String!, userId: Int!): Category!
   createLinkToken: LinkToken
@@ -154,14 +155,14 @@ type Transaction {
   Category: Category
   User: User
   accountId: Int
-  amount: Float!
+  amount: Float
   categoryId: Int
-  date: Int!
+  date: Int
   id: Int!
   io: InOrOutEnum
-  merchantName: String!
+  merchantName: String
   name: String
-  plaidId: String!
+  plaidId: String
   userId: Int
 }
 
