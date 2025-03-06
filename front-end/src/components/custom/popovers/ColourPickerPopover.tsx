@@ -5,8 +5,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ReactNode, useRef, useState } from "react";
-import { ColourPicker } from "./ColourPicker";
-import { CategoryColourButton } from "./CategoryColourButton";
+
+import { CategoryColourButton } from "../../custom/buttons/CategoryColourButton";
+import { ColourPicker } from "../colourpickers/ColourPicker";
 
 type Props = {
   oldColour: string;

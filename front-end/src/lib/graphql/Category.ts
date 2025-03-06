@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client"
 
-export const GET_CATEGORIES_BY_USER_ID_FOR_CATEGORY_COLUMN = gql(`
-  query GetCategoriesByUserIdForCategoryColumn($userId: Int!) {
+export const GET_CATEGORIES_BY_USER_ID_FOR_TABLE = gql(`
+  query GetCategoriesByUserIdForTable($userId: Int!) {
     getCategoriesByUserId(userId: $userId) {
       id
       name

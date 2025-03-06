@@ -1,3 +1,4 @@
+import { Category } from "@/__generated__/graphql";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -5,7 +6,8 @@ import {
   DropdownMenuContent,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { GET_CATEGORIES_BY_USER_ID_FOR_CATEGORY_COLUMN } from "@/lib/graphql/Category";
+import { DEFAULT_COLOUR } from "@/lib/constants";
+import { GET_CATEGORIES_BY_USER_ID_FOR_TABLE } from "@/lib/graphql/Category";
 import {
   GET_TRANSACTIONS_BY_USER_ID,
   UPDATE_TRANSACTION,
@@ -37,9 +39,9 @@ export const TransactionCategoryButton = ({
     refetchQueries: [GET_TRANSACTIONS_BY_USER_ID],
   });
   const [
-    getCategoriesByUserIdForCategoryColumn,
+    getCategoriesByUserIdForTable,
     { data: categoriesData, loading: categoriesLoading },
-  ] = useLazyQuery(GET_CATEGORIES_BY_USER_ID_FOR_CATEGORY_COLUMN, {
+  ] = useLazyQuery(GET_CATEGORIES_BY_USER_ID_FOR_TABLE, {
     variables: {
       userId,
     },
@@ -48,7 +50,7 @@ export const TransactionCategoryButton = ({
   return (
     <DropdownMenu
       onOpenChange={() => {
-        getCategoriesByUserIdForCategoryColumn();
+        getCategoriesByUserIdForTable();
       }}
     >
       <DropdownMenuTrigger>
@@ -64,7 +66,7 @@ export const TransactionCategoryButton = ({
       <DropdownMenuContent align="end">
         {categoriesLoading && "Loading..."}
         {categoriesData &&
-          categoriesData?.getCategoriesByUserId?.map((category) => (
+          categoriesData?.getCategoriesByUserId?.map((category: Category) => (
             <div className="flex w-full">
               <DropdownMenuCheckboxItem
                 className="w-full"
@@ -83,7 +85,7 @@ export const TransactionCategoryButton = ({
                 {category.name}
               </DropdownMenuCheckboxItem>
               <div
-                style={{ backgroundColor: category.colour }}
+                style={{ backgroundColor: category.colour ?? DEFAULT_COLOUR }}
                 className="w-8 ml-auto"
               />
               <DropdownMenuSeparator />

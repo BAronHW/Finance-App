@@ -70,11 +70,6 @@ export interface NexusGenObjects {
     type?: string | null; // String
     website?: string | null; // String
   }
-  Document: { // root type
-    key: string; // String!
-    name: number; // Int!
-    size: string; // String!
-  }
   Item: { // root type
     auth_method?: string | null; // String
     available_products?: Array<string | null> | null; // [String]
@@ -205,11 +200,6 @@ export interface NexusGenFieldTypes {
     type: string | null; // String
     website: string | null; // String
   }
-  Document: { // field return type
-    key: string; // String!
-    name: number; // Int!
-    size: string; // String!
-  }
   Item: { // field return type
     auth_method: string | null; // String
     available_products: Array<string | null> | null; // [String]
@@ -252,7 +242,6 @@ export interface NexusGenFieldTypes {
     updateCategory: NexusGenRootTypes['Category']; // Category!
     updateTransaction: NexusGenRootTypes['Transaction'] | null; // Transaction
     updateUserDetails: NexusGenRootTypes['User']; // User!
-    uploadPdf: NexusGenScalars['Any'] | null; // Any
     upsertAccountsFromPlaid: NexusGenRootTypes['Account'][]; // [Account!]!
     upsertTransactionsFromPlaid: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
   }
@@ -278,7 +267,6 @@ export interface NexusGenFieldTypes {
     getAllUsers: NexusGenRootTypes['User'][]; // [User!]!
     getCategoriesByUserId: NexusGenRootTypes['Category'][]; // [Category!]!
     getCategoryById: NexusGenRootTypes['Category']; // Category!
-    getPdfUrlByKey: NexusGenScalars['Any'] | null; // Any
     getTransactionById: NexusGenRootTypes['Transaction']; // Transaction!
     getTransactionsByUserId: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
     getUserById: NexusGenRootTypes['User'] | null; // User
@@ -361,11 +349,6 @@ export interface NexusGenFieldTypeNames {
     type: 'String'
     website: 'String'
   }
-  Document: { // field return type name
-    key: 'String'
-    name: 'Int'
-    size: 'String'
-  }
   Item: { // field return type name
     auth_method: 'String'
     available_products: 'String'
@@ -408,7 +391,6 @@ export interface NexusGenFieldTypeNames {
     updateCategory: 'Category'
     updateTransaction: 'Transaction'
     updateUserDetails: 'User'
-    uploadPdf: 'Any'
     upsertAccountsFromPlaid: 'Account'
     upsertTransactionsFromPlaid: 'Transaction'
   }
@@ -434,7 +416,6 @@ export interface NexusGenFieldTypeNames {
     getAllUsers: 'User'
     getCategoriesByUserId: 'Category'
     getCategoryById: 'Category'
-    getPdfUrlByKey: 'Any'
     getTransactionById: 'Transaction'
     getTransactionsByUserId: 'Transaction'
     getUserById: 'User'
@@ -558,11 +539,6 @@ export interface NexusGenArgTypes {
       uid: string; // String!
       username: string; // String!
     }
-    uploadPdf: { // args
-      file: string; // String!
-      name: string; // String!
-      size: number; // Int!
-    }
     upsertAccountsFromPlaid: { // args
       accessToken: string; // String!
       userId: number; // Int!
@@ -584,9 +560,6 @@ export interface NexusGenArgTypes {
     }
     getCategoryById: { // args
       id: number; // Int!
-    }
-    getPdfUrlByKey: { // args
-      key: string; // String!
     }
     getTransactionById: { // args
       id: number; // Int!
