@@ -22,14 +22,13 @@ import { Account } from "@/__generated__/graphql";
 
 export default function Home() {
   const params = useParams();
-  const auth = getAuth();
-  const currentUser = auth.currentUser;
   const userId = Array.isArray(params?.userId)
     ? Number(params?.userId[0])
     : Number(params?.userId);
 
   const [accessToken, setAccessToken] = useState("");
   const [linkToken, setLinkToken] = useState("");
+  const [displayName, setDisplayName] = useState("");
 
   useQuery(GET_USER_BY_ID, {
     variables: {
@@ -38,8 +37,14 @@ export default function Home() {
     onCompleted: (data) => {
       console.log("GET_USER_BY_ID completed");
       console.log({ data });
-      if (data?.fetchAccessTokenFromUser.accessToken) {
-        setAccessToken(data.fetchAccessTokenFromUser.accessToken);
+      const user = data?.getUserById;
+      setDisplayName(
+        user.firstName && user.lastName
+          ? user.firstName + " " + user.lastName
+          : user.username
+      ); // TODO: Eventually have a setting that allows the user to switch display name
+      if (user.accessToken) {
+        setAccessToken(user.accessToken);
         console.log("user has access token already!");
       }
     },
@@ -141,7 +146,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Header
-          name={currentUser?.displayName ?? ""}
+          name={displayName ?? ""}
           appMoto="Manage your student funds"
           accBal={10}
           accounts={accountData?.getAccountsByUserId ?? []}
