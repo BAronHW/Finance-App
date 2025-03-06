@@ -12,8 +12,8 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { CustomError } from '@/lib/utils'
-import { EmailSignUpForm } from '@/components/customComponents/authComponents/EmailSignUpForm'
-import GoogleSignIn from '@/components/customComponents/authComponents/GoogleSignIn'
+import { EmailSignUpForm } from '@/components/custom/auth/EmailSignUpForm'
+import GoogleSignIn from '@/components/custom/auth/GoogleSignIn'
 
 export const emailSignUpFormSchema = z
     .object({
