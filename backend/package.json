@@ -16,6 +16,7 @@
     "@as-integrations/next": "^3.2.0",
     "@aws-sdk/client-s3": "^3.750.0",
     "@aws-sdk/s3-request-presigner": "^3.750.0",
+    "@google/generative-ai": "^0.23.0",
     "@prisma/client": "^5.19.1",
     "apollo-server": "^3.13.0",
     "aws-sdk": "^2.1692.0",
