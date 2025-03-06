@@ -55,7 +55,7 @@ export const CategoriesDialog = ({
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4 text-center">
-          {!categoriesLoading && categories.length
+          {!categoriesLoading && categories && categories.length
             ? categories.map((category) => (
                 <div key={category.id} className="flex items-center">
                   <h4 className="text-xl font-semibold m-auto">

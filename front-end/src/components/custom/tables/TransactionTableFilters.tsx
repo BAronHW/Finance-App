@@ -217,7 +217,7 @@ export const TransactionTableFilters = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            {categories.length &&
+            {categories.length > 0 &&
               categories.map((category) => {
                 return (
                   <DropdownMenuCheckboxItem
