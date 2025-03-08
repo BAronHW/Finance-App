@@ -29,6 +29,9 @@ export const GET_USER_BY_ID = gql(`
   query GetUserbyId($userId: Int!) {
     getUserById(userId: $userId) {
       accessToken
+      firstName
+      lastName
+      username
     }
   }
   `) 

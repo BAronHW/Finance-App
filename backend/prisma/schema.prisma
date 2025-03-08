@@ -49,7 +49,7 @@ model Document {
   key     String    @unique
   size    Int
   name    String?
-  user    User      @relation(fields: [uid], references: [uid]) // Many-to-One with User
+  user    User      @relation(fields: [uid], references: [uid])
   uid     String
   Account Account[]
 }
@@ -62,7 +62,7 @@ model Account {
   officialName           String?
   type                   String
   subtype                String?
-  User                   User          @relation(fields: [userId], references: [id])
+  User                   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                 Int
   plaidId                String        @unique
   available              Float?
@@ -77,7 +77,7 @@ model Account {
 model Category {
   id           Int           @id @default(autoincrement())
   name         String
-  User         User          @relation(fields: [userId], references: [id])
+  User         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       Int
   description  String?
   colour       String        @default("#ffffff")
