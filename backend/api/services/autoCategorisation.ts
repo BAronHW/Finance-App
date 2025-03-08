@@ -86,24 +86,28 @@ export const categoriseTransactions = async (
   `;
   const batchedTransactions = [];
   const batch = [];
-  let count = 0;
-  for (const transaction in transactions) {
-    batch.push(transaction);
-    count++;
-    if (count % batchSize === 0) {
-      batchedTransactions.push(batch);
+  for (let i = 0; i < transactions.length; i++) {
+    batch.push(transactions[i]);
+    if ((i + 1) % batchSize === 0) {
+      batchedTransactions.push([...batch]);
       batch.length = 0;
     }
   }
+  batchedTransactions.push([...batch])
+  batch.length = 0;
+  console.log({batchedTransactions})
   const result = await Promise.all(
     batchedTransactions.flatMap((batch) => {
       const output = model.generateContent(prompt + JSON.stringify(batch));
+      console.log(JSON.stringify(batch))
+      console.log(output.response.text())
+      console.log("---------------------");
       const outputJson = JSON.parse(output.response.text()).filter(
         (pair: unknown) => pair as CategorisedPair
       );
       return outputJson;
     })
   );
-
+console.log({result})
   return result;
 };
