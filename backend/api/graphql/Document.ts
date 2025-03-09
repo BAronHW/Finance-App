@@ -204,6 +204,15 @@ export const DocumentMutation = extendType({
                 }
             }
         })
+        t.field('analyseSinglePdfWithAI',{
+            type: 'Boolean',
+            args:{
+                pdfKey: nonNull(stringArg())
+            },
+            async resolve(_root, args, ctx){
+
+            }
+        })
     },
 })
 
