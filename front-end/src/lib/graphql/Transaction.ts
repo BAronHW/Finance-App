@@ -51,3 +51,17 @@ export const UPDATE_TRANSACTION = gql(`
     }
   }
   `)
+
+export const CATEGORISE_TRANSACTIONS_WITH_AI = gql(`
+  mutation CategoriseTransactionsWithAi($ids: [Int!]) {
+    categoriseTransactionsWithAi(ids: $ids) {
+      id
+      merchantName
+      amount
+      Category {
+        id
+        name
+      }
+    }
+  }
+  `)

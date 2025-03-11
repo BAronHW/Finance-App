@@ -6,10 +6,13 @@ import {
   intArg,
   enumType,
   floatArg,
+  list,
+  booleanArg,
 } from "nexus";
 import { plaidClient } from "../config/PlaidConfiguration";
 import dayjs from "dayjs";
 import { TransactionsGetRequest } from "plaid";
+import { categoriseTransactions } from "../services/autoCategorisation";
 
 export const Transaction = objectType({
   name: "Transaction",
@@ -24,7 +27,7 @@ export const Transaction = objectType({
     t.field("io", {
       type: "InOrOutEnum",
       resolve(root, _args, _ctx) {
-        if (root.amount >= 0) {
+        if (root.amount && root.amount >= 0) {
           return "IN";
         } else {
           return "OUT";
@@ -32,14 +35,14 @@ export const Transaction = objectType({
       },
     });
     t.string("name");
-    t.nonNull.string("merchantName");
-    t.nonNull.float("amount");
-    t.nonNull.int("date");
+    t.string("merchantName");
+    t.float("amount");
+    t.int("date");
     t.int("categoryId");
     t.field("Category", {
-      type: "Category"
+      type: "Category",
     });
-    t.nonNull.string("plaidId");
+    t.string("plaidId");
   },
 });
 
@@ -71,16 +74,16 @@ export const TransactionQuery = extendType({
               select: {
                 id: true,
                 name: true,
-              }
+              },
             },
             Category: {
               select: {
                 id: true,
                 name: true,
                 colour: true,
-              }
-            }
-          }
+              },
+            },
+          },
         });
         if (!transactions) {
           throw new Error("Error while fetching transactions.");
@@ -298,21 +301,23 @@ export const TransactionMutations = extendType({
               Category: {
                 connect: {
                   id: args.categoryId,
-                }
-              }
+                },
+              },
             }),
-            ...((!args.categoryId && !args.merchantName && !args.name) && {
-              Category: {
-                disconnect: true,
-              }
-            }),
+            ...(!args.categoryId &&
+              !args.merchantName &&
+              !args.name && {
+                Category: {
+                  disconnect: true,
+                },
+              }),
           },
           include: {
             Category: true,
-          }
-        })
-      }
-    })
+          },
+        });
+      },
+    });
     t.field("deleteTransaction", {
       type: "Transaction",
       args: {
@@ -324,6 +329,59 @@ export const TransactionMutations = extendType({
             id: args.id,
           },
         });
+      },
+    });
+    t.nonNull.list.field("categoriseTransactionsWithAi", {
+      type: "Transaction",
+      args: {
+        ids: nonNull(list(nonNull(intArg()))),
+        overwrite: booleanArg(),
+      },
+      resolve: async (root, args, ctx) => {
+        const transactions = await ctx.db.transaction.findMany({
+          where: {
+            id: {
+              in: args.ids,
+            },
+          },
+          select: {
+            id: true,
+            merchantName: true,
+            amount: true,
+            categoryId: true,
+          },
+        });
+        const categories = await ctx.db.category.findMany({
+          select: {
+            id: true,
+            name: true,
+            description: true,
+          },
+        });
+
+        const transactionCategoryIdPairs = await categoriseTransactions(
+          transactions.filter((transaction) =>
+            args.overwrite && !!transaction.categoryId ? false : true
+          ),
+          10,
+          categories
+        );
+        return await Promise.all(
+          transactionCategoryIdPairs.map(({ transactionId, categoryId }) =>
+            ctx.db.transaction.update({
+              where: {
+                id: transactionId,
+              },
+              data: {
+                Category: {
+                  connect: {
+                    id: categoryId,
+                  },
+                },
+              },
+            })
+          )
+        );
       },
     });
   },
