@@ -249,7 +249,7 @@ export interface NexusGenFieldTypes {
     store_number: string | null; // String
   }
   Mutation: { // field return type
-    analyseSinglePdfWithAI: boolean | null; // Boolean
+    analyseSinglePdfWithAI: NexusGenScalars['Any'] | null; // Any
     createAccount: NexusGenRootTypes['Account']; // Account!
     createCategory: NexusGenRootTypes['Category']; // Category!
     createLinkToken: NexusGenRootTypes['LinkToken'] | null; // LinkToken
@@ -421,7 +421,7 @@ export interface NexusGenFieldTypeNames {
     store_number: 'String'
   }
   Mutation: { // field return type name
-    analyseSinglePdfWithAI: 'Boolean'
+    analyseSinglePdfWithAI: 'Any'
     createAccount: 'Account'
     createCategory: 'Category'
     createLinkToken: 'LinkToken'

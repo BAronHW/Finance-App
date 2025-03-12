@@ -13,6 +13,13 @@ import * as crypto from 'crypto'
 import dotenv from 'dotenv'
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import * as fs from 'node:fs';
+import path from 'node:path';
+import os from 'os';
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
+import { PromptTemplate } from "@langchain/core/prompts"
+import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 dotenv.config()
 
 const bucketName = process.env.BUCKET_NAME
@@ -205,12 +212,115 @@ export const DocumentMutation = extendType({
             }
         })
         t.field('analyseSinglePdfWithAI',{
-            type: 'Boolean',
+            type: 'Any',
             args:{
                 pdfKey: nonNull(stringArg())
             },
             async resolve(_root, args, ctx){
 
+                const uniquePdf = await ctx.db.document.findUnique({
+                    where:{
+                        key: args.pdfKey
+                    }
+                })
+
+                if(!uniquePdf){
+                    return false
+                }
+
+                interface s3ObjInterface {
+                    file: string,
+                    name: string | null,
+                    size: number,
+                    contentType: string | undefined,
+                    lastModified: Date | undefined,
+                }
+
+
+                const getObjectParams = {
+                    Bucket: bucketName,
+                    Key: uniquePdf.key
+                }
+
+                const command = new GetObjectCommand(getObjectParams);
+                const response = await s3.send(command);
+
+                if (!response.Body){
+                    throw new Error("Unable to retrieve s3 object")
+                }
+
+                const arrayBuffer = await response.Body.transformToByteArray();
+                const buffer = Buffer.from(arrayBuffer);
+
+
+                const tempDir = os.tmpdir();
+                const tempFilePath = path.join(tempDir, `${uniquePdf.key}.pdf`);
+                fs.writeFileSync(tempFilePath,buffer);
+
+                const loader = new PDFLoader(tempFilePath, {
+                    splitPages: true,
+                });
+                const docs = await loader.load();
+
+                const textSplitter = new RecursiveCharacterTextSplitter({
+                    chunkSize: 1000,
+                    chunkOverlap: 200,
+                });
+
+                const splitDocs = await textSplitter.splitDocuments(docs);
+                console.log(`Split into ${splitDocs.length} chunks`);
+
+
+                const model = new ChatGoogleGenerativeAI({
+                    modelName: "gemini-1.5-pro",
+                    maxOutputTokens: 2048,
+                    apiKey: process.env.GEMINI_KEY
+                });
+                
+                const tableExtractionPrompt = PromptTemplate.fromTemplate(`
+                    You are a data extraction specialist. Analyze the following PDF content carefully to identify and extract ALL tables.
+                    
+                    For each table:
+                    1. Identify the table boundaries
+                    2. Preserve the exact structure (rows and columns)
+                    3. Extract the column headers
+                    4. Extract all data cells
+                    5. Convert to a clean JSON format
+                    
+                    If you encounter any data that looks tabular (even if it's not in a formal table), extract it as well.
+                    
+                    Here's the PDF content to analyze:
+                    
+                    {context}
+                    
+                    Return ONLY the extracted tables in the following structured JSON format:
+                    {{
+                      "tables": [
+                        {{
+                          "tableTitle": "title or description of the table",
+                          "headers": ["column1", "column2", "column3", ...],
+                          "rows": [
+                            ["row1cell1", "row1cell2", "row1cell3", ...],
+                            ["row2cell1", "row2cell2", "row2cell3", ...],
+                            ...
+                          ]
+                        }},
+                        ... additional tables ...
+                      ]
+                    }}
+                    
+                    Don't include any explanations, just the JSON data.
+                `);
+
+                const chain = tableExtractionPrompt.pipe(model);
+
+                /**
+                 * TODO:
+                 * 1. using the current prompt extract all the table data from each chunk 
+                 * 2. then write a function to return all of the data from each chunk and merge it back into one json format.
+                 * 
+                 */
+                return null
             }
         })
     },
