@@ -252,6 +252,9 @@ export const DocumentMutation = extendType({
                 const arrayBuffer = await response.Body.transformToByteArray();
                 const buffer = Buffer.from(arrayBuffer);
 
+                const pdf = require('pdf-parse');
+                console.log(await pdf(buffer))
+
 
                 const tempDir = os.tmpdir();
                 const tempFilePath = path.join(tempDir, `${uniquePdf.key}.pdf`);
@@ -268,7 +271,6 @@ export const DocumentMutation = extendType({
                 });
 
                 const splitDocs = await textSplitter.splitDocuments(docs);
-                console.log(`Split into ${splitDocs.length} chunks`);
 
 
                 const model = new ChatGoogleGenerativeAI({
@@ -281,11 +283,10 @@ export const DocumentMutation = extendType({
                     You are a data extraction specialist. Analyze the following PDF content carefully to identify and extract ALL tables.
                     
                     For each table:
-                    1. Identify the table boundaries
-                    2. Preserve the exact structure (rows and columns)
-                    3. Extract the column headers
-                    4. Extract all data cells
-                    5. Convert to a clean JSON format
+                    1. Preserve the exact structure (rows and columns)
+                    2. Extract the column headers
+                    3. Extract all data cells
+                    4. Convert to a clean JSON format
                     
                     If you encounter any data that looks tabular (even if it's not in a formal table), extract it as well.
                     
@@ -314,13 +315,20 @@ export const DocumentMutation = extendType({
 
                 const chain = tableExtractionPrompt.pipe(model);
 
+                const array = Promise.all(splitDocs.map( async (doc) => {
+                    const test = await chain.invoke({
+                        context: doc.pageContent
+                    })
+                }))
+
                 /**
                  * TODO:
-                 * 1. using the current prompt extract all the table data from each chunk 
-                 * 2. then write a function to return all of the data from each chunk and merge it back into one json format.
+                 * 1. using the current prompt extract all the table data from each chunk
+                 * 2. process the chunks in batches of 5  
+                 * 3. then write a function to return all of the data from each chunk and merge it back into one json format.
                  * 
                  */
-                return null
+                return array
             }
         })
     },
