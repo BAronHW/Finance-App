@@ -228,15 +228,6 @@ export const DocumentMutation = extendType({
                     return false
                 }
 
-                interface s3ObjInterface {
-                    file: string,
-                    name: string | null,
-                    size: number,
-                    contentType: string | undefined,
-                    lastModified: Date | undefined,
-                }
-
-
                 const getObjectParams = {
                     Bucket: bucketName,
                     Key: uniquePdf.key
@@ -252,13 +243,9 @@ export const DocumentMutation = extendType({
                 const arrayBuffer = await response.Body.transformToByteArray();
                 const buffer = Buffer.from(arrayBuffer);
 
-                const pdf = require('pdf-parse');
-                console.log(await pdf(buffer))
-
-
                 const tempDir = os.tmpdir();
                 const tempFilePath = path.join(tempDir, `${uniquePdf.key}.pdf`);
-                fs.writeFileSync(tempFilePath,buffer);
+                fs.writeFileSync(tempFilePath, buffer);
 
                 const loader = new PDFLoader(tempFilePath, {
                     splitPages: true,
@@ -283,10 +270,9 @@ export const DocumentMutation = extendType({
                     You are a data extraction specialist. Analyze the following PDF content carefully to identify and extract ALL tables.
                     
                     For each table:
-                    1. Preserve the exact structure (rows and columns)
-                    2. Extract the column headers
-                    3. Extract all data cells
-                    4. Convert to a clean JSON format
+                    1. Extract the column headers
+                    2. Extract all data cells
+                    3. Convert to a clean JSON format
                     
                     If you encounter any data that looks tabular (even if it's not in a formal table), extract it as well.
                     
@@ -315,20 +301,89 @@ export const DocumentMutation = extendType({
 
                 const chain = tableExtractionPrompt.pipe(model);
 
-                const array = Promise.all(splitDocs.map( async (doc) => {
+                const chunkResultArray = await Promise.all(splitDocs.map(async (doc) => {
                     const test = await chain.invoke({
                         context: doc.pageContent
-                    })
-                }))
+                    });
+                    return {
+                        content: test,
+                        pageNumber: doc.metadata?.loc?.pageNumber
+                    };
+                }));
 
+                chunkResultArray.map((val)=> console.log(val.content))
+
+                const mergeTablesPrompt = PromptTemplate.fromTemplate(`
+                    You are a data integration specialist. Your task is to analyze tables extracted from different chunks of the same PDF document and merge them into a coherent set of complete tables.
+                  
+                    For each set of table fragments:
+                    1. Identify tables that appear to be parts of the same larger table
+                    2. Merge partial tables that belong together
+                    3. Remove duplicate rows
+                    4. Combine headers appropriately
+                    5. Ensure consistent formatting across merged tables
+                    6. Preserve any table titles or descriptions
+                  
+                    Here are the extracted tables from different chunks:
+                  
+                    {context}
+                  
+                    Please analyze these table fragments and return a complete set of merged tables in the following JSON format:
+                    {{
+                      "merged tables": [
+                        {{
+                          "tableTitle": "title or description of the table",
+                          "headers": ["column1", "column2", "column3", ...],
+                          "rows": [
+                            ["row1cell1", "row1cell2", "row1cell3", ...],
+                            ["row2cell1", "row2cell2", "row2cell3", ...],
+                            ...
+                          ]
+                        }},
+                        ... additional tables ...
+                      ]
+                    }}
+                  
+                    For merging logic:
+                    - Tables with matching headers should be considered part of the same table
+                    - Tables with similar titles should be checked for potential merging
+                    - Partial tables that appear to continue from one chunk to another should be joined
+                    - If a table spans across page boundaries, ensure rows are in the correct order
+                  
+                    If you detect any tables that are clearly different entities, keep them separate.
+                    Return ONLY the JSON with merged tables without any additional explanations.
+                  `);
+
+                const mergeChain = mergeTablesPrompt.pipe(model);
+
+                const mergedTablesResult = await mergeChain.invoke({context: chunkResultArray});
+                
+                console.log("here")
+                console.log(mergedTablesResult.content)
+
+
+                try {
+                    fs.unlinkSync(tempFilePath);
+                } catch (error) {
+                    console.error("Error removing temp file:", error);
+                }
+                
                 /**
                  * TODO:
                  * 1. using the current prompt extract all the table data from each chunk
                  * 2. process the chunks in batches of 5  
                  * 3. then write a function to return all of the data from each chunk and merge it back into one json format.
                  * 
+                 * create a mutation to extract text and summarise text from the pdf
                  */
-                return array
+                return {
+                    success: true,
+                    mergedTables: mergedTablesResult,
+                    documentInfo: {
+                        key: uniquePdf.key,
+                        name: uniquePdf.name || 'Unnamed document'
+                    }
+                };
             }
         })
     },
