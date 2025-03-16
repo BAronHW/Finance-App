@@ -311,8 +311,6 @@ export const DocumentMutation = extendType({
                     };
                 }));
 
-                chunkResultArray.map((val)=> console.log(val.content))
-
                 const mergeTablesPrompt = PromptTemplate.fromTemplate(`
                     You are a data integration specialist. Your task is to analyze tables extracted from different chunks of the same PDF document and merge them into a coherent set of complete tables.
                   
@@ -357,28 +355,48 @@ export const DocumentMutation = extendType({
                 const mergeChain = mergeTablesPrompt.pipe(model);
 
                 const mergedTablesResult = await mergeChain.invoke({context: chunkResultArray});
-                
-                console.log("here")
+
                 console.log(mergedTablesResult.content)
 
+                const doesMergedTableExists = await ctx.db.mergedTable.findFirst({
+                    where: {
+                        documentKey: args.pdfKey
+                    }
+                })
+
+                if(!doesMergedTableExists){
+                    await ctx.db.mergedTable.create({
+                        data: {
+                            documentKey: args.pdfKey,
+                            mergedTableContent: mergedTablesResult.content
+                        }
+                    })
+                }else{
+                    return {
+                        success: true,
+                        existAlready: true,
+                        mergeTablesPrompt: mergedTablesResult.content,
+                        documentInfo: {
+                            key: uniquePdf.key,
+                            name: uniquePdf.name || 'Unnamed document'
+                        }
+                    }
+                }
 
                 try {
                     fs.unlinkSync(tempFilePath);
                 } catch (error) {
                     console.error("Error removing temp file:", error);
                 }
-                
+
                 /**
                  * TODO:
-                 * 1. using the current prompt extract all the table data from each chunk
-                 * 2. process the chunks in batches of 5  
-                 * 3. then write a function to return all of the data from each chunk and merge it back into one json format.
-                 * 
-                 * create a mutation to extract text and summarise text from the pdf
+                 * 1. look into using batches to make it better
                  */
                 return {
                     success: true,
-                    mergedTables: mergedTablesResult,
+                    existAlready: false,
+                    mergedTables: mergedTablesResult.content,
                     documentInfo: {
                         key: uniquePdf.key,
                         name: uniquePdf.name || 'Unnamed document'
