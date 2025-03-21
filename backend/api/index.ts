@@ -16,10 +16,10 @@ const startServer = async () => {
             return{
                 db: context.db,
             }
-        }
+        }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
     })
     
     console.log(`🚀  Server ready at ${url}`)
-}
+}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 
 startServer()
