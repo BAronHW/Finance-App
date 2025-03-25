@@ -6,7 +6,7 @@ import { onAuthStateChanged, signOut, User } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 import { GET_SINGLE_USERID_BY_UID } from '../graphql/Users'
 import { useLazyQuery } from '@apollo/client'
-import { LoaderCircle } from 'lucide-react'
+import CircularProgress from '@mui/material/CircularProgress'
 
 interface UserQueryResponse {
     getUserByUid: {
@@ -117,7 +117,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         <AuthContext.Provider value={value}>
             {loading ? (
                 <div className="flex items-center justify-center">
-                    <LoaderCircle />
+                    <CircularProgress />
                 </div>
             ) : (
                 children
