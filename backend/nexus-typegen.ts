@@ -250,6 +250,7 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     categoriseTransactionsWithAi: Array<NexusGenRootTypes['Transaction'] | null>; // [Transaction]!
+    analyseSinglePdfWithAI: NexusGenScalars['Any'] | null; // Any
     createAccount: NexusGenRootTypes['Account']; // Account!
     createCategory: NexusGenRootTypes['Category']; // Category!
     createLinkToken: NexusGenRootTypes['LinkToken'] | null; // LinkToken
@@ -422,6 +423,7 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     categoriseTransactionsWithAi: 'Transaction'
+    analyseSinglePdfWithAI: 'Any'
     createAccount: 'Account'
     createCategory: 'Category'
     createLinkToken: 'LinkToken'
@@ -524,6 +526,9 @@ export interface NexusGenArgTypes {
     categoriseTransactionsWithAi: { // args
       ids: number[]; // [Int!]!
       overwrite?: boolean | null; // Boolean
+    }
+    analyseSinglePdfWithAI: { // args
+      pdfKey: string; // String!
     }
     createAccount: { // args
       available: number; // Float!

@@ -21,8 +21,6 @@ import { Account } from '@/__generated__/graphql'
 import { useAuth } from '@/lib/contexts/authContext'
 import { useRouter } from 'next/navigation'
 export default function Home() {
-    // check if the current userid is equal to the id in the parameter if not then redirect to home/currentid
-
     const auth = useAuth()
     const router = useRouter()
     const userIdInAuthContext = auth.userId
@@ -30,10 +28,25 @@ export default function Home() {
     const userId = Array.isArray(params?.userId)
         ? Number(params?.userId[0])
         : Number(params?.userId)
+    const [mounted, setMounted] = useState(false)
 
-    if (userIdInAuthContext != userId) {
-        router.push(`/home/${userIdInAuthContext}`)
-    }
+    useEffect(() => {
+        if (mounted) {
+            if (userIdInAuthContext === null) {
+                router.push('/')
+                return
+            }
+
+            if (userIdInAuthContext !== userId) {
+                router.push(`/home/${userIdInAuthContext}`)
+                return
+            }
+        }
+    }, [userIdInAuthContext, userId, router, mounted])
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
 
     const [accessToken, setAccessToken] = useState('')
     const [linkToken, setLinkToken] = useState('')

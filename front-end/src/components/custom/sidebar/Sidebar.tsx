@@ -21,12 +21,11 @@ function Sidebar() {
     const auth = useAuth()
 
     const currentUserId = auth.userId
+    const dashboardLink = currentUserId ? `/home/${currentUserId}` : '/sign-in'
     console.log(currentUserId)
 
     const logOut = () => {
         auth.logOut()
-        console.log(auth.currentUser)
-        console.log(auth.userLoggedIn)
     }
 
     const menuItems = [
@@ -34,7 +33,7 @@ function Sidebar() {
             id: 1,
             label: 'Dashboard',
             icon: Home,
-            link: `/home/${currentUserId}`,
+            link: dashboardLink || '',
         },
         { id: 2, label: 'Analytics', icon: Users, link: '/analytics' },
         { id: 3, label: 'Documents', icon: FileText, link: '/documents' },

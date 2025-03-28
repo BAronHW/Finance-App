@@ -45,13 +45,21 @@ model Transaction {
 }
 
 model Document {
-  id      Int       @id @default(autoincrement())
-  key     String    @unique
-  size    Int
-  name    String?
-  user    User      @relation(fields: [uid], references: [uid])
-  uid     String
-  Account Account[]
+  id          Int           @id @default(autoincrement())
+  key         String        @unique
+  size        Int
+  name        String?
+  user        User          @relation(fields: [uid], references: [uid])
+  uid         String
+  Account     Account[]
+  MergedTable MergedTable[]
+}
+
+model MergedTable {
+  id                 Int      @id @default(autoincrement())
+  document           Document @relation(fields: [documentKey], references: [key])
+  documentKey        String
+  mergedTableContent Json
 }
 
 model Account {

@@ -6,6 +6,7 @@ import { onAuthStateChanged, signOut, User } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 import { GET_SINGLE_USERID_BY_UID } from '../graphql/Users'
 import { useLazyQuery } from '@apollo/client'
+import { LoaderCircle } from 'lucide-react'
 
 interface UserQueryResponse {
     getUserByUid: {
@@ -73,7 +74,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                     setCurrentUser(null)
                     setUserLoggedIn(false)
                     setUserId(null)
-                    router.replace('/sign-in')
+                    console.log(user)
+                    if (!window.location.pathname.includes('/sign-in')) {
+                        router.replace('/sign-in')
+                    }
                 }
             } catch (error) {
                 console.error('Error initializing user:', error)
@@ -111,7 +115,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     return (
         <AuthContext.Provider value={value}>
-            {!loading && children}
+            {loading ? (
+                <div className="flex items-center justify-center">
+                    <LoaderCircle />
+                </div>
+            ) : (
+                children
+            )}
         </AuthContext.Provider>
     )
 }
