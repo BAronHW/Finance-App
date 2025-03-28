@@ -366,7 +366,9 @@ export const TransactionMutations = extendType({
           10,
           categories
         );
-        console.log({transactionCategoryIdPairs})
+        console.log(
+          transactionCategoryIdPairs.forEach((pair) => console.log({ pair }))
+        );
         return await Promise.all(
           transactionCategoryIdPairs.map(({ transactionId, categoryId }) =>
             ctx.db.transaction.update({

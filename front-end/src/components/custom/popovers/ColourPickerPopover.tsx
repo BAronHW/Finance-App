@@ -41,7 +41,6 @@ export const ColourPickerPopover = ({
           variant="default"
           onClick={() => {
             onSaveColour(colourRef.current);
-            console.log(colourRef.current);
             setButtonColour(colourRef.current)
           }}
         >

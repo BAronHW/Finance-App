@@ -1,4 +1,6 @@
-import { model } from "./gemini";
+import { Type } from "@google/genai";
+import { ai } from "./gemini";
+import {} from "@google/generative-ai";
 
 type CategorisedPair = {
   transactionId: number;
@@ -93,21 +95,39 @@ export const categoriseTransactions = async (
       batch.length = 0;
     }
   }
-  batchedTransactions.push([...batch])
+  batchedTransactions.push([...batch]);
   batch.length = 0;
-  console.log({batchedTransactions})
   const result = await Promise.all(
     batchedTransactions.flatMap((batch) => {
-      const output = model.generateContent(prompt + JSON.stringify(batch));
-      console.log(JSON.stringify(batch))
-      console.log(output.response.text())
-      console.log("---------------------");
-      const outputJson = JSON.parse(output.response.text()).filter(
-        (pair: unknown) => pair as CategorisedPair
-      );
-      return outputJson;
+      const response = ai.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: prompt + JSON.stringify(batch),
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                transactionId: {
+                  type: Type.INTEGER,
+                  nullable: false,
+                },
+                categoryId: {
+                  type: Type.INTEGER,
+                  nullable: false,
+                },
+              },
+              required: ["transactionId", "categoryId"],
+            },
+          },
+        },
+      });
+      return response;
     })
   );
-console.log({result})
-  return result;
+  const parsedResult = result
+    .flatMap((object) => (object.text ? JSON.parse(object.text) : undefined))
+    .filter((output) => output);
+  return parsedResult;
 };

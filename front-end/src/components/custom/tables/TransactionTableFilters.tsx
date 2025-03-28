@@ -34,7 +34,6 @@ export const TransactionTableFilters = ({
   categories,
   accounts,
 }: Props) => {
-  console.log({ categories });
   return (
     <div className="flex place-content-between py-4">
       <div className="flex items-center gap-1 border border-slate-200 rounded-md">
@@ -231,7 +230,6 @@ export const TransactionTableFilters = ({
                         ?.includes(category.name)
                     }
                     onCheckedChange={(checked) => {
-                      console.log({ category });
                       const filterValue: (string | undefined)[] =
                         (table.getColumn("category")?.getFilterValue() as (
                           | string

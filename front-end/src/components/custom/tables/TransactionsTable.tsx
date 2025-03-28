@@ -28,7 +28,10 @@ import { useMutation, useQuery } from "@apollo/client";
 import { GET_CATEGORIES_BY_USER_ID_FOR_TABLE } from "@/lib/graphql/Category";
 import { TransactionTableFilters } from "./TransactionTableFilters";
 import { AutoCategoriseWithAiPopover } from "../popovers/AutoCategoriseWithAiPopover";
-import { CATEGORISE_TRANSACTIONS_WITH_AI } from "@/lib/graphql/Transaction";
+import {
+  CATEGORISE_TRANSACTIONS_WITH_AI,
+  GET_TRANSACTIONS_BY_USER_ID,
+} from "@/lib/graphql/Transaction";
 
 interface TransactionsTable {
   columns: ColumnDef<Transaction>[];
@@ -81,7 +84,10 @@ function TransactionsTable({
   );
 
   const [categoriseTransactionsWithAi] = useMutation(
-    CATEGORISE_TRANSACTIONS_WITH_AI
+    CATEGORISE_TRANSACTIONS_WITH_AI,
+    {
+      refetchQueries: [GET_TRANSACTIONS_BY_USER_ID],
+    }
   );
 
   console.log({ categoriesData });
@@ -93,12 +99,12 @@ function TransactionsTable({
           const selectedIds = table
             .getFilteredSelectedRowModel()
             .rows.map((row) => row.original.id);
-          console.log({ selectedIds });
           categoriseTransactionsWithAi({
             variables: {
               ids: selectedIds,
             },
           });
+          table.toggleAllPageRowsSelected(false);
         }}
       />
       <TransactionTableFilters

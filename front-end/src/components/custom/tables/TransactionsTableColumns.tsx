@@ -1,12 +1,9 @@
 import {
   ColumnDef,
-  createColumnHelper,
   Getter,
-  Row,
-  RowData,
 } from "@tanstack/react-table";
 import { InOrOutEnum, Transaction } from "@/__generated__/graphql";
-import { FilePenLine, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { ArrowUpDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import dayjs from "dayjs";
@@ -20,9 +17,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { TransactionRow } from "./TransactionsTable";
-import { CategoryColourButton } from "../buttons/CategoryColourButton";
-import { useQuery } from "@apollo/client";
-import { GET_CATEGORY_BY_ID } from "@/lib/graphql/Category";
 import { DEFAULT_COLOUR } from "@/lib/constants";
 import { TransactionCategoryButton } from "../buttons/TransactionCategoryButton";
 
