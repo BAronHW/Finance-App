@@ -10,7 +10,6 @@ import {
     UPSERT_TRANSACTIONS_FROM_PLAID,
 } from '@/lib/graphql/Transaction'
 import { useEffect, useState } from 'react'
-import { getAuth } from 'firebase/auth'
 import { CREATE_LINKTOKEN, EXCHANGE_PUB_TOKEN } from '@/lib/graphql/Plaid'
 import { usePlaidLink } from 'react-plaid-link'
 import { GET_USER_BY_ID } from '@/lib/graphql/Users'
