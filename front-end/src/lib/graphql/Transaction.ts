@@ -52,6 +52,18 @@ export const UPDATE_TRANSACTION = gql(`
   }
   `)
 
+export const UPDATE_SELECTED_TRANSACTION_CATEGORIES = gql(`
+  mutation UpdateSelectedTransactionCategories($ids: [Int!]!, $categoryId: Int) {
+    updateTransactions(ids: $ids, categoryId: $categoryId) {
+      id
+      Category {
+        id
+        name
+      }
+    }
+  }
+  `)
+
 export const CATEGORISE_TRANSACTIONS_WITH_AI = gql(`
   mutation CategoriseTransactionsWithAi($ids: [Int!]!) {
     categoriseTransactionsWithAi(ids: $ids) {

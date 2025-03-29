@@ -11,8 +11,13 @@ import {
 } from "nexus";
 import { plaidClient } from "../config/PlaidConfiguration";
 import dayjs from "dayjs";
-import { TransactionsGetRequest } from "plaid";
+import {
+  TransactionsGetRequest,
+  TransactionsRuleField,
+  TransferDocumentPurpose,
+} from "plaid";
 import { categoriseTransactions } from "../services/autoCategorisation";
+import { Category } from "./Category";
 
 export const Transaction = objectType({
   name: "Transaction",
@@ -316,6 +321,59 @@ export const TransactionMutations = extendType({
             Category: true,
           },
         });
+      },
+    });
+    t.nonNull.list.nonNull.field("updateTransactions", {
+      // Currently only supports categories
+      type: "Transaction",
+      args: {
+        ids: nonNull(list(nonNull(intArg()))),
+        categoryId: intArg(),
+      },
+      resolve: async (_root, args, ctx) => {
+        const transactions = await ctx.db.transaction.findMany({
+          where: {
+            id: {
+              in: args.ids,
+            },
+          },
+        });
+        const updatedTransactions = await Promise.all(
+          transactions.map((transaction) =>
+            ctx.db.transaction.update({
+              where: {
+                id: transaction.id,
+              },
+              data: {
+                ...(args.categoryId
+                  ? {
+                      Category: {
+                        connect: {
+                          id: args.categoryId,
+                        },
+                      },
+                    }
+                  : {
+                      categoryId: null,
+                    }),
+              },
+              include: {
+                Category: {
+                  select: {
+                    id: true,
+                    name: true,
+                  },
+                },
+              },
+            })
+          )
+        );
+        if (!updatedTransactions) {
+          throw new Error(
+            "Error: Unable to update selected transactions at once."
+          );
+        }
+        return updatedTransactions;
       },
     });
     t.field("deleteTransaction", {

@@ -32,6 +32,7 @@ import {
   CATEGORISE_TRANSACTIONS_WITH_AI,
   GET_TRANSACTIONS_BY_USER_ID,
 } from "@/lib/graphql/Transaction";
+import { AssignCategoryToSelectedDropdown } from "../dropdowns/AssignCategoryToSelectedDropdown";
 
 interface TransactionsTable {
   columns: ColumnDef<Transaction>[];
@@ -90,23 +91,35 @@ function TransactionsTable({
     }
   );
 
+  const selectedTransactionIds = table
+  .getFilteredSelectedRowModel()
+  .rows.map((row) => Number(row.original.id))
+
   console.log({ categoriesData });
 
   return (
     <div>
-      <AutoCategoriseWithAiPopover
-        onRunAutoCategorise={() => {
-          const selectedIds = table
-            .getFilteredSelectedRowModel()
-            .rows.map((row) => row.original.id);
-          categoriseTransactionsWithAi({
-            variables: {
-              ids: selectedIds,
-            },
-          });
-          table.toggleAllPageRowsSelected(false);
-        }}
-      />
+      <div className="flex gap-4 justify-center">
+        <AutoCategoriseWithAiPopover
+          onRunAutoCategorise={() => {
+            const selectedIds = table
+              .getFilteredSelectedRowModel()
+              .rows.map((row) => row.original.id);
+            categoriseTransactionsWithAi({
+              variables: {
+                ids: selectedIds,
+              },
+            });
+            table.toggleAllPageRowsSelected(false);
+          }}
+        />
+        <AssignCategoryToSelectedDropdown
+          categories={categoriesData ? categoriesData.getCategoriesByUserId : []}
+          categoriesLoading={categoriesLoading}
+          transactionIds={selectedTransactionIds}
+          disabled={selectedTransactionIds.length === 0}
+        />
+      </div>
       <TransactionTableFilters
         table={table}
         categories={categoriesData?.getCategoriesByUserId ?? []}

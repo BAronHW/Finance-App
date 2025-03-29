@@ -249,8 +249,8 @@ export interface NexusGenFieldTypes {
     store_number: string | null; // String
   }
   Mutation: { // field return type
-    categoriseTransactionsWithAi: Array<NexusGenRootTypes['Transaction'] | null>; // [Transaction]!
     analyseSinglePdfWithAI: NexusGenScalars['Any'] | null; // Any
+    categoriseTransactionsWithAi: Array<NexusGenRootTypes['Transaction'] | null>; // [Transaction]!
     createAccount: NexusGenRootTypes['Account']; // Account!
     createCategory: NexusGenRootTypes['Category']; // Category!
     createLinkToken: NexusGenRootTypes['LinkToken'] | null; // LinkToken
@@ -266,6 +266,7 @@ export interface NexusGenFieldTypes {
     exchangePublicToken: string; // String!
     updateCategory: NexusGenRootTypes['Category']; // Category!
     updateTransaction: NexusGenRootTypes['Transaction'] | null; // Transaction
+    updateTransactions: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
     updateUserDetails: NexusGenRootTypes['User']; // User!
     uploadPdf: NexusGenScalars['Any'] | null; // Any
     upsertAccountsFromPlaid: NexusGenRootTypes['Account'][]; // [Account!]!
@@ -422,8 +423,8 @@ export interface NexusGenFieldTypeNames {
     store_number: 'String'
   }
   Mutation: { // field return type name
-    categoriseTransactionsWithAi: 'Transaction'
     analyseSinglePdfWithAI: 'Any'
+    categoriseTransactionsWithAi: 'Transaction'
     createAccount: 'Account'
     createCategory: 'Category'
     createLinkToken: 'LinkToken'
@@ -439,6 +440,7 @@ export interface NexusGenFieldTypeNames {
     exchangePublicToken: 'String'
     updateCategory: 'Category'
     updateTransaction: 'Transaction'
+    updateTransactions: 'Transaction'
     updateUserDetails: 'User'
     uploadPdf: 'Any'
     upsertAccountsFromPlaid: 'Account'
@@ -523,12 +525,12 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    analyseSinglePdfWithAI: { // args
+      pdfKey: string; // String!
+    }
     categoriseTransactionsWithAi: { // args
       ids: number[]; // [Int!]!
       overwrite?: boolean | null; // Boolean
-    }
-    analyseSinglePdfWithAI: { // args
-      pdfKey: string; // String!
     }
     createAccount: { // args
       available: number; // Float!
@@ -604,6 +606,10 @@ export interface NexusGenArgTypes {
       id: number; // Int!
       merchantName?: string | null; // String
       name?: string | null; // String
+    }
+    updateTransactions: { // args
+      categoryId?: number | null; // Int
+      ids: number[]; // [Int!]!
     }
     updateUserDetails: { // args
       email: string; // String!

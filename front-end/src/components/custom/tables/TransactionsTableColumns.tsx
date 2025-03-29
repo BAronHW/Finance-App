@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { TransactionRow } from "./TransactionsTable";
 import { DEFAULT_COLOUR } from "@/lib/constants";
-import { TransactionCategoryButton } from "../buttons/TransactionCategoryButton";
+import { TransactionCategoryButton } from "../dropdowns/TransactionCategoryDropdown";
 
 const TransactionsTableColumns: ColumnDef<Transaction>[] = [
   {
