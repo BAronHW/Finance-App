@@ -96,6 +96,8 @@ export const categoriseTransactions = async (
     }
   }
   batchedTransactions.push([...batch]);
+  console.log({batchedTransactions})
+  console.log(batchedTransactions.length)
   batch.length = 0;
   const result = await Promise.all(
     batchedTransactions.flatMap((batch) => {

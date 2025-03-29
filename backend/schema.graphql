@@ -94,8 +94,8 @@ type Location {
 }
 
 type Mutation {
-  categoriseTransactionsWithAi(ids: [Int!]!, overwrite: Boolean): [Transaction]!
   analyseSinglePdfWithAI(pdfKey: String!): Any
+  categoriseTransactionsWithAi(ids: [Int!]!, overwrite: Boolean): [Transaction]!
   createAccount(available: Float!, current: Float!, isoCurrencyCode: String, limit: Float, mask: String, name: String!, officialName: String, plaidId: String!, subtype: String, type: String!, unofficialCurrencyCode: String, userId: Int!): Account!
   createCategory(description: String, name: String!, userId: Int!): Category!
   createLinkToken: LinkToken
@@ -111,6 +111,7 @@ type Mutation {
   exchangePublicToken(public_token: String!, userId: Int!): String!
   updateCategory(colour: String, description: String, id: Int!, name: String): Category!
   updateTransaction(categoryId: Int, id: Int!, merchantName: String, name: String): Transaction
+  updateTransactions(categoryId: Int, ids: [Int!]!): [Transaction!]!
   updateUserDetails(email: String!, firstName: String, id: Int!, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
   uploadPdf(file: String!, name: String!, size: Int!, uid: String!): Any
   upsertAccountsFromPlaid(accessToken: String!, userId: Int!): [Account!]!
