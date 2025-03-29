@@ -170,7 +170,7 @@ export default function Home() {
 
     return (
         <div className="flex flex-col min-h-screen">
-            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="w-full max-w-7xl mx-auto">
                 <Header
                     name={displayName ?? ''}
                     appMoto="Manage your student funds"
@@ -181,8 +181,6 @@ export default function Home() {
                     openPlaidLink={openPlaidLink}
                     plaidLinkReady={plaidLinkReady}
                 />
-            </div>
-            <main className="flex-grow flex items-center justify-center flex-col gap-10 m-7">
                 <div className="mt-6 space-y-4 text-center w-full">
                     <TransactionsTable
                         columns={TransactionsTableColumns}
@@ -192,7 +190,7 @@ export default function Home() {
                         userId={userId}
                     />
                 </div>
-            </main>
+            </div>
         </div>
     )
 }
