@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -45,6 +45,10 @@ import { DARK_GRAY, DEFAULT_COLOUR } from "@/lib/constants";
 import { ColourPickerPopover } from "../popovers/ColourPickerPopover";
 import { CategoriesDialog } from "../dialogs/CategoriesDialog";
 import { PieChartComponent } from "../charts/PiechartComponent";
+import { DatePickerWithRange } from "../datepickers/DatePickerWithRange";
+import { DateRange } from "react-day-picker";
+import { isInDateRange } from "@/lib/utils";
+import { isDefined } from "@/lib/typeguards";
 
 ChartJS.register(ArcElement, ChartTooltip, Legend);
 
@@ -84,6 +88,11 @@ function Header({
     { variables: { userId } }
   );
 
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: undefined,
+    to: undefined,
+  });
+
   const initials = name
     .split(" ")
     .map((n) => n[0])
@@ -107,6 +116,9 @@ function Header({
       map.set(null, 0);
       transactionData
         .filter((transaction) => transaction.io === InOrOutEnum.Out)
+        .filter((transaction) =>
+          dateRange ? isInDateRange(dateRange, transaction.date) : true
+        )
         .forEach((transaction: Transaction) => {
           if (map.has(transaction.categoryId ?? null)) {
             const current = map.get(transaction.categoryId ?? null)!;
@@ -118,7 +130,7 @@ function Header({
         });
       return map;
     }
-  }, [transactionData, categoriesData]);
+  }, [transactionData, categoriesData, dateRange]);
 
   const chartData: ChartDataType[] =
     categoriesData?.getCategoriesByUserId.map((category: Category) => {
@@ -129,24 +141,38 @@ function Header({
       };
     }) ?? [];
 
-  const totalSpending = useMemo(() => {
+  const totalOut = useMemo(() => {
     if (transactionData.length) {
       return transactionData
+        .filter((transaction) =>
+          dateRange ? isInDateRange(dateRange, transaction.date) : true
+        )
         .map((transaction) =>
           transaction.amount >= 0 ? transaction.amount : 0
         )
-        .reduce((total, currentValue) => total + currentValue);
+        .reduce((total, currentValue) => total + currentValue, 0);
     }
-  }, [transactionData]);
+  }, [transactionData, dateRange]);
 
-  if (!totalSpending) {
+  const totalIn = useMemo(() => {
+    if (transactionData.length) {
+      return transactionData
+        .filter((transaction) =>
+          dateRange ? isInDateRange(dateRange, transaction.date) : true
+        )
+        .map((transaction) => (transaction.amount < 0 ? transaction.amount : 0))
+        .reduce((total, currentValue) => total - currentValue, 0);
+    }
+  }, [transactionData, dateRange]);
+
+  if (!isDefined(totalOut) || !isDefined(totalIn)) {
     return <p>Loading...</p>;
   }
 
   chartData.push({
     category: "Uncategorised",
     spending:
-      totalSpending -
+      totalOut -
       chartData
         .map((dataPoint: ChartDataType) => dataPoint.spending)
         .reduce((total, currentValue) => total + currentValue, 0),
@@ -189,23 +215,47 @@ function Header({
           </div>
           <div className="flex gap-4">
             <div className="flex flex-col gap-4">
-              <h3 className="text-lg font-semibold">Total Balance: </h3>
               <h3 className="text-lg font-semibold">
+                Total Balance:{" "}
                 {new Intl.NumberFormat("en-GB", {
                   style: "currency",
                   currency: "GBP",
                 }).format(totalBalance)}
               </h3>
-              <h3 className="text-lg font-semibold">Total Spending: </h3>
+              <Popover>
+                <PopoverTrigger>
+                  <Button variant="outline">Select Date Range</Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-fit">
+                  <DatePickerWithRange
+                    date={dateRange}
+                    setDate={(range: DateRange | undefined) =>
+                      setDateRange(range)
+                    }
+                  />
+                </PopoverContent>
+              </Popover>
               <h3 className="text-lg font-semibold">
+                Total Out:{" "}
                 {new Intl.NumberFormat("en-GB", {
                   style: "currency",
                   currency: "GBP",
-                }).format(totalSpending)}
+                }).format(totalOut)}
+              </h3>
+              <h3 className="text-lg font-semibold">
+                Total In:{" "}
+                {new Intl.NumberFormat("en-GB", {
+                  style: "currency",
+                  currency: "GBP",
+                }).format(totalIn)}
               </h3>
             </div>
             <div className="flex flex-col">
-              <PieChartComponent chartData={chartData} />
+              <PieChartComponent
+                chartData={chartData}
+                dateRange={dateRange}
+                totalOut={totalOut}
+              />
             </div>
           </div>
         </div>
