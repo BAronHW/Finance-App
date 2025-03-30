@@ -1,23 +1,8 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import BlurIn from "@/components/magicui/blur-in";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -32,23 +17,14 @@ import {
   Transaction,
 } from "@/__generated__/graphql";
 import AccountManagementPopover from "../popovers/AccountManagementPopover";
-import { Palette, Pencil, Plus, Trash2 } from "lucide-react";
-import { useMutation, useQuery } from "@apollo/client";
-import {
-  CREATE_CATEGORY,
-  DELETE_CATEGORY,
-  GET_CATEGORIES_BY_USER_ID,
-  UPDATE_CATEGORY,
-} from "@/lib/graphql/Category";
-import CategoryForm from "../forms/CategoryForm";
-import { DARK_GRAY, DEFAULT_COLOUR } from "@/lib/constants";
-import { ColourPickerPopover } from "../popovers/ColourPickerPopover";
+import { useQuery } from "@apollo/client";
+import { GET_CATEGORIES_BY_USER_ID } from "@/lib/graphql/Category";
+import { DARK_GRAY } from "@/lib/constants";
 import { CategoriesDialog } from "../dialogs/CategoriesDialog";
 import { PieChartComponent } from "../charts/PiechartComponent";
 import { DatePickerWithRange } from "../datepickers/DatePickerWithRange";
 import { DateRange } from "react-day-picker";
 import { isInDateRange } from "@/lib/utils";
-import { isDefined } from "@/lib/typeguards";
 
 ChartJS.register(ArcElement, ChartTooltip, Legend);
 
@@ -62,7 +38,6 @@ interface Props {
   name: string;
   userId: number;
   appMoto: string;
-  accBal: number;
   avatarUrl?: string;
   accounts: Account[];
   transactionData: Transaction[];
@@ -76,7 +51,6 @@ function Header({
   userId,
   appMoto,
   transactionData,
-  accBal,
   avatarUrl,
   accounts = [],
   accountsLoading,
@@ -165,17 +139,14 @@ function Header({
     }
   }, [transactionData, dateRange]);
 
-  if (!isDefined(totalOut) || !isDefined(totalIn)) {
-    return <p>Loading...</p>;
-  }
-
   chartData.push({
     category: "Uncategorised",
-    spending:
-      totalOut -
-      chartData
-        .map((dataPoint: ChartDataType) => dataPoint.spending)
-        .reduce((total, currentValue) => total + currentValue, 0),
+    spending: totalOut
+      ? totalOut -
+        chartData
+          .map((dataPoint: ChartDataType) => dataPoint.spending)
+          .reduce((total, currentValue) => total + currentValue, 0)
+      : 0,
     fill: DARK_GRAY,
   });
 
@@ -231,7 +202,7 @@ function Header({
                 {new Intl.NumberFormat("en-GB", {
                   style: "currency",
                   currency: "GBP",
-                }).format(totalOut)}
+                }).format(totalOut ?? 0)}
               </p>
             </h3>
             <h3 className="flex place-content-between text-lg font-medium">
@@ -240,7 +211,7 @@ function Header({
                 {new Intl.NumberFormat("en-GB", {
                   style: "currency",
                   currency: "GBP",
-                }).format(totalIn)}
+                }).format(totalIn ?? 0)}
               </p>
             </h3>
           </div>
@@ -248,7 +219,7 @@ function Header({
             <PieChartComponent
               chartData={chartData}
               dateRange={dateRange}
-              totalOut={totalOut}
+              totalOut={totalOut ?? 0}
             />
           </div>
         </div>
