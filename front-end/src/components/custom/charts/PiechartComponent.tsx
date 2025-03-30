@@ -41,7 +41,7 @@ export function PieChartComponent({ chartData }: Props) {
       <CardContent className="flex-1 pb-0">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square w-[400px]"
+          className="mx-auto aspect-square w-[400px] my-[-25px]"
         >
           <PieChart>
             <ChartTooltip
