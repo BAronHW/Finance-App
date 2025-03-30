@@ -1,23 +1,8 @@
 "use client";
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import BlurIn from "@/components/magicui/blur-in";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -25,30 +10,37 @@ import {
   Legend,
 } from "chart.js";
 
-import { Account, Category } from "@/__generated__/graphql";
-import AccountManagementPopover from "../popovers/AccountManagementPopover";
-import { Palette, Pencil, Plus, Trash2 } from "lucide-react";
-import { useMutation, useQuery } from "@apollo/client";
 import {
-  CREATE_CATEGORY,
-  DELETE_CATEGORY,
-  GET_CATEGORIES_BY_USER_ID,
-  UPDATE_CATEGORY,
-} from "@/lib/graphql/Category";
-import CategoryForm from "../forms/CategoryForm";
-import { DEFAULT_COLOUR } from "@/lib/constants";
-import { ColourPickerPopover } from "../popovers/ColourPickerPopover";
+  Account,
+  Category,
+  InOrOutEnum,
+  Transaction,
+} from "@/__generated__/graphql";
+import AccountManagementPopover from "../popovers/AccountManagementPopover";
+import { useQuery } from "@apollo/client";
+import { GET_CATEGORIES_BY_USER_ID } from "@/lib/graphql/Category";
+import { DARK_GRAY } from "@/lib/constants";
 import { CategoriesDialog } from "../dialogs/CategoriesDialog";
+import { PieChartComponent } from "../charts/PiechartComponent";
+import { DatePickerWithRange } from "../datepickers/DatePickerWithRange";
+import { DateRange } from "react-day-picker";
+import { isInDateRange } from "@/lib/utils";
 
 ChartJS.register(ArcElement, ChartTooltip, Legend);
+
+export type ChartDataType = {
+  category: string;
+  spending: number;
+  fill: string;
+};
 
 interface Props {
   name: string;
   userId: number;
   appMoto: string;
-  accBal: number;
   avatarUrl?: string;
   accounts: Account[];
+  transactionData: Transaction[];
   accountsLoading: boolean;
   openPlaidLink: Function;
   plaidLinkReady: boolean;
@@ -58,7 +50,7 @@ function Header({
   name,
   userId,
   appMoto,
-  accBal,
+  transactionData,
   avatarUrl,
   accounts = [],
   accountsLoading,
@@ -70,29 +62,93 @@ function Header({
     { variables: { userId } }
   );
 
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: undefined,
+    to: undefined,
+  });
+
   const initials = name
     .split(" ")
     .map((n) => n[0])
     .join("")
     .toUpperCase();
 
-  const chartData = {
-    labels: ["Savings", "Checking", "Investments"],
-    datasets: [
-      {
-        data: [1250, 2500, 3750],
-        backgroundColor: ["#1d1d7d", "#4242ed", "#6d6df2"],
-        hoverBackgroundColor: ["#1d1d7d", "#4242ed", "#6d6df2"],
-      },
-    ],
-  };
+  const totalBalance = accounts
+    .map((account) => account.current ?? 0)
+    .reduce((total, currentValue) => total + currentValue, 0);
 
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    borderRadius: 20,
-  };
+  const spendingPerCategory = useMemo(() => {
+    if (
+      transactionData.length &&
+      categoriesData &&
+      categoriesData?.getCategoriesByUserId
+    ) {
+      const map = new Map<number | null, number>();
+      categoriesData.getCategoriesByUserId.forEach((category: Category) => {
+        map.set(category.id, 0);
+      });
+      map.set(null, 0);
+      transactionData
+        .filter((transaction) => transaction.io === InOrOutEnum.Out)
+        .filter((transaction) =>
+          dateRange ? isInDateRange(dateRange, transaction.date) : true
+        )
+        .forEach((transaction: Transaction) => {
+          if (map.has(transaction.categoryId ?? null)) {
+            const current = map.get(transaction.categoryId ?? null)!;
+            map.set(
+              transaction.categoryId ?? null,
+              current + transaction.amount
+            );
+          }
+        });
+      return map;
+    }
+  }, [transactionData, categoriesData, dateRange]);
+
+  const chartData: ChartDataType[] =
+    categoriesData?.getCategoriesByUserId.map((category: Category) => {
+      return {
+        category: category.name,
+        spending: spendingPerCategory?.get(category.id),
+        fill: category.colour,
+      };
+    }) ?? [];
+
+  const totalOut = useMemo(() => {
+    if (transactionData.length) {
+      return transactionData
+        .filter((transaction) =>
+          dateRange ? isInDateRange(dateRange, transaction.date) : true
+        )
+        .map((transaction) =>
+          transaction.amount >= 0 ? transaction.amount : 0
+        )
+        .reduce((total, currentValue) => total + currentValue, 0);
+    }
+  }, [transactionData, dateRange]);
+
+  const totalIn = useMemo(() => {
+    if (transactionData.length) {
+      return transactionData
+        .filter((transaction) =>
+          dateRange ? isInDateRange(dateRange, transaction.date) : true
+        )
+        .map((transaction) => (transaction.amount < 0 ? transaction.amount : 0))
+        .reduce((total, currentValue) => total - currentValue, 0);
+    }
+  }, [transactionData, dateRange]);
+
+  chartData.push({
+    category: "Uncategorised",
+    spending: totalOut
+      ? totalOut -
+        chartData
+          .map((dataPoint: ChartDataType) => dataPoint.spending)
+          .reduce((total, currentValue) => total + currentValue, 0)
+      : 0,
+    fill: DARK_GRAY,
+  });
 
   return (
     <Card className="w-full bg-white/80 backdrop-blur-sm z-50 shadow-lg">
@@ -113,33 +169,58 @@ function Header({
                 />
               </div>
               <p className="text-sm text-muted-foreground">{appMoto}</p>
-              <div className="my-8">
+              <div className="flex flex-col gap-6 my-12">
                 <AccountManagementPopover
                   accounts={accounts}
                   openPlaidLink={openPlaidLink}
                   plaidLinkReady={plaidLinkReady}
                   accountsLoading={accountsLoading}
                 />
+                <CategoriesDialog
+                  categoriesLoading={categoriesLoading}
+                  categories={categoriesData?.getCategoriesByUserId}
+                  userId={userId}
+                />
               </div>
             </div>
           </div>
-          <div className="flex flex-col space-x-4">
-            <CategoriesDialog
-              categoriesLoading={categoriesLoading}
-              categories={categoriesData?.getCategoriesByUserId}
-              userId={userId}
+          <div className="flex flex-col gap-4">
+            <h3 className="text-lg font-bold">
+              Total Balance:{" "}
+              {new Intl.NumberFormat("en-GB", {
+                style: "currency",
+                currency: "GBP",
+              }).format(totalBalance)}
+            </h3>
+            <DatePickerWithRange
+              date={dateRange}
+              setDate={(range: DateRange | undefined) => setDateRange(range)}
             />
+            <h3 className="flex place-content-between text-lg font-medium">
+              <p>Total Out:</p>
+              <p>
+                {new Intl.NumberFormat("en-GB", {
+                  style: "currency",
+                  currency: "GBP",
+                }).format(totalOut ?? 0)}
+              </p>
+            </h3>
+            <h3 className="flex place-content-between text-lg font-medium">
+              <p>Total In:</p>
+              <p>
+                {new Intl.NumberFormat("en-GB", {
+                  style: "currency",
+                  currency: "GBP",
+                }).format(totalIn ?? 0)}
+              </p>
+            </h3>
           </div>
-          <div className="flex items-center space-x-4">
-            <div className="text-right">
-              <p className="text-sm text-muted-foreground">Account Balance</p>
-              <p className="text-lg font-semibold">${accBal.toFixed(2)}</p>
-            </div>
-            <div className="flex space-x-2 items-center">
-              <div style={{ width: "60px", height: "60px" }}>
-                <Doughnut data={chartData} options={chartOptions} />
-              </div>
-            </div>
+          <div className="flex flex-col">
+            <PieChartComponent
+              chartData={chartData}
+              dateRange={dateRange}
+              totalOut={totalOut ?? 0}
+            />
           </div>
         </div>
       </CardContent>

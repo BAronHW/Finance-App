@@ -33,9 +33,9 @@ export const Transaction = objectType({
       type: "InOrOutEnum",
       resolve(root, _args, _ctx) {
         if (root.amount && root.amount >= 0) {
-          return "IN";
-        } else {
           return "OUT";
+        } else {
+          return "IN";
         }
       },
     });
