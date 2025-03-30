@@ -213,50 +213,43 @@ function Header({
               </div>
             </div>
           </div>
-          <div className="flex gap-4">
-            <div className="flex flex-col gap-4">
-              <h3 className="text-lg font-semibold">
-                Total Balance:{" "}
-                {new Intl.NumberFormat("en-GB", {
-                  style: "currency",
-                  currency: "GBP",
-                }).format(totalBalance)}
-              </h3>
-              <Popover>
-                <PopoverTrigger>
-                  <Button variant="outline">Select Date Range</Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-fit">
-                  <DatePickerWithRange
-                    date={dateRange}
-                    setDate={(range: DateRange | undefined) =>
-                      setDateRange(range)
-                    }
-                  />
-                </PopoverContent>
-              </Popover>
-              <h3 className="text-lg font-semibold">
-                Total Out:{" "}
+          <div className="flex flex-col gap-4">
+            <h3 className="text-lg font-bold">
+              Total Balance:{" "}
+              {new Intl.NumberFormat("en-GB", {
+                style: "currency",
+                currency: "GBP",
+              }).format(totalBalance)}
+            </h3>
+            <DatePickerWithRange
+              date={dateRange}
+              setDate={(range: DateRange | undefined) => setDateRange(range)}
+            />
+            <h3 className="flex place-content-between text-lg font-medium">
+              <p>Total Out:</p>
+              <p>
                 {new Intl.NumberFormat("en-GB", {
                   style: "currency",
                   currency: "GBP",
                 }).format(totalOut)}
-              </h3>
-              <h3 className="text-lg font-semibold">
-                Total In:{" "}
+              </p>
+            </h3>
+            <h3 className="flex place-content-between text-lg font-medium">
+              <p>Total In:</p>
+              <p>
                 {new Intl.NumberFormat("en-GB", {
                   style: "currency",
                   currency: "GBP",
                 }).format(totalIn)}
-              </h3>
-            </div>
-            <div className="flex flex-col">
-              <PieChartComponent
-                chartData={chartData}
-                dateRange={dateRange}
-                totalOut={totalOut}
-              />
-            </div>
+              </p>
+            </h3>
+          </div>
+          <div className="flex flex-col">
+            <PieChartComponent
+              chartData={chartData}
+              dateRange={dateRange}
+              totalOut={totalOut}
+            />
           </div>
         </div>
       </CardContent>
