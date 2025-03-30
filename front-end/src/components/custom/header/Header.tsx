@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,7 +25,12 @@ import {
   Legend,
 } from "chart.js";
 
-import { Account, Category } from "@/__generated__/graphql";
+import {
+  Account,
+  Category,
+  InOrOutEnum,
+  Transaction,
+} from "@/__generated__/graphql";
 import AccountManagementPopover from "../popovers/AccountManagementPopover";
 import { Palette, Pencil, Plus, Trash2 } from "lucide-react";
 import { useMutation, useQuery } from "@apollo/client";
@@ -36,11 +41,18 @@ import {
   UPDATE_CATEGORY,
 } from "@/lib/graphql/Category";
 import CategoryForm from "../forms/CategoryForm";
-import { DEFAULT_COLOUR } from "@/lib/constants";
+import { DARK_GRAY, DEFAULT_COLOUR } from "@/lib/constants";
 import { ColourPickerPopover } from "../popovers/ColourPickerPopover";
 import { CategoriesDialog } from "../dialogs/CategoriesDialog";
+import { PieChartComponent } from "../charts/PiechartComponent";
 
 ChartJS.register(ArcElement, ChartTooltip, Legend);
+
+export type ChartDataType = {
+  category: string;
+  spending: number;
+  fill: string;
+};
 
 interface Props {
   name: string;
@@ -49,6 +61,7 @@ interface Props {
   accBal: number;
   avatarUrl?: string;
   accounts: Account[];
+  transactionData: Transaction[];
   accountsLoading: boolean;
   openPlaidLink: Function;
   plaidLinkReady: boolean;
@@ -58,6 +71,7 @@ function Header({
   name,
   userId,
   appMoto,
+  transactionData,
   accBal,
   avatarUrl,
   accounts = [],
@@ -76,23 +90,68 @@ function Header({
     .join("")
     .toUpperCase();
 
-  const chartData = {
-    labels: ["Savings", "Checking", "Investments"],
-    datasets: [
-      {
-        data: [1250, 2500, 3750],
-        backgroundColor: ["#1d1d7d", "#4242ed", "#6d6df2"],
-        hoverBackgroundColor: ["#1d1d7d", "#4242ed", "#6d6df2"],
-      },
-    ],
-  };
+  const totalBalance = accounts
+    .map((account) => account.current ?? 0)
+    .reduce((total, currentValue) => total + currentValue, 0);
 
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    borderRadius: 20,
-  };
+  const spendingPerCategory = useMemo(() => {
+    if (
+      transactionData.length &&
+      categoriesData &&
+      categoriesData?.getCategoriesByUserId
+    ) {
+      const map = new Map<number | null, number>();
+      categoriesData.getCategoriesByUserId.forEach((category: Category) => {
+        map.set(category.id, 0);
+      });
+      map.set(null, 0);
+      transactionData
+        .filter((transaction) => transaction.io === InOrOutEnum.Out)
+        .forEach((transaction: Transaction) => {
+          if (map.has(transaction.categoryId ?? null)) {
+            const current = map.get(transaction.categoryId ?? null)!;
+            map.set(
+              transaction.categoryId ?? null,
+              current + transaction.amount
+            );
+          }
+        });
+      return map;
+    }
+  }, [transactionData, categoriesData]);
+
+  const chartData: ChartDataType[] =
+    categoriesData?.getCategoriesByUserId.map((category: Category) => {
+      return {
+        category: category.name,
+        spending: spendingPerCategory?.get(category.id),
+        fill: category.colour,
+      };
+    }) ?? [];
+
+  const totalSpending = useMemo(() => {
+    if (transactionData.length) {
+      return transactionData
+        .map((transaction) =>
+          transaction.amount >= 0 ? transaction.amount : 0
+        )
+        .reduce((total, currentValue) => total + currentValue);
+    }
+  }, [transactionData]);
+
+  if (!totalSpending) {
+    return <p>Loading...</p>;
+  }
+
+  chartData.push({
+    category: "Uncategorised",
+    spending:
+      totalSpending -
+      chartData
+        .map((dataPoint: ChartDataType) => dataPoint.spending)
+        .reduce((total, currentValue) => total + currentValue, 0),
+    fill: DARK_GRAY,
+  });
 
   return (
     <Card className="w-full bg-white/80 backdrop-blur-sm z-50 shadow-lg">
@@ -113,32 +172,40 @@ function Header({
                 />
               </div>
               <p className="text-sm text-muted-foreground">{appMoto}</p>
-              <div className="my-8">
+              <div className="flex flex-col gap-6 my-12">
                 <AccountManagementPopover
                   accounts={accounts}
                   openPlaidLink={openPlaidLink}
                   plaidLinkReady={plaidLinkReady}
                   accountsLoading={accountsLoading}
                 />
+                <CategoriesDialog
+                  categoriesLoading={categoriesLoading}
+                  categories={categoriesData?.getCategoriesByUserId}
+                  userId={userId}
+                />
               </div>
             </div>
           </div>
-          <div className="flex flex-col space-x-4">
-            <CategoriesDialog
-              categoriesLoading={categoriesLoading}
-              categories={categoriesData?.getCategoriesByUserId}
-              userId={userId}
-            />
-          </div>
-          <div className="flex items-center space-x-4">
-            <div className="text-right">
-              <p className="text-sm text-muted-foreground">Account Balance</p>
-              <p className="text-lg font-semibold">${accBal.toFixed(2)}</p>
+          <div className="flex gap-4">
+            <div className="flex flex-col gap-4">
+              <h3 className="text-lg font-semibold">Total Balance: </h3>
+              <h3 className="text-lg font-semibold">
+                {new Intl.NumberFormat("en-GB", {
+                  style: "currency",
+                  currency: "GBP",
+                }).format(totalBalance)}
+              </h3>
+              <h3 className="text-lg font-semibold">Total Spending: </h3>
+              <h3 className="text-lg font-semibold">
+                {new Intl.NumberFormat("en-GB", {
+                  style: "currency",
+                  currency: "GBP",
+                }).format(totalSpending)}
+              </h3>
             </div>
-            <div className="flex space-x-2 items-center">
-              <div style={{ width: "60px", height: "60px" }}>
-                <Doughnut data={chartData} options={chartOptions} />
-              </div>
+            <div className="flex flex-col">
+              <PieChartComponent chartData={chartData} />
             </div>
           </div>
         </div>

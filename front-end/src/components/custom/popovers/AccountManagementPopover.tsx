@@ -39,7 +39,7 @@ const AccountManagementPopover = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent>
-        <div>
+        <div className="w-full">
           {accountsLoading
             ? "Loading..."
             : accounts.map((account) =>
