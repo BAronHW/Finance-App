@@ -1,4 +1,4 @@
-import "../../globals.css";
+import "../globals.css";
 import Sidebar from "@/components/custom/sidebar/Sidebar";
 import { SidebarV2 } from "@/components/custom/sidebar/SidebarV2";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
