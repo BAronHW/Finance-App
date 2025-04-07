@@ -1,9 +1,11 @@
 'use client'
 import { MagicCard } from '@/components/magicui/magic-card'
+import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/lib/contexts/authContext'
 import { GET_ALL_PDF_URL_FROM_USER } from '@/lib/graphql/Documents'
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
+import { Bot } from 'lucide-react'
 import React from 'react'
 
 export default function PDFViewer() {
@@ -42,8 +44,12 @@ export default function PDFViewer() {
                             className="border rounded-lg shadow-md overflow-hidden"
                             gradientColor="#D9D9D955"
                         >
-                            <CardHeader>
+                            <CardHeader className='flex flex-row justify-between'>
                                 <CardTitle>Document {index + 1}</CardTitle>
+                                <Button> 
+                                    <Bot/>
+                                    Analyze With AI!
+                                </Button>
                             </CardHeader>
 
                             <div className="h-[500px] overflow-hidden">
