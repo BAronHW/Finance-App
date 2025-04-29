@@ -168,7 +168,7 @@ function Header({
                   duration={0.5}
                 />
               </div>
-              <p className="text-sm text-muted-foreground">{appMoto}</p>
+              <p className="text-sm text-muted-foreground mt-4">{appMoto}</p>
               <div className="flex flex-col gap-6 my-12">
                 <AccountManagementPopover
                   accounts={accounts}

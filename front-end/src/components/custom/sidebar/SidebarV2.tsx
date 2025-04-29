@@ -54,12 +54,12 @@ export function SidebarV2() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="gap-4">
+            <SidebarMenu className="gap-2">
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.label}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild className="h-16 [&_svg]:size-6">
                     <a href={item.link}>
-                      <item.icon className="mr-2 h-4 w-4" />
+                      <item.icon className="mx-6 h-4 w-4" />
                       <span className="text-lg font-medium">{item.label}</span>
                     </a>
                   </SidebarMenuButton>
@@ -73,10 +73,10 @@ export function SidebarV2() {
         <SidebarContent>
           <Button
             variant="ghost"
-            className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-100"
+            className="w-full h-16 justify-start text-red-500 hover:text-red-600 hover:bg-red-100 text-lg"
             onClick={() => logOut()}
           >
-            <LogOut className="mr-2 h-4 w-4" />
+            <LogOut className="mx-6 h-4 w-4" />
             Logout
           </Button>
         </SidebarContent>
