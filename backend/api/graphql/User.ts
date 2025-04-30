@@ -102,7 +102,7 @@ export const UserMutation = extendType({
         const hash = args.password
           ? await bcrypt.hash(args.password, 10)
           : null;
-        return ctx.db.user.create({
+        return await ctx.db.user.create({
           data: {
             firstName: args.firstName,
             lastName: args.lastName,

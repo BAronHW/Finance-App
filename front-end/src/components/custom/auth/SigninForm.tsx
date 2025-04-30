@@ -15,21 +15,17 @@ import {
 import { Input } from '@/components/ui/input'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/contexts/authContext'
-import { useEmailPasswordSignIn } from '@/lib/Hooks/useEmailPasswordSignIn'
-import { useGoogleSignIn } from '@/lib/Hooks/useGoogleSignIn'
+import { useEmailPasswordSignIn } from '@/lib/hooks/useEmailPasswordSignIn'
+import { useGoogleSignIn } from '@/lib/hooks/useGoogleSignIn'
 import { FormEvent, useState } from 'react'
 import GoogleSignIn from './GoogleSignIn'
 
 export function SignInForm() {
     const router = useRouter()
 
-    const authData = useAuth()
-
-    const [isSigningIn, setIsSigningIn] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
     const [errorCode, setErrorCode] = useState('')
 
-    const { googleSignIn, queryError: googleQueryError } = useGoogleSignIn()
     const { emailPasswordSignIn, queryError: emailPasswordQueryError } =
         useEmailPasswordSignIn()
 
@@ -119,7 +115,7 @@ export function SignInForm() {
             {errorCode && errorMessage && (
                 <div className="flex-column text-center p-4 mt-6 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800">
                     <p className="flex-1 my-2">
-                        Error while registering new user:
+                        Error while logging in:
                     </p>
                     <p className="flex-1 my-2">{errorCode}</p>
                     <p className="flex-1 my-2">{errorMessage}</p>
