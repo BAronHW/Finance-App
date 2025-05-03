@@ -113,7 +113,7 @@ const SigninPage = () => {
           </form>
         </Form>
         <div className="mt-6 space-y-4 text-center">
-          <p className="text-lg mb-2">New user? Create an account below:</p>
+          <p className="text-md font-light mt-4 mb-2">New user? Create an account below:</p>
           <Link href="/sign-up" passHref>
             <Button variant="secondary" className="m-15 w-full" type="submit">
               Sign Up
