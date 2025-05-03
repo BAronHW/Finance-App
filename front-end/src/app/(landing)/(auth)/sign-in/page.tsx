@@ -17,11 +17,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import GoogleSignIn from "@/components/custom/auth/GoogleSignIn";
-
+import { LoaderCircle } from "lucide-react";
 
 const SigninPage = () => {
   const router = useRouter();
-
+  const [signingIn, setSigningIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorCode, setErrorCode] = useState("");
 
@@ -46,6 +46,7 @@ const SigninPage = () => {
   });
 
   const onSignIn = async (values: z.infer<typeof formSchema>) => {
+    setSigningIn(true);
     const {
       user: emailPasswordUser,
       errorCode,
@@ -53,10 +54,15 @@ const SigninPage = () => {
     } = await emailPasswordSignIn(values.email, values.password);
     if (errorCode && errorMessage) {
       setErrorCode(errorCode);
-      setErrorMessage(errorMessage);
+      if (errorCode === "auth/invalid-credential") {
+        setErrorCode("Please check your username and password!");
+      } else {
+        setErrorMessage(errorMessage);
+      }
     } else if (emailPasswordUser) {
       router.push(`/home/${emailPasswordUser.id}`);
     }
+    setSigningIn(false);
   };
 
   return (
@@ -94,7 +100,16 @@ const SigninPage = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit">Sign in</Button>
+            <Button type="submit" disabled={signingIn}>
+              {signingIn ? (
+                <>
+                  <LoaderCircle className="animate-spin mr-2" />
+                  Signing In
+                </>
+              ) : (
+                "Sign in"
+              )}
+            </Button>
           </form>
         </Form>
         <div className="mt-6 space-y-4 text-center">
