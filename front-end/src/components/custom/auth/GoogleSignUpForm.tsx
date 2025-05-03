@@ -10,20 +10,25 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { FunctionComponent } from "react";
-import { UseFormReturn } from "react-hook-form";
+import { LoaderCircle } from "lucide-react";
+import { SubmitHandler, UseFormReturn } from "react-hook-form";
 
-type SignUpFormData = UseFormReturn<{
+type GoogleSignUpSchemaType = {
   username?: string | undefined;
   firstName: string;
   lastName: string;
   phone?: string | undefined;
-}>;
+};
 
-export const GoogleSignUpForm: FunctionComponent<{
-  form: SignUpFormData;
-  onSubmit: (values: any) => Promise<void>; // TODO: Fix the type here
-}> = ({ form, onSubmit }) => {
+type GoogleSignUpFormData = UseFormReturn<GoogleSignUpSchemaType>;
+
+type Props = {
+  form: GoogleSignUpFormData;
+  onSubmit: SubmitHandler<GoogleSignUpSchemaType>;
+  isSubmitting: boolean;
+};
+
+export const GoogleSignUpForm = ({ form, onSubmit, isSubmitting }: Props) => {
   return (
     <Form {...form}>
       <form
@@ -92,7 +97,15 @@ export const GoogleSignUpForm: FunctionComponent<{
             </FormItem>
           )}
         />
-        <Button type="submit">Register</Button>
+        <Button type="submit">
+          {isSubmitting ? (
+            <>
+              <LoaderCircle className="animate-spin mr-2" /> Loading...
+            </>
+          ) : (
+            "Register"
+          )}
+        </Button>
       </form>
     </Form>
   );

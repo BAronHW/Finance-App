@@ -1,17 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "@/app/globals.css";
-import { createUserWithEmailAndPassword, deleteUser } from "firebase/auth";
-import { useAuth } from "@/lib/contexts/authContext";
+import {
+  createUserWithEmailAndPassword,
+  deleteUser,
+  User,
+} from "firebase/auth";
 import { auth } from "@/lib/firebase/firebase";
-import { CREATE_USER, GET_SINGLE_USERID_BY_UID } from "@/lib/graphql/Users";
+import { CREATE_USER, GET_SINGLE_USER_BY_UID } from "@/lib/graphql/Users";
 import { useMutation } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { CustomError } from "@/lib/utils";
 import { EmailSignUpForm } from "@/components/custom/auth/EmailSignUpForm";
 import GoogleSignIn from "@/components/custom/auth/GoogleSignIn";
 
@@ -53,14 +55,21 @@ const SignUpPage = () => {
     refetchQueries: (result) => {
       const uid = result.data.createUser.uid;
       if (uid) {
-        return [{ query: GET_SINGLE_USERID_BY_UID, variables: { uid } }];
+        return [{ query: GET_SINGLE_USER_BY_UID, variables: { uid } }];
       }
       return [];
     },
   });
+
+  useEffect(() => {
+    console.log("SIGN UP RELOADED");
+  }, []);
+
   const [errorMessage, setErrorMessage] = useState("");
   const [errorCode, setErrorCode] = useState("");
   const [emailInUse, setEmailInUse] = useState(false);
+
+  const [submitting, setSubmitting] = useState(false);
 
   const form = useForm<z.infer<EmailSignUpSchemaType>>({
     resolver: zodResolver(emailSignUpFormSchema),
@@ -77,61 +86,74 @@ const SignUpPage = () => {
 
   const onSubmit = async (values: z.infer<EmailSignUpSchemaType>) => {
     setEmailInUse(false);
-    createUserWithEmailAndPassword(auth, values.email, values.password)
-      .then(async (userCredential) => {
-        console.log("createUserWithEmailAndPassword invoked!");
-        const firebaseUser = userCredential.user;
+    setSubmitting(true);
+    setErrorMessage("");
+    setErrorCode("");
+    let firebaseUser: User | null = null;
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password
+      );
+      firebaseUser = userCredential.user;
 
-        const newUser = await createUser({
-          variables: {
-            firstName: values.firstName,
-            lastName: values.lastName,
-            username: values.username,
-            password: values.password,
-            email: values.email,
-            phone: values.phone,
-            uid: firebaseUser.uid,
-          },
-        });
+      const newUser = await createUser({
+        variables: {
+          firstName: values.firstName,
+          lastName: values.lastName,
+          username: values.username,
+          email: values.email,
+          phone: values.phone,
+          uid: firebaseUser.uid,
+        },
+      });
 
-        if (!newUser || !newUser.data) {
-          deleteUser(firebaseUser)
-            .then(() => {
-              console.log("User creation failed - deleting Firebase user.");
-            })
-            .catch((error) => {
-              console.log(
-                `Error deleting Firebase user - please delete user ${firebaseUser.uid} manually.`
-              );
-              console.log({ error });
-            });
-          throw new CustomError(
-            "Error creating new user",
-            "newUser.data is nullish"
-          );
-        }
-        console.log("User created!");
-        console.log({ userData: newUser.data });
-        router.push(`/home/${newUser.data.createUser.id}`);
-        console.log("redirected!");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log({ errorCode });
-        console.log({ errorMessage });
+      router.push(`/home/${newUser.data.createUser.id}`);
+    } catch (error: any) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      if (errorCode && errorCode.startsWith("auth/")) {
         if (errorCode === "auth/email-already-in-use") {
           setEmailInUse(true);
         }
         setErrorCode(errorCode);
         setErrorMessage(errorMessage);
-      });
+      } else {
+        if (firebaseUser) {
+          console.log(
+            "Attempting to delete Firebase user due to backend error..."
+          );
+          try {
+            await deleteUser(firebaseUser); // Await the deleteUser promise
+            console.log("Firebase user deleted successfully.");
+          } catch (deleteError) {
+            console.error(
+              `Failed to delete Firebase user ${firebaseUser.uid}:`,
+              deleteError
+            );
+          }
+        }
+        setErrorCode("server-error");
+        setErrorMessage(
+          `Profile creation failed: ${
+            error.message || "Unknown error during profile creation."
+          }`
+        );
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <>
       <h2 className="text-3xl font-bold text-center mb-6">Sign Up</h2>
-      <EmailSignUpForm form={form} onSubmit={onSubmit} />
+      <EmailSignUpForm
+        form={form}
+        onSubmit={onSubmit}
+        isSubmitting={submitting}
+      />
       <GoogleSignIn signUp={true} />
       {errorCode &&
         errorMessage &&

@@ -9,7 +9,7 @@ import {
   GET_TRANSACTIONS_BY_USER_ID,
   UPSERT_TRANSACTIONS_FROM_PLAID,
 } from "@/lib/graphql/Transaction";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { CREATE_LINKTOKEN, EXCHANGE_PUB_TOKEN } from "@/lib/graphql/Plaid";
 import { usePlaidLink } from "react-plaid-link";
 import { GET_USER_BY_ID } from "@/lib/graphql/Users";
@@ -17,36 +17,38 @@ import {
   GET_ACCOUNTS_BY_USER_ID,
   UPSERT_ACCOUNTS_FROM_PLAID,
 } from "@/lib/graphql/Account";
-import { Account, Transaction } from "@/__generated__/graphql";
+import { Account } from "@/__generated__/graphql";
 import { useAuth } from "@/lib/contexts/authContext";
 import { useRouter } from "next/navigation";
+
 export default function Home() {
   const auth = useAuth();
   const router = useRouter();
-  const userIdInAuthContext = auth.userId;
   const params = useParams();
   const userId = Array.isArray(params?.userId)
     ? Number(params?.userId[0])
     : Number(params?.userId);
-  const [mounted, setMounted] = useState(false);
+
+  const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
-    if (mounted) {
-      if (userIdInAuthContext === null) {
+    console.log({ auth });
+    if (!auth.loading) {
+      console.log({ auth });
+      if (auth.userId === null) {
+        console.log("redirected back now");
         router.push("/");
         return;
       }
 
-      if (userIdInAuthContext !== userId) {
-        router.push(`/home/${userIdInAuthContext}`);
+      if (auth.userId !== null && auth.userId !== userId) {
+        router.push(`/home/${auth.userId}`);
         return;
       }
+      
+      setAuthChecked(true)
     }
-  }, [userIdInAuthContext, userId, router, mounted]);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  }, [auth.loading, auth.userId, userId]);
 
   const [accessToken, setAccessToken] = useState("");
   const [linkToken, setLinkToken] = useState("");
@@ -56,6 +58,7 @@ export default function Home() {
     variables: {
       userId: userId,
     },
+    skip: !authChecked || !userId,
     onCompleted: (data) => {
       console.log("GET_USER_BY_ID completed");
       console.log({ data });
@@ -172,7 +175,6 @@ export default function Home() {
         <Header
           name={displayName ?? ""}
           appMoto="Manage your student funds"
-          accBal={10}
           accounts={accountData?.getAccountsByUserId ?? []}
           accountsLoading={accountsLoading}
           userId={userId}

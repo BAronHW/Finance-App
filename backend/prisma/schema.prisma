@@ -19,7 +19,6 @@ model User {
   lastName     String?
   username     String        @unique
   email        String        @unique
-  password     String?
   uid          String        @unique
   phone        String?
   Transactions Transaction[]

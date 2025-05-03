@@ -11,7 +11,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { FunctionComponent } from "react";
 import { LoaderCircle } from "lucide-react";
 
 type SignUpFormSchemaType = {
@@ -26,11 +25,13 @@ type SignUpFormSchemaType = {
 
 type SignUpFormData = UseFormReturn<SignUpFormSchemaType>;
 
-export const EmailSignUpForm: FunctionComponent<{
+type Props = {
   form: SignUpFormData;
   onSubmit: SubmitHandler<SignUpFormSchemaType>;
-}> = ({ form, onSubmit }) => {
-  const isSubmitting = form.formState.isSubmitting;
+  isSubmitting: boolean;
+}
+
+export const EmailSignUpForm = ({ form, onSubmit, isSubmitting }: Props) => {
   return (
     <Form {...form}>
       <form
