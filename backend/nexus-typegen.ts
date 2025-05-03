@@ -149,7 +149,6 @@ export interface NexusGenObjects {
     firstName?: string | null; // String
     id: number; // Int!
     lastName?: string | null; // String
-    password?: string | null; // String
     phone?: string | null; // String
     uid: string; // String!
     username: string; // String!
@@ -262,7 +261,6 @@ export interface NexusGenFieldTypes {
     deleteDocumentByKey: boolean | null; // Boolean
     deleteTransaction: NexusGenRootTypes['Transaction'] | null; // Transaction
     deleteUser: NexusGenRootTypes['User']; // User!
-    emailSignIn: NexusGenRootTypes['User']; // User!
     exchangePublicToken: string; // String!
     updateCategory: NexusGenRootTypes['Category']; // Category!
     updateTransaction: NexusGenRootTypes['Transaction'] | null; // Transaction
@@ -302,6 +300,7 @@ export interface NexusGenFieldTypes {
     getTransactionsByUserId: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
     getUserById: NexusGenRootTypes['User'] | null; // User
     getUserByUid: NexusGenRootTypes['User']; // User!
+    usernameExists: boolean | null; // Boolean
   }
   Transaction: { // field return type
     Account: NexusGenRootTypes['Account'] | null; // Account
@@ -333,7 +332,6 @@ export interface NexusGenFieldTypes {
     firstName: string | null; // String
     id: number; // Int!
     lastName: string | null; // String
-    password: string | null; // String
     phone: string | null; // String
     uid: string; // String!
     username: string; // String!
@@ -436,7 +434,6 @@ export interface NexusGenFieldTypeNames {
     deleteDocumentByKey: 'Boolean'
     deleteTransaction: 'Transaction'
     deleteUser: 'User'
-    emailSignIn: 'User'
     exchangePublicToken: 'String'
     updateCategory: 'Category'
     updateTransaction: 'Transaction'
@@ -476,6 +473,7 @@ export interface NexusGenFieldTypeNames {
     getTransactionsByUserId: 'Transaction'
     getUserById: 'User'
     getUserByUid: 'User'
+    usernameExists: 'Boolean'
   }
   Transaction: { // field return type name
     Account: 'Account'
@@ -507,7 +505,6 @@ export interface NexusGenFieldTypeNames {
     firstName: 'String'
     id: 'Int'
     lastName: 'String'
-    password: 'String'
     phone: 'String'
     uid: 'String'
     username: 'String'
@@ -564,7 +561,6 @@ export interface NexusGenArgTypes {
       email: string; // String!
       firstName?: string | null; // String
       lastName?: string | null; // String
-      password?: string | null; // String
       phone?: string | null; // String
       uid: string; // String!
       username: string; // String!
@@ -586,10 +582,6 @@ export interface NexusGenArgTypes {
     }
     deleteUser: { // args
       id: number; // Int!
-    }
-    emailSignIn: { // args
-      password: string; // String!
-      username: string; // String!
     }
     exchangePublicToken: { // args
       public_token: string; // String!
@@ -616,7 +608,6 @@ export interface NexusGenArgTypes {
       firstName?: string | null; // String
       id: number; // Int!
       lastName?: string | null; // String
-      password?: string | null; // String
       phone?: string | null; // String
       uid: string; // String!
       username: string; // String!
@@ -672,6 +663,9 @@ export interface NexusGenArgTypes {
     }
     getUserByUid: { // args
       uid: string; // String!
+    }
+    usernameExists: { // args
+      username: string; // String!
     }
   }
 }

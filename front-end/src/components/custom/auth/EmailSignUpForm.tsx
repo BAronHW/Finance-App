@@ -1,6 +1,6 @@
 "use client";
 
-import { UseFormReturn } from "react-hook-form";
+import { SubmitHandler, UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,9 +11,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { FunctionComponent } from "react";
+import { LoaderCircle } from "lucide-react";
 
-type SignUpFormData = UseFormReturn<{
+type SignUpFormSchemaType = {
   username: string;
   email: string;
   password: string;
@@ -21,12 +21,17 @@ type SignUpFormData = UseFormReturn<{
   firstName: string;
   lastName: string;
   phone?: string | undefined;
-}>;
+};
 
-export const EmailSignUpForm: FunctionComponent<{
+type SignUpFormData = UseFormReturn<SignUpFormSchemaType>;
+
+type Props = {
   form: SignUpFormData;
-  onSubmit: (values: any) => Promise<void>; // TODO: Fix the type here 
-}> = ({ form, onSubmit }) => {
+  onSubmit: SubmitHandler<SignUpFormSchemaType>;
+  isSubmitting: boolean;
+}
+
+export const EmailSignUpForm = ({ form, onSubmit, isSubmitting }: Props) => {
   return (
     <Form {...form}>
       <form
@@ -136,7 +141,7 @@ export const EmailSignUpForm: FunctionComponent<{
               <FormLabel>Phone Number</FormLabel>
               <FormControl>
                 <Input
-                  type="Enter your phone number"
+                  type="tel"
                   placeholder="Phone number"
                   {...field}
                 />
@@ -145,7 +150,18 @@ export const EmailSignUpForm: FunctionComponent<{
             </FormItem>
           )}
         />
-        <Button type="submit">Register</Button>
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <>
+              <LoaderCircle className="animate-spin mr-2" /> Loading...
+            </>
+          ) : (
+            "Register"
+          )}
+        </Button>
       </form>
     </Form>
   );

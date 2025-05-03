@@ -5,6 +5,7 @@ import {
 import { ApolloError, useLazyQuery } from "@apollo/client";
 import { GET_SINGLE_USER_BY_UID } from "@/lib/graphql/Users";
 import { User } from "@/__generated__/graphql";
+import { User as FirebaseUser } from "firebase/auth"
 import { auth } from "@/lib/firebase/firebase"
 
 const provider = new GoogleAuthProvider();
@@ -12,8 +13,11 @@ const provider = new GoogleAuthProvider();
 export const useGoogleSignIn = (): {
   googleSignIn: () => Promise<{
       user: User | null;
-      errorCode: string | null;
-      errorMessage: string | null;
+      firebaseUser: FirebaseUser | null;
+      error: {
+        code: string;
+        message: string;
+      } | null;
     }
   >;
   queryError: ApolloError | null;
@@ -25,22 +29,24 @@ export const useGoogleSignIn = (): {
   const googleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
-      console.log(result)
       const firebaseUser = result.user;
+      
       const { data } = await getUserByUid({
         variables: { uid: firebaseUser.uid },
       });
       return {
         user: data?.getUserByUid || null,
-        errorCode: null,
-        errorMessage: null,
+        error: null,
+        firebaseUser: firebaseUser,
       };
     } catch (error: any) {
       return {
         user: null,
-        errorCode: error.code || "SIGN_IN_ERROR",
-        errorMessage:
-          error.message || "An error occurred when trying to sign in.",
+        error: {
+          code: error.code || "SIGN_IN_ERROR",
+          message: error.message || "An error occurred when trying to sign in.",
+        },  
+        firebaseUser: null,
       };
     }
   };

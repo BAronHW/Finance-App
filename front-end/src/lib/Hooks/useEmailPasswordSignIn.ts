@@ -24,13 +24,14 @@ export const useEmailPasswordSignIn = (): {
   const emailPasswordSignIn = async (email: string, password: string) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
+      console.log({result})
       const firebaseUser = result.user;
-      const { data: data } = await getUserByUid({
+      const { data } = await getUserByUid({
         variables: { uid: firebaseUser.uid },
       });
 
       return {
-        user: data?.user || null,
+        user: data.getUserByUid || null,
         errorCode: null,
         errorMessage: null,
       };

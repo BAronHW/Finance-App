@@ -100,19 +100,18 @@ type Mutation {
   createCategory(description: String, name: String!, userId: Int!): Category!
   createLinkToken: LinkToken
   createTransaction(accountId: Int, amount: Float!, date: Int!, merchantName: String!, name: String, plaidId: String!, userId: Int!): Transaction!
-  createUser(email: String!, firstName: String, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
+  createUser(email: String!, firstName: String, lastName: String, phone: String, uid: String!, username: String!): User!
   deleteAccount(id: Int!): Account!
   deleteAllDocumentsAssociatedWithUserInBucketByUid(uid: String!): Boolean
   deleteCategory(id: Int!): Category!
   deleteDocumentByKey(documentKey: String!): Boolean
   deleteTransaction(id: Int!): Transaction
   deleteUser(id: Int!): User!
-  emailSignIn(password: String!, username: String!): User!
   exchangePublicToken(public_token: String!, userId: Int!): String!
   updateCategory(colour: String, description: String, id: Int!, name: String): Category!
   updateTransaction(categoryId: Int, id: Int!, merchantName: String, name: String): Transaction
   updateTransactions(categoryId: Int, ids: [Int!]!): [Transaction!]!
-  updateUserDetails(email: String!, firstName: String, id: Int!, lastName: String, password: String, phone: String, uid: String!, username: String!): User!
+  updateUserDetails(email: String!, firstName: String, id: Int!, lastName: String, phone: String, uid: String!, username: String!): User!
   uploadPdf(file: String!, name: String!, size: Int!, uid: String!): Any
   upsertAccountsFromPlaid(accessToken: String!, userId: Int!): [Account!]!
   upsertTransactionsFromPlaid(accessToken: String!, accountId: Int, endDate: String!, startDate: String!, userId: Int): [Transaction!]!
@@ -150,6 +149,7 @@ type Query {
   getTransactionsByUserId(userId: Int!): [Transaction!]!
   getUserById(userId: Int!): User
   getUserByUid(uid: String!): User!
+  usernameExists(username: String!): Boolean
 }
 
 type Transaction {
@@ -184,7 +184,6 @@ type User {
   firstName: String
   id: Int!
   lastName: String
-  password: String
   phone: String
   uid: String!
   username: String!

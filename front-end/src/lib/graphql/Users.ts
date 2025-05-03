@@ -6,7 +6,6 @@ export const GET_ALL_USERS = gql(`
       firstName
       lastName
       username
-      password
       phone
       email
       uid
@@ -43,7 +42,6 @@ export const DELETE_USER = gql(`
       firstName
       lastName
       username
-      password
       phone
       email
       uid
@@ -68,7 +66,6 @@ export const GET_SINGLE_USER_BY_UID = gql(`
       firstName
       lastName
       username
-      password
       phone
       email
       uid
@@ -99,7 +96,6 @@ export const CREATE_USER = gql(`
     $firstName: String
     $lastName: String
     $username: String!
-    $password: String
     $email: String!
     $uid: String!
     $phone: String
@@ -108,7 +104,6 @@ export const CREATE_USER = gql(`
       firstName: $firstName
       lastName: $lastName
       username: $username
-      password: $password
       email: $email
       uid: $uid
       phone: $phone
@@ -117,7 +112,6 @@ export const CREATE_USER = gql(`
       firstName
       lastName
       username
-      password
       email
       uid
       phone
@@ -126,9 +120,15 @@ export const CREATE_USER = gql(`
 `);
 
 export const FETCH_UID_FROM_USER = gql`
-query GetUserUidFromUserId($userId: Int!) {
+  query GetUserUidFromUserId($userId: Int!) {
     getUserById(userId: $userId) {
         uid
     }
 }
+`
+
+export const USERNAME_EXISTS = gql`
+  query UsernameExists($username: String!) {
+    usernameExists(username: $username)
+  }
 `
