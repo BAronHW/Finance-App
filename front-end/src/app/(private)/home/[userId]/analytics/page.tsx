@@ -1,18 +1,12 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { BaseSyntheticEvent, useState } from "react";
+import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { DatePickerWithRange } from "@/components/custom/datepickers/DatePickerWithRange";
+import ChartRenderer from "@/components/custom/charts/analytics/ChartRenderer";
 
 const AnalyticsPage = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
@@ -35,7 +29,7 @@ const AnalyticsPage = () => {
               <RadioGroupItem
                 value="SINGLE"
                 id="SINGLE"
-                onSelect={() => setViewType("SINGLE")}
+                onClick={() => setViewType("SINGLE")}
               />
               <Label htmlFor="SINGLE">Single View</Label>
             </div>
@@ -43,7 +37,7 @@ const AnalyticsPage = () => {
               <RadioGroupItem
                 value="MULTI"
                 id="MULTI"
-                onSelect={() => setViewType("MULTI")}
+                onClick={() => setViewType("MULTI")}
               />
               <Label htmlFor="MULTI">Multi-view</Label>
             </div>
@@ -53,7 +47,7 @@ const AnalyticsPage = () => {
               <RadioGroupItem
                 value="BAR"
                 id="BAR"
-                onSelect={() => setChartType("BAR")}
+                onClick={() => setChartType("BAR")}
               />
               <Label htmlFor="BAR">Bar Chart</Label>
             </div>
@@ -61,7 +55,7 @@ const AnalyticsPage = () => {
               <RadioGroupItem
                 value="PIE"
                 id="PIE"
-                onSelect={() => setChartType("PIE")}
+                onClick={() => setChartType("PIE")}
               />
               <Label htmlFor="PIE">Pie Chart</Label>
             </div>
@@ -71,7 +65,7 @@ const AnalyticsPage = () => {
               <RadioGroupItem
                 value="TIME"
                 id="TIME"
-                onSelect={() => setDataType("TIME")}
+                onClick={() => setDataType("TIME")}
               />
               <Label htmlFor="TIME">Time</Label>
             </div>
@@ -79,7 +73,7 @@ const AnalyticsPage = () => {
               <RadioGroupItem
                 value="CATEGORY"
                 id="CATEGORY"
-                onSelect={() => setDataType("CATEGORY")}
+                onClick={() => setDataType("CATEGORY")}
               />
               <Label htmlFor="CATEGORY">Category</Label>
             </div>
@@ -87,13 +81,19 @@ const AnalyticsPage = () => {
               <RadioGroupItem
                 value="IO"
                 id="IO"
-                onSelect={() => setDataType("IO")}
+                onClick={() => setDataType("IO")}
               />
               <Label htmlFor="IO">In / Out</Label>
             </div>
           </RadioGroup>
         </CardContent>
       </Card>
+      <ChartRenderer
+        dateRange={dateRange}
+        viewType={viewType}
+        chartType={chartType}
+        dataType={dataType}
+      />
     </div>
   );
 };

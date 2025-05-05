@@ -23,7 +23,7 @@ export const categoriseTransactions = async (
   const prompt = `
     Please assign each of the transactions provided one of the following categories. 
     Make the best possible guess based on the information provided. 
-    If there's no clue whatsoever, assign a null category.
+    If there's no clue whatsoever, assign a null category. But try to avoid null categories if possible.
 
     RETURN ONLY THE JSON, NO OTHER CHARACTERS.
     
