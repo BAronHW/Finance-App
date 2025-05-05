@@ -36,10 +36,10 @@ export function SidebarV2() {
       icon: Home,
       link: dashboardLink || "",
     },
-    { id: 2, label: "Analytics", icon: Users, link: "/analytics" },
-    { id: 3, label: "Documents", icon: FileText, link: "/documents" },
-    { id: 4, label: "Upload", icon: Upload, link: "/upload" },
-    { id: 5, label: "Settings", icon: Settings, link: "/settings" },
+    { id: 2, label: "Analytics", icon: Users, link: `${dashboardLink}/analytics` },
+    { id: 3, label: "Documents", icon: FileText, link: `${dashboardLink}/documents` },
+    { id: 4, label: "Upload", icon: Upload, link: `${dashboardLink}/upload` },
+    { id: 5, label: "Settings", icon: Settings, link: `${dashboardLink}/settings` },
   ];
 
   return (

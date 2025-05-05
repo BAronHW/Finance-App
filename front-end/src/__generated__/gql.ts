@@ -38,7 +38,8 @@ type Documents = {
     "\n  query GetSingleUserByUid($uid: String!) {\n    getUserByUid (uid: $uid) {\n      id\n      firstName\n      lastName\n      username\n      phone\n      email\n      uid\n      Transactions {\n        id\n        userId\n        accountId\n        io\n        name\n        merchantName\n        amount\n        date\n      }\n    }\n  }\n": typeof types.GetSingleUserByUidDocument,
     "\n  query GetUserIdByUid($uid: String!) {\n    getUserByUid (uid: $uid) {\n      id\n    }\n  }\n": typeof types.GetUserIdByUidDocument,
     "\n  mutation CreateUser(\n    $firstName: String\n    $lastName: String\n    $username: String!\n    $email: String!\n    $uid: String!\n    $phone: String\n  ) {\n    createUser(\n      firstName: $firstName\n      lastName: $lastName\n      username: $username\n      email: $email\n      uid: $uid\n      phone: $phone\n    ) {\n      id\n      firstName\n      lastName\n      username\n      email\n      uid\n      phone\n    }\n  }\n": typeof types.CreateUserDocument,
-    "\nquery GetUserUidFromUserId($userId: Int!) {\n    getUserById(userId: $userId) {\n        uid\n    }\n}\n": typeof types.GetUserUidFromUserIdDocument,
+    "\n  query GetUserUidFromUserId($userId: Int!) {\n    getUserById(userId: $userId) {\n        uid\n    }\n}\n": typeof types.GetUserUidFromUserIdDocument,
+    "\n  query UsernameExists($username: String!) {\n    usernameExists(username: $username)\n  }\n": typeof types.UsernameExistsDocument,
 };
 const documents: Documents = {
     "\n  query GetAccountsByUserId($userId: Int!) {\n    getAccountsByUserId(userId: $userId) {\n      id\n      mask\n      name\n      officialName\n      subtype\n      type\n      Transactions {\n        userId\n        merchantName\n        amount\n      }\n      plaidId\n      available\n      current\n      isoCurrencyCode\n      unofficialCurrencyCode\n      limit\n    }\n  }\n  ": types.GetAccountsByUserIdDocument,
@@ -65,7 +66,8 @@ const documents: Documents = {
     "\n  query GetSingleUserByUid($uid: String!) {\n    getUserByUid (uid: $uid) {\n      id\n      firstName\n      lastName\n      username\n      phone\n      email\n      uid\n      Transactions {\n        id\n        userId\n        accountId\n        io\n        name\n        merchantName\n        amount\n        date\n      }\n    }\n  }\n": types.GetSingleUserByUidDocument,
     "\n  query GetUserIdByUid($uid: String!) {\n    getUserByUid (uid: $uid) {\n      id\n    }\n  }\n": types.GetUserIdByUidDocument,
     "\n  mutation CreateUser(\n    $firstName: String\n    $lastName: String\n    $username: String!\n    $email: String!\n    $uid: String!\n    $phone: String\n  ) {\n    createUser(\n      firstName: $firstName\n      lastName: $lastName\n      username: $username\n      email: $email\n      uid: $uid\n      phone: $phone\n    ) {\n      id\n      firstName\n      lastName\n      username\n      email\n      uid\n      phone\n    }\n  }\n": types.CreateUserDocument,
-    "\nquery GetUserUidFromUserId($userId: Int!) {\n    getUserById(userId: $userId) {\n        uid\n    }\n}\n": types.GetUserUidFromUserIdDocument,
+    "\n  query GetUserUidFromUserId($userId: Int!) {\n    getUserById(userId: $userId) {\n        uid\n    }\n}\n": types.GetUserUidFromUserIdDocument,
+    "\n  query UsernameExists($username: String!) {\n    usernameExists(username: $username)\n  }\n": types.UsernameExistsDocument,
 };
 
 /**
@@ -181,7 +183,11 @@ export function gql(source: "\n  mutation CreateUser(\n    $firstName: String\n 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\nquery GetUserUidFromUserId($userId: Int!) {\n    getUserById(userId: $userId) {\n        uid\n    }\n}\n"): (typeof documents)["\nquery GetUserUidFromUserId($userId: Int!) {\n    getUserById(userId: $userId) {\n        uid\n    }\n}\n"];
+export function gql(source: "\n  query GetUserUidFromUserId($userId: Int!) {\n    getUserById(userId: $userId) {\n        uid\n    }\n}\n"): (typeof documents)["\n  query GetUserUidFromUserId($userId: Int!) {\n    getUserById(userId: $userId) {\n        uid\n    }\n}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query UsernameExists($username: String!) {\n    usernameExists(username: $username)\n  }\n"): (typeof documents)["\n  query UsernameExists($username: String!) {\n    usernameExists(username: $username)\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};
