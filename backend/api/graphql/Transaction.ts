@@ -41,8 +41,8 @@ export const Transaction = objectType({
     });
     t.string("name");
     t.string("merchantName");
-    t.float("amount");
-    t.int("date");
+    t.nonNull.float("amount");
+    t.nonNull.int("date");
     t.int("categoryId");
     t.field("Category", {
       type: "Category",

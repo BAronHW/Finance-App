@@ -4,7 +4,6 @@ import * as React from "react"
 import * as RechartsPrimitive from "recharts"
 
 import { cn } from "@/lib/utils"
-import { ValueType } from "recharts/types/component/DefaultTooltipContent"
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const
@@ -112,7 +111,6 @@ const ChartTooltipContent = React.forwardRef<
       indicator?: "line" | "dot" | "dashed"
       nameKey?: string
       labelKey?: string
-      valueFormatter?: (value: ValueType) => string
     }
 >(
   (
@@ -130,7 +128,6 @@ const ChartTooltipContent = React.forwardRef<
       color,
       nameKey,
       labelKey,
-      valueFormatter,
     },
     ref
   ) => {
@@ -231,7 +228,7 @@ const ChartTooltipContent = React.forwardRef<
                     )}
                     <div
                       className={cn(
-                        "flex flex-1 justify-between leading-none gap-2",
+                        "flex flex-1 justify-between leading-none",
                         nestLabel ? "items-end" : "items-center"
                       )}
                     >
@@ -243,7 +240,7 @@ const ChartTooltipContent = React.forwardRef<
                       </div>
                       {item.value && (
                         <span className="font-mono font-medium tabular-nums text-slate-950 dark:text-slate-50">
-                          {valueFormatter ? valueFormatter(item.value) : item.value.toLocaleString()}
+                          {item.value.toLocaleString()}
                         </span>
                       )}
                     </div>

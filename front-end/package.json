@@ -63,7 +63,7 @@
     "react-hook-form": "^7.53.0",
     "react-plaid-link": "^3.6.1",
     "react-remove-scroll": "^2.6.3",
-    "recharts": "^2.15.1",
+    "recharts": "^2.15.3",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"

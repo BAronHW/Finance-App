@@ -5,6 +5,10 @@ import CategoryPiechart from "./CategoryPiechart";
 import CategoryPiechartGrid from "./grid/CategoryPiechartGrid";
 import TimeBarchartGrid from "./grid/TimeBarchartGrid";
 import CategoryBarchartGrid from "./grid/CategoryBarchartGrid";
+import { GET_TRANSACTIONS_BY_USER_ID } from "@/lib/graphql/Transaction";
+import { useQuery } from "@apollo/client";
+import { useAuth } from "@/lib/contexts/authContext";
+import { GET_CATEGORIES_BY_USER_ID } from "@/lib/graphql/Category";
 
 type Props = {
   dateRange: DateRange | undefined;
@@ -14,11 +18,21 @@ type Props = {
 };
 
 const ChartRenderer = ({ dateRange, viewType, chartType, dataType }: Props) => {
-  console.log("ChartRenderer", dateRange, viewType, chartType, dataType);
+  const auth = useAuth();
+  const userId = auth.userId
+  const { data: transactionsData, loading: transactionsLoading, error: transactionsError } = useQuery(GET_TRANSACTIONS_BY_USER_ID, {
+    variables: { userId: userId },
+  })
+  const { data: categoriesData, loading: categoriesLoading, error: categoriesError } = useQuery(GET_CATEGORIES_BY_USER_ID, {
+    variables: { userId: userId },
+  })
+  const transactions = transactionsData?.getTransactionsByUserId || [];
+  const categories = categoriesData?.getCategoriesByUserId || [];
+  
   if (viewType === "SINGLE") {
     if (chartType === "BAR") {
       if (dataType === "TIME") {
-        return <TimeBarchart dateRange={dateRange} />;
+        return <TimeBarchart dateRange={dateRange} transactions={transactions} categories={categories} />;
       } else if (dataType === "CATEGORY") {
         return <CategoryBarchart dateRange={dateRange} />;
       }

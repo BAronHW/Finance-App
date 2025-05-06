@@ -386,9 +386,9 @@ export type Transaction = {
   Category?: Maybe<Category>;
   User?: Maybe<User>;
   accountId?: Maybe<Scalars['Int']['output']>;
-  amount?: Maybe<Scalars['Float']['output']>;
+  amount: Scalars['Float']['output'];
   categoryId?: Maybe<Scalars['Int']['output']>;
-  date?: Maybe<Scalars['Int']['output']>;
+  date: Scalars['Int']['output'];
   id: Scalars['Int']['output'];
   io?: Maybe<InOrOutEnum>;
   merchantName?: Maybe<Scalars['String']['output']>;
@@ -436,7 +436,7 @@ export type GetAccountsByUserIdQueryVariables = Exact<{
 }>;
 
 
-export type GetAccountsByUserIdQuery = { __typename?: 'Query', getAccountsByUserId: Array<{ __typename?: 'Account', id: number, mask?: string | null, name: string, officialName?: string | null, subtype?: string | null, type?: string | null, plaidId?: string | null, available?: number | null, current?: number | null, isoCurrencyCode?: string | null, unofficialCurrencyCode?: string | null, limit?: number | null, Transactions?: Array<{ __typename?: 'Transaction', userId?: number | null, merchantName?: string | null, amount?: number | null }> | null }> };
+export type GetAccountsByUserIdQuery = { __typename?: 'Query', getAccountsByUserId: Array<{ __typename?: 'Account', id: number, mask?: string | null, name: string, officialName?: string | null, subtype?: string | null, type?: string | null, plaidId?: string | null, available?: number | null, current?: number | null, isoCurrencyCode?: string | null, unofficialCurrencyCode?: string | null, limit?: number | null, Transactions?: Array<{ __typename?: 'Transaction', userId?: number | null, merchantName?: string | null, amount: number }> | null }> };
 
 export type UpsertAccountsFromPlaidMutationVariables = Exact<{
   userId: Scalars['Int']['input'];
@@ -451,7 +451,7 @@ export type DeleteAccountMutationVariables = Exact<{
 }>;
 
 
-export type DeleteAccountMutation = { __typename?: 'Mutation', deleteAccount: { __typename?: 'Account', id: number, mask?: string | null, name: string, officialName?: string | null, subtype?: string | null, type?: string | null, plaidId?: string | null, available?: number | null, current?: number | null, isoCurrencyCode?: string | null, unofficialCurrencyCode?: string | null, limit?: number | null, Transactions?: Array<{ __typename?: 'Transaction', userId?: number | null, merchantName?: string | null, amount?: number | null }> | null } };
+export type DeleteAccountMutation = { __typename?: 'Mutation', deleteAccount: { __typename?: 'Account', id: number, mask?: string | null, name: string, officialName?: string | null, subtype?: string | null, type?: string | null, plaidId?: string | null, available?: number | null, current?: number | null, isoCurrencyCode?: string | null, unofficialCurrencyCode?: string | null, limit?: number | null, Transactions?: Array<{ __typename?: 'Transaction', userId?: number | null, merchantName?: string | null, amount: number }> | null } };
 
 export type GetCategoriesByUserIdForTableQueryVariables = Exact<{
   userId: Scalars['Int']['input'];
@@ -465,7 +465,7 @@ export type GetCategoriesByUserIdQueryVariables = Exact<{
 }>;
 
 
-export type GetCategoriesByUserIdQuery = { __typename?: 'Query', getCategoriesByUserId: Array<{ __typename?: 'Category', id: number, name: string, description?: string | null, userId?: number | null, colour?: string | null, User?: { __typename?: 'User', username: string, firstName?: string | null, lastName?: string | null, email: string, uid: string } | null, Transactions?: Array<{ __typename?: 'Transaction', id: number, date?: number | null, amount?: number | null, merchantName?: string | null }> | null }> };
+export type GetCategoriesByUserIdQuery = { __typename?: 'Query', getCategoriesByUserId: Array<{ __typename?: 'Category', id: number, name: string, description?: string | null, userId?: number | null, colour?: string | null, User?: { __typename?: 'User', username: string, firstName?: string | null, lastName?: string | null, email: string, uid: string } | null, Transactions?: Array<{ __typename?: 'Transaction', id: number, date: number, amount: number, merchantName?: string | null }> | null }> };
 
 export type GetCategoryByIdQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -535,7 +535,7 @@ export type GetTransactionsByUserIdQueryVariables = Exact<{
 }>;
 
 
-export type GetTransactionsByUserIdQuery = { __typename?: 'Query', getTransactionsByUserId: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, accountId?: number | null, io?: InOrOutEnum | null, name?: string | null, merchantName?: string | null, amount?: number | null, categoryId?: number | null, date?: number | null, Account?: { __typename?: 'Account', name: string } | null, Category?: { __typename?: 'Category', id: number, name: string, colour?: string | null } | null }> };
+export type GetTransactionsByUserIdQuery = { __typename?: 'Query', getTransactionsByUserId: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, accountId?: number | null, io?: InOrOutEnum | null, name?: string | null, merchantName?: string | null, amount: number, categoryId?: number | null, date: number, Account?: { __typename?: 'Account', name: string } | null, Category?: { __typename?: 'Category', id: number, name: string, colour?: string | null } | null }> };
 
 export type UpsertTransactionsFromPlaidMutationVariables = Exact<{
   userId: Scalars['Int']['input'];
@@ -546,7 +546,7 @@ export type UpsertTransactionsFromPlaidMutationVariables = Exact<{
 }>;
 
 
-export type UpsertTransactionsFromPlaidMutation = { __typename?: 'Mutation', upsertTransactionsFromPlaid: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, merchantName?: string | null, amount?: number | null, date?: number | null, plaidId?: string | null }> };
+export type UpsertTransactionsFromPlaidMutation = { __typename?: 'Mutation', upsertTransactionsFromPlaid: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, merchantName?: string | null, amount: number, date: number, plaidId?: string | null }> };
 
 export type UpdateTransactionMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -571,12 +571,12 @@ export type CategoriseTransactionsWithAiMutationVariables = Exact<{
 }>;
 
 
-export type CategoriseTransactionsWithAiMutation = { __typename?: 'Mutation', categoriseTransactionsWithAi: Array<{ __typename?: 'Transaction', id: number, merchantName?: string | null, amount?: number | null, Category?: { __typename?: 'Category', id: number, name: string } | null } | null> };
+export type CategoriseTransactionsWithAiMutation = { __typename?: 'Mutation', categoriseTransactionsWithAi: Array<{ __typename?: 'Transaction', id: number, merchantName?: string | null, amount: number, Category?: { __typename?: 'Category', id: number, name: string } | null } | null> };
 
 export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllUsersQuery = { __typename?: 'Query', getAllUsers: Array<{ __typename?: 'User', firstName?: string | null, lastName?: string | null, username: string, phone?: string | null, email: string, uid: string, id: number, Transactions?: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, accountId?: number | null, io?: InOrOutEnum | null, name?: string | null, merchantName?: string | null, amount?: number | null, date?: number | null }> | null }> };
+export type GetAllUsersQuery = { __typename?: 'Query', getAllUsers: Array<{ __typename?: 'User', firstName?: string | null, lastName?: string | null, username: string, phone?: string | null, email: string, uid: string, id: number, Transactions?: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, accountId?: number | null, io?: InOrOutEnum | null, name?: string | null, merchantName?: string | null, amount: number, date: number }> | null }> };
 
 export type GetUserbyIdQueryVariables = Exact<{
   userId: Scalars['Int']['input'];
@@ -590,14 +590,14 @@ export type DeleteUserMutationVariables = Exact<{
 }>;
 
 
-export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'User', id: number, firstName?: string | null, lastName?: string | null, username: string, phone?: string | null, email: string, uid: string, Transactions?: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, accountId?: number | null, io?: InOrOutEnum | null, name?: string | null, merchantName?: string | null, amount?: number | null, date?: number | null }> | null } };
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'User', id: number, firstName?: string | null, lastName?: string | null, username: string, phone?: string | null, email: string, uid: string, Transactions?: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, accountId?: number | null, io?: InOrOutEnum | null, name?: string | null, merchantName?: string | null, amount: number, date: number }> | null } };
 
 export type GetSingleUserByUidQueryVariables = Exact<{
   uid: Scalars['String']['input'];
 }>;
 
 
-export type GetSingleUserByUidQuery = { __typename?: 'Query', getUserByUid: { __typename?: 'User', id: number, firstName?: string | null, lastName?: string | null, username: string, phone?: string | null, email: string, uid: string, Transactions?: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, accountId?: number | null, io?: InOrOutEnum | null, name?: string | null, merchantName?: string | null, amount?: number | null, date?: number | null }> | null } };
+export type GetSingleUserByUidQuery = { __typename?: 'Query', getUserByUid: { __typename?: 'User', id: number, firstName?: string | null, lastName?: string | null, username: string, phone?: string | null, email: string, uid: string, Transactions?: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, accountId?: number | null, io?: InOrOutEnum | null, name?: string | null, merchantName?: string | null, amount: number, date: number }> | null } };
 
 export type GetUserIdByUidQueryVariables = Exact<{
   uid: Scalars['String']['input'];
