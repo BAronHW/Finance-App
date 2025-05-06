@@ -32,9 +32,9 @@ const ChartRenderer = ({ dateRange, viewType, chartType, dataType }: Props) => {
   if (viewType === "SINGLE") {
     if (chartType === "BAR") {
       if (dataType === "TIME") {
-        return <TimeBarchart dateRange={dateRange} transactions={transactions} categories={categories} />;
+        return <TimeBarchart dateRange={dateRange} transactions={transactions} />;
       } else if (dataType === "CATEGORY") {
-        return <CategoryBarchart dateRange={dateRange} />;
+        return <CategoryBarchart dateRange={dateRange} categories={categories} transactions={transactions} />;
       }
     } else if (chartType === "PIE") {
       if (dataType === "CATEGORY") {
