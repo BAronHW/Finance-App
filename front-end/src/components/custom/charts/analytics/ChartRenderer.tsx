@@ -46,7 +46,7 @@ const ChartRenderer = ({ dateRange, viewType, chartType, dataType }: Props) => {
       if (dataType === "TIME") {
         return <TimeBarchartGrid dateRange={dateRange} />;
       } else if (dataType === "CATEGORY") {
-        return <CategoryBarchartGrid dateRange={dateRange} />;
+        return <CategoryBarchartGrid dateRange={dateRange} categories={categories} transactions={transactions} />;
       } else if (dataType === "IO") {
         return <TimeBarchartGrid dateRange={dateRange} />;
       }

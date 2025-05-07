@@ -52,7 +52,7 @@ const CategoryBarchart = ({ dateRange, categories, transactions }: Props) => {
   return (
     <div className="flex flex-col items-center justify-center h-full w-full">
       <ChartContainer config={{}} className="w-full h-full">
-        <BarChart data={chartData} margin={{ bottom: 60 }}>
+        <BarChart data={chartData} margin={{ top: 40, bottom: 160 }}>
           <CartesianGrid vertical={false} />
           <XAxis
             dataKey="category"
@@ -62,9 +62,10 @@ const CategoryBarchart = ({ dateRange, categories, transactions }: Props) => {
             axisLine={false}
             tick={{
               fontSize: 12,
-              width: 100,
+              // width: 100,
             }}
-            textAnchor="middle"
+            textAnchor="start"
+            angle={45}
             tickFormatter={(value) => {
               console.log({ value });
               return value ?? "Uncategorised";
