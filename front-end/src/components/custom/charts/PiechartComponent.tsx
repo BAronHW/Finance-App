@@ -43,7 +43,9 @@ export function PieChartComponent({ chartData, dateRange, totalOut }: Props) {
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
         <CardTitle>Spending by Category</CardTitle>
-        <CardDescription>Date Range: {formatDateRange(dateRange)}</CardDescription>
+        <CardDescription>
+          Date Range: {formatDateRange(dateRange)}
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -56,22 +58,23 @@ export function PieChartComponent({ chartData, dateRange, totalOut }: Props) {
               content={
                 totalOut > 0 ? (
                   <ChartTooltipContent
-                    hideLabel
-                    valueFormatter={(value) =>
+                    labelFormatter={(value, payload) =>
                       new Intl.NumberFormat("en-GB", {
                         style: "currency",
                         currency: "GBP",
-                      }).format(Number(value.toString()))
+                      }).format(Number(payload[0].value))
                     }
+                    hideValue
                   />
                 ) : (
                   <ChartTooltipContent
-                    valueFormatter={() =>
+                    labelFormatter={() =>
                       new Intl.NumberFormat("en-GB", {
                         style: "currency",
                         currency: "GBP",
-                      }).format(Number(0))
+                      }).format(0)
                     }
+                    hideValue
                   />
                 )
               }
