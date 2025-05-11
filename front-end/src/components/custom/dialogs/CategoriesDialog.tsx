@@ -42,7 +42,7 @@ export const CategoriesDialog = ({
   });
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button size="lg" className="w-full">Custom Spending Categories</Button>
       </DialogTrigger>
       <DialogContent>

@@ -33,6 +33,7 @@ import {
   GET_TRANSACTIONS_BY_USER_ID,
 } from "@/lib/graphql/Transaction";
 import { AssignCategoryToSelectedDropdown } from "../dropdowns/AssignCategoryToSelectedDropdown";
+import { DateRange } from "react-day-picker";
 
 interface TransactionsTable {
   columns: ColumnDef<Transaction>[];

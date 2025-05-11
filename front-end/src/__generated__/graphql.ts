@@ -320,6 +320,7 @@ export type Query = {
   getTransactionsByUserId: Array<Transaction>;
   getUserById?: Maybe<User>;
   getUserByUid: User;
+  usernameExists?: Maybe<Scalars['Boolean']['output']>;
 };
 
 
@@ -377,15 +378,20 @@ export type QueryGetUserByUidArgs = {
   uid: Scalars['String']['input'];
 };
 
+
+export type QueryUsernameExistsArgs = {
+  username: Scalars['String']['input'];
+};
+
 export type Transaction = {
   __typename?: 'Transaction';
   Account?: Maybe<Account>;
   Category?: Maybe<Category>;
   User?: Maybe<User>;
   accountId?: Maybe<Scalars['Int']['output']>;
-  amount?: Maybe<Scalars['Float']['output']>;
+  amount: Scalars['Float']['output'];
   categoryId?: Maybe<Scalars['Int']['output']>;
-  date?: Maybe<Scalars['Int']['output']>;
+  date: Scalars['Int']['output'];
   id: Scalars['Int']['output'];
   io?: Maybe<InOrOutEnum>;
   merchantName?: Maybe<Scalars['String']['output']>;
@@ -433,7 +439,7 @@ export type GetAccountsByUserIdQueryVariables = Exact<{
 }>;
 
 
-export type GetAccountsByUserIdQuery = { __typename?: 'Query', getAccountsByUserId: Array<{ __typename?: 'Account', id: number, mask?: string | null, name: string, officialName?: string | null, subtype?: string | null, type?: string | null, plaidId?: string | null, available?: number | null, current?: number | null, isoCurrencyCode?: string | null, unofficialCurrencyCode?: string | null, limit?: number | null, Transactions?: Array<{ __typename?: 'Transaction', userId?: number | null, merchantName?: string | null, amount?: number | null }> | null }> };
+export type GetAccountsByUserIdQuery = { __typename?: 'Query', getAccountsByUserId: Array<{ __typename?: 'Account', id: number, mask?: string | null, name: string, officialName?: string | null, subtype?: string | null, type?: string | null, plaidId?: string | null, available?: number | null, current?: number | null, isoCurrencyCode?: string | null, unofficialCurrencyCode?: string | null, limit?: number | null, Transactions?: Array<{ __typename?: 'Transaction', userId?: number | null, merchantName?: string | null, amount: number }> | null }> };
 
 export type UpsertAccountsFromPlaidMutationVariables = Exact<{
   userId: Scalars['Int']['input'];
@@ -448,7 +454,7 @@ export type DeleteAccountMutationVariables = Exact<{
 }>;
 
 
-export type DeleteAccountMutation = { __typename?: 'Mutation', deleteAccount: { __typename?: 'Account', id: number, mask?: string | null, name: string, officialName?: string | null, subtype?: string | null, type?: string | null, plaidId?: string | null, available?: number | null, current?: number | null, isoCurrencyCode?: string | null, unofficialCurrencyCode?: string | null, limit?: number | null, Transactions?: Array<{ __typename?: 'Transaction', userId?: number | null, merchantName?: string | null, amount?: number | null }> | null } };
+export type DeleteAccountMutation = { __typename?: 'Mutation', deleteAccount: { __typename?: 'Account', id: number, mask?: string | null, name: string, officialName?: string | null, subtype?: string | null, type?: string | null, plaidId?: string | null, available?: number | null, current?: number | null, isoCurrencyCode?: string | null, unofficialCurrencyCode?: string | null, limit?: number | null, Transactions?: Array<{ __typename?: 'Transaction', userId?: number | null, merchantName?: string | null, amount: number }> | null } };
 
 export type GetCategoriesByUserIdForTableQueryVariables = Exact<{
   userId: Scalars['Int']['input'];
@@ -462,7 +468,7 @@ export type GetCategoriesByUserIdQueryVariables = Exact<{
 }>;
 
 
-export type GetCategoriesByUserIdQuery = { __typename?: 'Query', getCategoriesByUserId: Array<{ __typename?: 'Category', id: number, name: string, description?: string | null, userId?: number | null, colour?: string | null, User?: { __typename?: 'User', username: string, firstName?: string | null, lastName?: string | null, email: string, uid: string } | null, Transactions?: Array<{ __typename?: 'Transaction', id: number, date?: number | null, amount?: number | null, merchantName?: string | null }> | null }> };
+export type GetCategoriesByUserIdQuery = { __typename?: 'Query', getCategoriesByUserId: Array<{ __typename?: 'Category', id: number, name: string, description?: string | null, userId?: number | null, colour?: string | null, User?: { __typename?: 'User', username: string, firstName?: string | null, lastName?: string | null, email: string, uid: string } | null, Transactions?: Array<{ __typename?: 'Transaction', id: number, date: number, amount: number, merchantName?: string | null }> | null }> };
 
 export type GetCategoryByIdQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -532,7 +538,7 @@ export type GetTransactionsByUserIdQueryVariables = Exact<{
 }>;
 
 
-export type GetTransactionsByUserIdQuery = { __typename?: 'Query', getTransactionsByUserId: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, accountId?: number | null, io?: InOrOutEnum | null, name?: string | null, merchantName?: string | null, amount?: number | null, categoryId?: number | null, date?: number | null, Account?: { __typename?: 'Account', name: string } | null, Category?: { __typename?: 'Category', id: number, name: string, colour?: string | null } | null }> };
+export type GetTransactionsByUserIdQuery = { __typename?: 'Query', getTransactionsByUserId: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, accountId?: number | null, io?: InOrOutEnum | null, name?: string | null, merchantName?: string | null, amount: number, categoryId?: number | null, date: number, Account?: { __typename?: 'Account', name: string } | null, Category?: { __typename?: 'Category', id: number, name: string, colour?: string | null } | null }> };
 
 export type UpsertTransactionsFromPlaidMutationVariables = Exact<{
   userId: Scalars['Int']['input'];
@@ -543,7 +549,7 @@ export type UpsertTransactionsFromPlaidMutationVariables = Exact<{
 }>;
 
 
-export type UpsertTransactionsFromPlaidMutation = { __typename?: 'Mutation', upsertTransactionsFromPlaid: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, merchantName?: string | null, amount?: number | null, date?: number | null, plaidId?: string | null }> };
+export type UpsertTransactionsFromPlaidMutation = { __typename?: 'Mutation', upsertTransactionsFromPlaid: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, merchantName?: string | null, amount: number, date: number, plaidId?: string | null }> };
 
 export type UpdateTransactionMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -568,12 +574,12 @@ export type CategoriseTransactionsWithAiMutationVariables = Exact<{
 }>;
 
 
-export type CategoriseTransactionsWithAiMutation = { __typename?: 'Mutation', categoriseTransactionsWithAi: Array<{ __typename?: 'Transaction', id: number, merchantName?: string | null, amount?: number | null, Category?: { __typename?: 'Category', id: number, name: string } | null } | null> };
+export type CategoriseTransactionsWithAiMutation = { __typename?: 'Mutation', categoriseTransactionsWithAi: Array<{ __typename?: 'Transaction', id: number, merchantName?: string | null, amount: number, Category?: { __typename?: 'Category', id: number, name: string } | null } | null> };
 
 export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllUsersQuery = { __typename?: 'Query', getAllUsers: Array<{ __typename?: 'User', firstName?: string | null, lastName?: string | null, username: string, phone?: string | null, email: string, uid: string, id: number, Transactions?: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, accountId?: number | null, io?: InOrOutEnum | null, name?: string | null, merchantName?: string | null, amount?: number | null, date?: number | null }> | null }> };
+export type GetAllUsersQuery = { __typename?: 'Query', getAllUsers: Array<{ __typename?: 'User', firstName?: string | null, lastName?: string | null, username: string, phone?: string | null, email: string, uid: string, id: number, Transactions?: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, accountId?: number | null, io?: InOrOutEnum | null, name?: string | null, merchantName?: string | null, amount: number, date: number }> | null }> };
 
 export type GetUserbyIdQueryVariables = Exact<{
   userId: Scalars['Int']['input'];
@@ -587,14 +593,14 @@ export type DeleteUserMutationVariables = Exact<{
 }>;
 
 
-export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'User', id: number, firstName?: string | null, lastName?: string | null, username: string, phone?: string | null, email: string, uid: string, Transactions?: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, accountId?: number | null, io?: InOrOutEnum | null, name?: string | null, merchantName?: string | null, amount?: number | null, date?: number | null }> | null } };
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'User', id: number, firstName?: string | null, lastName?: string | null, username: string, phone?: string | null, email: string, uid: string, Transactions?: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, accountId?: number | null, io?: InOrOutEnum | null, name?: string | null, merchantName?: string | null, amount: number, date: number }> | null } };
 
 export type GetSingleUserByUidQueryVariables = Exact<{
   uid: Scalars['String']['input'];
 }>;
 
 
-export type GetSingleUserByUidQuery = { __typename?: 'Query', getUserByUid: { __typename?: 'User', id: number, firstName?: string | null, lastName?: string | null, username: string, phone?: string | null, email: string, uid: string, Transactions?: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, accountId?: number | null, io?: InOrOutEnum | null, name?: string | null, merchantName?: string | null, amount?: number | null, date?: number | null }> | null } };
+export type GetSingleUserByUidQuery = { __typename?: 'Query', getUserByUid: { __typename?: 'User', id: number, firstName?: string | null, lastName?: string | null, username: string, phone?: string | null, email: string, uid: string, Transactions?: Array<{ __typename?: 'Transaction', id: number, userId?: number | null, accountId?: number | null, io?: InOrOutEnum | null, name?: string | null, merchantName?: string | null, amount: number, date: number }> | null } };
 
 export type GetUserIdByUidQueryVariables = Exact<{
   uid: Scalars['String']['input'];
@@ -622,6 +628,13 @@ export type GetUserUidFromUserIdQueryVariables = Exact<{
 
 export type GetUserUidFromUserIdQuery = { __typename?: 'Query', getUserById?: { __typename?: 'User', uid: string } | null };
 
+export type UsernameExistsQueryVariables = Exact<{
+  username: Scalars['String']['input'];
+}>;
+
+
+export type UsernameExistsQuery = { __typename?: 'Query', usernameExists?: boolean | null };
+
 
 export const GetAccountsByUserIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAccountsByUserId"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAccountsByUserId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"mask"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"officialName"}},{"kind":"Field","name":{"kind":"Name","value":"subtype"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"Transactions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"merchantName"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"plaidId"}},{"kind":"Field","name":{"kind":"Name","value":"available"}},{"kind":"Field","name":{"kind":"Name","value":"current"}},{"kind":"Field","name":{"kind":"Name","value":"isoCurrencyCode"}},{"kind":"Field","name":{"kind":"Name","value":"unofficialCurrencyCode"}},{"kind":"Field","name":{"kind":"Name","value":"limit"}}]}}]}}]} as unknown as DocumentNode<GetAccountsByUserIdQuery, GetAccountsByUserIdQueryVariables>;
 export const UpsertAccountsFromPlaidDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpsertAccountsFromPlaid"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"upsertAccountsFromPlaid"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}},{"kind":"Argument","name":{"kind":"Name","value":"accessToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"accessToken"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"plaidId"}}]}}]}}]} as unknown as DocumentNode<UpsertAccountsFromPlaidMutation, UpsertAccountsFromPlaidMutationVariables>;
@@ -648,3 +661,4 @@ export const GetSingleUserByUidDocument = {"kind":"Document","definitions":[{"ki
 export const GetUserIdByUidDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUserIdByUid"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"uid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getUserByUid"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"uid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"uid"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<GetUserIdByUidQuery, GetUserIdByUidQueryVariables>;
 export const CreateUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"firstName"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"lastName"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"username"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"uid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"phone"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"firstName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"firstName"}}},{"kind":"Argument","name":{"kind":"Name","value":"lastName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"lastName"}}},{"kind":"Argument","name":{"kind":"Name","value":"username"},"value":{"kind":"Variable","name":{"kind":"Name","value":"username"}}},{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"uid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"uid"}}},{"kind":"Argument","name":{"kind":"Name","value":"phone"},"value":{"kind":"Variable","name":{"kind":"Name","value":"phone"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}}]}}]} as unknown as DocumentNode<CreateUserMutation, CreateUserMutationVariables>;
 export const GetUserUidFromUserIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUserUidFromUserId"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getUserById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}}]}}]}}]} as unknown as DocumentNode<GetUserUidFromUserIdQuery, GetUserUidFromUserIdQueryVariables>;
+export const UsernameExistsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UsernameExists"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"username"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"usernameExists"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"username"},"value":{"kind":"Variable","name":{"kind":"Name","value":"username"}}}]}]}}]} as unknown as DocumentNode<UsernameExistsQuery, UsernameExistsQueryVariables>;

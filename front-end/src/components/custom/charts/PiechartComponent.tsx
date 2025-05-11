@@ -26,9 +26,12 @@ type Props = {
   chartData: ChartDataType[];
   dateRange: DateRange | undefined;
   totalOut: number;
+  borderOff?: boolean;
+  titleOff?: boolean;
+  dateLabelOff?: boolean;
 };
 
-export function PieChartComponent({ chartData, dateRange, totalOut }: Props) {
+export function PieChartComponent({ chartData, dateRange, totalOut, borderOff, titleOff, dateLabelOff }: Props) {
   const chartConfig: Record<string, Record<string, string>> = {};
   chartData.forEach((dataPoint) => {
     chartConfig[dataPoint.category] = {
@@ -40,10 +43,12 @@ export function PieChartComponent({ chartData, dateRange, totalOut }: Props) {
 
   console.log({ chartData });
   return (
-    <Card className="flex flex-col">
+    <Card className={"flex flex-col" + (borderOff ? " border-0" : "")}>
       <CardHeader className="items-center pb-0">
-        <CardTitle>Spending by Category</CardTitle>
-        <CardDescription>Date Range: {formatDateRange(dateRange)}</CardDescription>
+        {titleOff ? null : <CardTitle>Spending by Category</CardTitle>}
+        {dateLabelOff ? null : <CardDescription>
+          Date Range: {formatDateRange(dateRange)}
+        </CardDescription>}
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -56,22 +61,23 @@ export function PieChartComponent({ chartData, dateRange, totalOut }: Props) {
               content={
                 totalOut > 0 ? (
                   <ChartTooltipContent
-                    hideLabel
-                    valueFormatter={(value) =>
+                    labelFormatter={(value, payload) =>
                       new Intl.NumberFormat("en-GB", {
                         style: "currency",
                         currency: "GBP",
-                      }).format(Number(value.toString()))
+                      }).format(Number(payload[0].value))
                     }
+                    hideValue
                   />
                 ) : (
                   <ChartTooltipContent
-                    valueFormatter={() =>
+                    labelFormatter={() =>
                       new Intl.NumberFormat("en-GB", {
                         style: "currency",
                         currency: "GBP",
-                      }).format(Number(0))
+                      }).format(0)
                     }
+                    hideValue
                   />
                 )
               }

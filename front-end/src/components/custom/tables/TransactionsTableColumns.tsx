@@ -19,6 +19,9 @@ import {
 import { TransactionRow } from "./TransactionsTable";
 import { DEFAULT_COLOUR } from "@/lib/constants";
 import { TransactionCategoryButton } from "../dropdowns/TransactionCategoryDropdown";
+import { DateRange } from "react-day-picker";
+import { date } from "zod";
+import { isInDateRange } from "@/lib/utils";
 
 const TransactionsTableColumns: ColumnDef<Transaction>[] = [
   {
@@ -111,6 +114,18 @@ const TransactionsTableColumns: ColumnDef<Transaction>[] = [
       const value = getValue();
       if (typeof value === "number") {
         return dayjs(1000 * value).format("DD/MM/YYYY");
+      }
+    },
+    filterFn: (
+      row: TransactionRow,
+      _columnId: string,
+      filterValue: DateRange | undefined
+    ): boolean => {
+      const value: number = row.getValue("date");
+      if (filterValue) {
+        return isInDateRange(filterValue, value)
+      } else {
+        return true;
       }
     },
   },

@@ -34,7 +34,7 @@ export const AssignCategoryToSelectedDropdown = ({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger disabled={disabled}>
+      <DropdownMenuTrigger asChild>
         <Button variant="secondary" disabled={disabled}>
           Assign Category to All Selected
         </Button>

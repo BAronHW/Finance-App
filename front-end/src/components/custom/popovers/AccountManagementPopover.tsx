@@ -22,8 +22,6 @@ const AccountManagementPopover = ({
   openPlaidLink,
   plaidLinkReady,
 }: Props) => {
-  console.log("accounts!!!");
-  console.log({ accounts });
   const [deleteAccount, { loading: deletingAccount }] = useMutation(
     DELETE_ACCOUNT,
     {
@@ -33,7 +31,7 @@ const AccountManagementPopover = ({
 
   return (
     <Popover>
-      <PopoverTrigger>
+      <PopoverTrigger asChild>
         <Button variant="default" size="lg">
           Manage your bank accounts with Plaid
         </Button>

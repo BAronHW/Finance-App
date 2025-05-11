@@ -12,7 +12,6 @@ interface ServiceAccountConfig {
     token_uri: string | undefined;
     auth_provider_x509_cert_url: string | undefined;
     client_x509_cert_url: string | undefined;
-    universe_domain: string | undefined
 }
 
 export const config: ServiceAccountConfig = {
@@ -26,8 +25,6 @@ export const config: ServiceAccountConfig = {
     token_uri: process.env.FIREBASE_TOKEN_URI,
     auth_provider_x509_cert_url: process.env.AUTH_PROVIDER_X509_CERT_URL,
     client_x509_cert_url: process.env.CLIENT_X509_CERT_URL,
-    universe_domain: process.env.UNIVERSE_DOMAIN
-
 }
 
 

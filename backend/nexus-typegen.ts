@@ -125,9 +125,9 @@ export interface NexusGenObjects {
     Category?: NexusGenRootTypes['Category'] | null; // Category
     User?: NexusGenRootTypes['User'] | null; // User
     accountId?: number | null; // Int
-    amount?: number | null; // Float
+    amount: number; // Float!
     categoryId?: number | null; // Int
-    date?: number | null; // Int
+    date: number; // Int!
     id: number; // Int!
     merchantName?: string | null; // String
     name?: string | null; // String
@@ -307,9 +307,9 @@ export interface NexusGenFieldTypes {
     Category: NexusGenRootTypes['Category'] | null; // Category
     User: NexusGenRootTypes['User'] | null; // User
     accountId: number | null; // Int
-    amount: number | null; // Float
+    amount: number; // Float!
     categoryId: number | null; // Int
-    date: number | null; // Int
+    date: number; // Int!
     id: number; // Int!
     io: NexusGenEnums['InOrOutEnum'] | null; // InOrOutEnum
     merchantName: string | null; // String
