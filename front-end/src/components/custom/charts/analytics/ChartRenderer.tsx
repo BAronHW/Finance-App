@@ -10,6 +10,9 @@ import { useAuth } from "@/lib/contexts/authContext";
 import { GET_CATEGORIES_BY_USER_ID } from "@/lib/graphql/Category";
 import IoBarchartGrid from "./grid/IoBarchartGrid";
 import NoChartAvailable from "./NoChartAvailable";
+import { useMemo } from "react";
+import { isInDateRange } from "@/lib/utils";
+import { Transaction } from "@/__generated__/graphql";
 
 type Props = {
   dateRange: DateRange | undefined;
@@ -35,7 +38,15 @@ const ChartRenderer = ({ dateRange, viewType, chartType, dataType }: Props) => {
   } = useQuery(GET_CATEGORIES_BY_USER_ID, {
     variables: { userId: userId },
   });
-  const transactions = transactionsData?.getTransactionsByUserId || [];
+  const transactions =
+    useMemo(() => {
+      const data = transactionsData?.getTransactionsByUserId || [];
+      if (dateRange) {
+        return data.filter((transaction: Transaction) => isInDateRange(dateRange, transaction.date));
+      } else {
+        return data; 
+      }
+    }, [transactionsData, dateRange]);
   const categories = categoriesData?.getCategoriesByUserId || [];
 
   if (viewType === "SINGLE") {
@@ -52,6 +63,8 @@ const ChartRenderer = ({ dateRange, viewType, chartType, dataType }: Props) => {
             transactions={transactions}
           />
         );
+      } else {
+        return <NoChartAvailable />;
       }
     } else if (chartType === "PIE") {
       if (dataType === "CATEGORY") {

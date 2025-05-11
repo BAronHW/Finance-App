@@ -1,6 +1,14 @@
 import { Category, Transaction } from "@/__generated__/graphql";
 import { DateRange } from "react-day-picker";
-import { Bar, BarChart, BarProps, CartesianGrid, Cell, XAxis, YAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  BarProps,
+  CartesianGrid,
+  Cell,
+  XAxis,
+  YAxis,
+} from "recharts";
 import {
   ChartContainer,
   ChartTooltip,
@@ -8,6 +16,7 @@ import {
 } from "@/components/ui/chart";
 import dayjs from "dayjs";
 import { DEFAULT_COLOUR } from "@/lib/constants";
+import { useMemo } from "react";
 
 type Props = {
   dateRange: DateRange | undefined;
@@ -27,10 +36,7 @@ const TimeBarchart = ({ dateRange, transactions }: Props) => {
 
   return (
     <div className="p-4">
-      <ChartContainer
-        config={{}}
-        className="h-full w-full"
-      >
+      <ChartContainer config={{}} className="h-full w-full">
         <BarChart
           accessibilityLayer
           data={chartData}
@@ -77,8 +83,11 @@ const TimeBarchart = ({ dateRange, transactions }: Props) => {
                 nameKey={"amount"}
                 labelFormatter={(_, payload) => {
                   const dataPoint = payload?.[0]?.payload;
-                  const categoryName = dataPoint?.category?.name || "Uncategorised";
-                  const dateFormatted = dayjs.unix(dataPoint?.date).format("D MMM");
+                  const categoryName =
+                    dataPoint?.category?.name || "Uncategorised";
+                  const dateFormatted = dayjs
+                    .unix(dataPoint?.date)
+                    .format("D MMM");
                   const colour = dataPoint?.category?.colour || DEFAULT_COLOUR;
 
                   return (
@@ -121,4 +130,3 @@ const TimeBarchart = ({ dateRange, transactions }: Props) => {
 };
 
 export default TimeBarchart;
-

@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState } from "react";
@@ -19,8 +19,17 @@ const AnalyticsPage = () => {
   return (
     <div>
       <Card>
-        <CardContent className="flex place-content-around">
+        <CardHeader className="items-center">
+          <CardTitle>Analytics Dashboard</CardTitle>
+          <CardDescription className="text-center">
+            Visualise your transaction history and spending habits over time with a wide range of chart formats.<br/>
+            Select the date range, view type, chart type, and data type to customise your analytics experience. Multi-view currently only supports a monthly view.
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="flex place-content-around pt-6">
           <DatePickerWithRange
+            className="self-center"
             date={dateRange}
             setDate={(range: DateRange | undefined) => setDateRange(range)}
           />
