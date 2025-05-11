@@ -4,7 +4,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -22,6 +21,9 @@ import {
   Transaction,
 } from "@/__generated__/graphql";
 import { Table } from "@tanstack/react-table";
+import { DateRange } from "react-day-picker";
+import { useState } from "react";
+import { displayDateRange } from "@/lib/utils";
 
 type Props = {
   table: Table<Transaction>;
@@ -34,6 +36,14 @@ export const TransactionTableFilters = ({
   categories,
   accounts,
 }: Props) => {
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+
+  const categoryColumn = table.getColumn("category");
+  const noCategoriesSelected = categoryColumn
+    ? (categoryColumn?.getFilterValue() as (string | undefined)[])?.length ===
+      categories.length + 1
+    : undefined;
+
   return (
     <div className="flex place-content-between py-4">
       <div className="flex items-center gap-1 border border-slate-200 rounded-md">
@@ -51,7 +61,7 @@ export const TransactionTableFilters = ({
       </div>
       <div className="flex items-center gap-1">
         <DropdownMenu>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger asChild>
             <Button variant="outline">
               <p className="flex items-center place-content-between gap-1 font-normal text-slate-500">
                 <Filter />
@@ -61,6 +71,9 @@ export const TransactionTableFilters = ({
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuCheckboxItem
+              onSelect={(event) => {
+                event.preventDefault();
+              }}
               className="text-center"
               checked={
                 !(
@@ -69,9 +82,12 @@ export const TransactionTableFilters = ({
               }
               onCheckedChange={(checked) => {
                 const column = table.getColumn("io");
-                const filterValue = (column?.getFilterValue() as InOrOutEnum[]) ?? [];
+                const filterValue =
+                  (column?.getFilterValue() as InOrOutEnum[]) ?? [];
                 if (checked) {
-                  column?.setFilterValue(filterValue.filter(value => value !== InOrOutEnum.In));
+                  column?.setFilterValue(
+                    filterValue.filter((value) => value !== InOrOutEnum.In)
+                  );
                 } else {
                   column?.setFilterValue([...filterValue, InOrOutEnum.In]);
                 }
@@ -81,6 +97,9 @@ export const TransactionTableFilters = ({
             </DropdownMenuCheckboxItem>
             <DropdownMenuSeparator />
             <DropdownMenuCheckboxItem
+              onSelect={(event) => {
+                event.preventDefault();
+              }}
               className="text-center"
               checked={
                 !(
@@ -89,9 +108,12 @@ export const TransactionTableFilters = ({
               }
               onCheckedChange={(checked) => {
                 const column = table.getColumn("io");
-                const filterValue = (column?.getFilterValue() as InOrOutEnum[]) ?? [];
+                const filterValue =
+                  (column?.getFilterValue() as InOrOutEnum[]) ?? [];
                 if (checked) {
-                  column?.setFilterValue(filterValue.filter(value => value !== InOrOutEnum.Out));
+                  column?.setFilterValue(
+                    filterValue.filter((value) => value !== InOrOutEnum.Out)
+                  );
                 } else {
                   column?.setFilterValue([...filterValue, InOrOutEnum.Out]);
                 }
@@ -104,16 +126,23 @@ export const TransactionTableFilters = ({
       </div>
       <div>
         <Popover>
-          <PopoverTrigger>
+          <PopoverTrigger asChild>
             <Button variant="outline">
               <p className="flex items-center place-content-between gap-1 font-normal text-slate-500">
                 <Filter />
-                Filter by Date
+                {dateRange ? displayDateRange(dateRange) : "Filter by Date"}
               </p>
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-fit">
-            <DatePickerWithRange />
+            <DatePickerWithRange
+              date={dateRange}
+              setDate={(range: DateRange | undefined) => {
+                setDateRange(range);
+                const column = table.getColumn("date");
+                column?.setFilterValue(range);
+              }}
+            />
           </PopoverContent>
         </Popover>
       </div>
@@ -134,6 +163,9 @@ export const TransactionTableFilters = ({
               .map((column) => {
                 return (
                   <DropdownMenuCheckboxItem
+                    onSelect={(event) => {
+                      event.preventDefault();
+                    }}
                     key={column.id}
                     className="capitalize"
                     checked={column.getIsVisible()}
@@ -163,6 +195,9 @@ export const TransactionTableFilters = ({
               return (
                 <DropdownMenuCheckboxItem
                   className="capitalize"
+                  onSelect={(event) => {
+                    event.preventDefault();
+                  }}
                   checked={
                     !(table.getColumn("account")?.getFilterValue() as string[]) // TODO: can try think of an alternative to type assertions
                       ?.includes(account.name)
@@ -216,10 +251,40 @@ export const TransactionTableFilters = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <DropdownMenuCheckboxItem
+              onSelect={(event) => {
+                console.log({ filterVal: categoryColumn?.getFilterValue() });
+                event.preventDefault();
+                if (noCategoriesSelected === undefined) {
+                  return;
+                } else if (noCategoriesSelected) {
+                  const filterValue: (string | undefined)[] = [];
+                  categoryColumn?.setFilterValue(filterValue);
+                } else {
+                  const filterValue: (string | undefined)[] = categories.map(
+                    (category) => category.name
+                  );
+                  filterValue.push(undefined);
+                  categoryColumn?.setFilterValue(filterValue);
+                }
+              }}
+              checked={false}
+            >
+              <p className="font-semibold">
+                {categoryColumn
+                  ? noCategoriesSelected
+                    ? "Select All"
+                    : "Deselect All"
+                  : "Loading column..."}
+              </p>
+            </DropdownMenuCheckboxItem>
             {categories.length > 0 &&
               categories.map((category) => {
                 return (
                   <DropdownMenuCheckboxItem
+                    onSelect={(event) => {
+                      event.preventDefault();
+                    }}
                     checked={
                       !(
                         table.getColumn("category")?.getFilterValue() as (
@@ -255,6 +320,9 @@ export const TransactionTableFilters = ({
                 );
               })}
             <DropdownMenuCheckboxItem
+              onSelect={(event) => {
+                event.preventDefault();
+              }}
               checked={
                 !(
                   table.getColumn("category")?.getFilterValue() as (

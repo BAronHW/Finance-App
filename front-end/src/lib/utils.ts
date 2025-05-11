@@ -35,3 +35,15 @@ export const isInDateRange = (dateRange: DateRange, timestamp: number) => {
     return true;
   }
 }
+
+export const displayDateRange = (dateRange: DateRange) => {
+  if (dateRange.from && dateRange.to) {
+    return `${dayjs(dateRange.from).format("DD/MM/YY")} - ${dayjs(dateRange.to).format("DD/MM/YYYY")}`;
+  } else if (dateRange.from) {
+    return `From ${dayjs(dateRange.from).format("DD/MM/YY")}`;
+  } else if (dateRange.to) {
+    return `To ${dayjs(dateRange.to).format("DD/MM/YY")}`;
+  } else {
+    return "All time";
+  }
+}

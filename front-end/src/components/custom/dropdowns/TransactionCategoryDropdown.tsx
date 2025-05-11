@@ -54,7 +54,7 @@ export const TransactionCategoryButton = ({
         getCategoriesByUserIdForTable();
       }}
     >
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
         <Button
           style={{
             backgroundColor: buttonColour ?? undefined,

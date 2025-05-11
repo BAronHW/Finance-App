@@ -62,10 +62,7 @@ function Header({
     { variables: { userId } }
   );
 
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: undefined,
-    to: undefined,
-  });
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   const initials = name
     .split(" ")
