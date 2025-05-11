@@ -1,19 +1,9 @@
 import { Category, Transaction } from "@/__generated__/graphql";
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { TrendingUp } from "lucide-react";
 import { BarChart, LabelList } from "recharts";
 import { DateRange } from "react-day-picker";
 import { CartesianGrid, XAxis, Bar, Rectangle } from "recharts";

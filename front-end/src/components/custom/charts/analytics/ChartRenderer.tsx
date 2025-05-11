@@ -9,6 +9,7 @@ import { useQuery } from "@apollo/client";
 import { useAuth } from "@/lib/contexts/authContext";
 import { GET_CATEGORIES_BY_USER_ID } from "@/lib/graphql/Category";
 import IoBarchartGrid from "./grid/IoBarchartGrid";
+import NoChartAvailable from "./NoChartAvailable";
 
 type Props = {
   dateRange: DateRange | undefined;
@@ -59,9 +60,14 @@ const ChartRenderer = ({ dateRange, viewType, chartType, dataType }: Props) => {
             dateRange={dateRange}
             categories={categories}
             transactions={transactions}
+            borderOff={true}
           />
         );
+      } else {
+        return <NoChartAvailable />;
       }
+    } else {
+      return <NoChartAvailable />;
     }
   } else if (viewType === "MULTI") {
     if (chartType === "BAR") {
@@ -74,20 +80,27 @@ const ChartRenderer = ({ dateRange, viewType, chartType, dataType }: Props) => {
           />
         );
       } else if (dataType === "IO") {
-        return <IoBarchartGrid dateRange={dateRange} categories={categories} transactions={transactions} />;
+        return (
+          <IoBarchartGrid dateRange={dateRange} transactions={transactions} />
+        );
+      } else {
+        return <NoChartAvailable />;
       }
     } else if (chartType === "PIE") {
       if (dataType === "CATEGORY") {
-        return <CategoryPiechartGrid dateRange={dateRange} />;
+        return (
+          <CategoryPiechartGrid
+            dateRange={dateRange}
+            categories={categories}
+            transactions={transactions}
+          />
+        );
+      } else {
+        return <NoChartAvailable />;
       }
-    } else {
-      return (
-        <div>
-          <h1 className="text-2xl font-bold">No chart available</h1>
-          <p className="text-gray-500">Please select a valid chart type.</p>
-        </div>
-      );
     }
+  } else {
+    <NoChartAvailable />;
   }
 };
 
