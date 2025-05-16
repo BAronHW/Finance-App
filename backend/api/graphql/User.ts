@@ -144,9 +144,9 @@ export const UserMutation = extendType({
         id: nonNull(intArg()),
         firstName: stringArg(),
         lastName: stringArg(),
-        username: nonNull(stringArg()),
-        email: nonNull(stringArg()),
-        uid: nonNull(stringArg()),
+        username: stringArg(),
+        email: stringArg(),
+        uid: stringArg(),
         phone: stringArg(),
       },
       resolve: async (_root, args, ctx) => {
@@ -155,9 +155,9 @@ export const UserMutation = extendType({
           data: {
             firstName: args.firstName,
             lastName: args.lastName,
-            username: args.username,
-            email: args.email,
-            uid: args.uid,
+            username: args.username ?? undefined,
+            email: args.email ?? undefined,
+            uid: args.uid ?? undefined,
           },
           include: {
             Transactions: true,

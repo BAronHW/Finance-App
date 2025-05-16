@@ -612,13 +612,13 @@ export interface NexusGenArgTypes {
       ids: number[]; // [Int!]!
     }
     updateUserDetails: { // args
-      email: string; // String!
+      email?: string | null; // String
       firstName?: string | null; // String
       id: number; // Int!
       lastName?: string | null; // String
       phone?: string | null; // String
-      uid: string; // String!
-      username: string; // String!
+      uid?: string | null; // String
+      username?: string | null; // String
     }
     uploadPdf: { // args
       file: string; // String!

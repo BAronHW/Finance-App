@@ -12,13 +12,10 @@ import { Pencil } from "lucide-react";
 
 type Props = {
   className?: string;
+  userId: number;
 };
 
-export const ProfilePicture = ({ className }: Props) => {
-  const params = useParams();
-  const userId = Array.isArray(params?.userId)
-    ? Number(params?.userId[0])
-    : Number(params?.userId);
+export const ProfilePicture = ({ className, userId }: Props) => {
 
   const [url, setUrl] = useState();
 

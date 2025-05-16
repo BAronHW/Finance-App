@@ -112,7 +112,7 @@ type Mutation {
   updateCategory(colour: String, description: String, id: Int!, name: String): Category!
   updateTransaction(categoryId: Int, id: Int!, merchantName: String, name: String): Transaction
   updateTransactions(categoryId: Int, ids: [Int!]!): [Transaction!]!
-  updateUserDetails(email: String!, firstName: String, id: Int!, lastName: String, phone: String, uid: String!, username: String!): User!
+  updateUserDetails(email: String, firstName: String, id: Int!, lastName: String, phone: String, uid: String, username: String): User!
   uploadPdf(file: String!, name: String!, size: Int!, uid: String!): Any
   upsertAccountsFromPlaid(accessToken: String!, userId: Int!): [Account!]!
   upsertTransactionsFromPlaid(accessToken: String!, accountId: Int, endDate: String!, startDate: String!, userId: Int): [Transaction!]!

@@ -150,7 +150,7 @@ function Header({
       <CardContent className="p-6">
         <div className="flex justify-between items-center gap-5">
           <div className="flex items-center gap-4">
-            <ProfilePicture className="h-32 w-32 rounded-full" />
+            <ProfilePicture className="h-32 w-32 rounded-full hover:opacity-75" userId={userId}/>
             <div>
               <div className="text-xl font-semibold z-10">
                 Welcome,{" "}

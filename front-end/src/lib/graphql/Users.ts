@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 
 export const GET_ALL_USERS = gql(`
   query GetAllUsers {
@@ -31,10 +31,12 @@ export const GET_USER_BY_ID = gql(`
       firstName
       lastName
       username
+      phone
+      email
       profilePictureUrl
     }
   }
-  `) 
+  `);
 
 export const DELETE_USER = gql(`
   mutation DeleteUser($id: Int!) {
@@ -123,16 +125,16 @@ export const CREATE_USER = gql(`
 export const FETCH_UID_FROM_USER = gql`
   query GetUserUidFromUserId($userId: Int!) {
     getUserById(userId: $userId) {
-        uid
+      uid
     }
-}
-`
+  }
+`;
 
 export const USERNAME_EXISTS = gql`
   query UsernameExists($username: String!) {
     usernameExists(username: $username)
   }
-`
+`;
 
 export const GET_USER_PFP = gql`
   query getUserById($userId: Int!) {
@@ -141,4 +143,31 @@ export const GET_USER_PFP = gql`
       profilePictureUrl
     }
   }
-`
+`;
+
+export const UPDATE_USER_DETAILS = gql`
+  mutation UpdateUserDetails(
+    $id: Int!
+    $firstName: String
+    $lastName: String
+    $username: String
+    $email: String
+    $phone: String
+  ) {
+    updateUserDetails(
+      id: $id
+      firstName: $firstName
+      lastName: $lastName
+      username: $username
+      email: $email
+      phone: $phone
+    ) {
+      id
+      firstName
+      lastName
+      username
+      email
+      phone
+    }
+  }
+`;

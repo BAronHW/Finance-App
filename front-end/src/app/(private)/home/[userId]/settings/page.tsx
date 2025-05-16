@@ -16,9 +16,16 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ProfilePicture } from "@/components/custom/pfp/ProfilePicture";
-import { useQuery } from "@apollo/client";
-import { GET_USER_PFP } from "@/lib/graphql/Users";
+import { useMutation, useQuery } from "@apollo/client";
+import {
+  GET_USER_BY_ID,
+  GET_USER_PFP,
+  UPDATE_USER_DETAILS,
+} from "@/lib/graphql/Users";
 import { useParams } from "next/navigation";
+import { useEffect } from "react";
+import { objectSize } from "pdfjs-dist/types/src/shared/util";
+import { LoaderCircle } from "lucide-react";
 
 const formSchema = z.object({
   firstName: z.string(),
@@ -38,6 +45,17 @@ const formSchema = z.object({
 });
 
 export default function SettingsPage() {
+  const params = useParams();
+  const userId = Array.isArray(params?.userId)
+    ? Number(params?.userId[0])
+    : Number(params?.userId);
+
+  const { data } = useQuery(GET_USER_BY_ID, {
+    variables: {
+      userId: userId,
+    },
+  });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,16 +67,56 @@ export default function SettingsPage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
+  const [updateUserDetails, { loading: updatingDetails }] = useMutation(
+    UPDATE_USER_DETAILS,
+    {
+      variables: {
+        id: userId,
+        firstName: form.getValues("firstName"),
+        lastName: form.getValues("lastName"),
+        username: form.getValues("username"),
+        email: form.getValues("email"),
+        phone: form.getValues("phone"),
+      },
+      onCompleted: (data) => {
+        console.log("User details updated successfully", { data });
+      },
+    }
+  );
 
+  useEffect(() => {
+    if (data?.getUserById) {
+      form.reset({
+        username: data.getUserById.username || "",
+        firstName: data.getUserById.firstName || "",
+        lastName: data.getUserById.lastName || "",
+        email: data.getUserById.email || "",
+        phone: data.getUserById.phone || "",
+      });
+    }
+  }, [data, form]);
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    updateUserDetails({
+      variables: {
+        id: userId,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        username: values.username,
+        email: values.email,
+        phone: values.phone,
+      },
+    });
+  }
   return (
     <div className="w-1/2 justify-self-center">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="flex flex-col gap-4 flex-1">
-            <ProfilePicture className="w-40 h-40 rounded-full"/>
+            <ProfilePicture
+              className="w-40 h-40 rounded-full hover:opacity-75"
+              userId={userId}
+            />
             <FormField
               control={form.control}
               name="username"
@@ -66,7 +124,7 @@ export default function SettingsPage() {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Change your username" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -78,11 +136,9 @@ export default function SettingsPage() {
                 name="firstName"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>
-                      First Name<span style={{ color: "red" }}>&nbsp;*</span>
-                    </FormLabel>
+                    <FormLabel>First Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="First name" {...field} />
+                      <Input placeholder="Change your first name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -93,11 +149,9 @@ export default function SettingsPage() {
                 name="lastName"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>
-                      Last Name<span style={{ color: "red" }}>&nbsp;*</span>
-                    </FormLabel>
+                    <FormLabel>Last Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Last name" {...field} />
+                      <Input placeholder="Change your last name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -111,7 +165,7 @@ export default function SettingsPage() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Change your email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -124,14 +178,30 @@ export default function SettingsPage() {
                 <FormItem>
                   <FormLabel>Phone</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Change your phone number" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button variant="outline" className="mt-4" type="submit">
-              Update Account Details
+            <Button
+              variant="outline"
+              className="mt-4"
+              type="submit"
+              disabled={
+                Object.keys(form.formState.touchedFields).length === 0 ||
+                updatingDetails
+              }
+            >
+              {updatingDetails ? (
+                <p>
+                  <LoaderCircle className="animate-spin mr-2" />
+                  Updating
+                </p>
+              ) : (
+                "Update"
+              )}{" "}
+              Account Details
             </Button>
           </div>
         </form>
