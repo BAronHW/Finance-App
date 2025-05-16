@@ -119,16 +119,16 @@ function TransactionsTable({
         </div>
         <div className="flex gap-4 justify-center">
           <AutoCategoriseWithAiPopover
-            onRunAutoCategorise={() => {
+            onRunAutoCategorise={(overwrite: boolean) => {
               const selectedIds = table
                 .getFilteredSelectedRowModel()
                 .rows.map((row) => row.original.id);
               categoriseTransactionsWithAi({
                 variables: {
                   ids: selectedIds,
+                  overwrite: overwrite,
                 },
               });
-              table.toggleAllPageRowsSelected(false);
             }}
           />
           <AssignCategoryToSelectedDropdown

@@ -419,7 +419,7 @@ export const TransactionMutations = extendType({
 
         const transactionCategoryIdPairs = await categoriseTransactions(
           transactions.filter((transaction) =>
-            args.overwrite && !!transaction.categoryId ? false : true
+            !args.overwrite && !!transaction.categoryId ? false : true
           ),
           10,
           categories
