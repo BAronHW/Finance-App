@@ -3,12 +3,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -17,15 +15,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { ProfilePicture } from "@/components/custom/pfp/ProfilePicture";
 import { useMutation, useQuery } from "@apollo/client";
-import {
-  GET_USER_BY_ID,
-  GET_USER_PFP,
-  UPDATE_USER_DETAILS,
-} from "@/lib/graphql/Users";
+import { GET_USER_BY_ID, UPDATE_USER_DETAILS } from "@/lib/graphql/Users";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
-import { objectSize } from "pdfjs-dist/types/src/shared/util";
 import { LoaderCircle } from "lucide-react";
+import { SettingsSkeleton } from "@/components/custom/skeletons/SettingsSkeleton";
 
 const formSchema = z.object({
   firstName: z.string(),
@@ -50,7 +44,7 @@ export default function SettingsPage() {
     ? Number(params?.userId[0])
     : Number(params?.userId);
 
-  const { data } = useQuery(GET_USER_BY_ID, {
+  const { data, loading: userLoading } = useQuery(GET_USER_BY_ID, {
     variables: {
       userId: userId,
     },
@@ -108,6 +102,11 @@ export default function SettingsPage() {
       },
     });
   }
+
+  if (userLoading) {
+    return <SettingsSkeleton />;
+  }
+
   return (
     <div className="w-1/2 justify-self-center">
       <Form {...form}>

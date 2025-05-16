@@ -9,7 +9,7 @@ import {
   GET_TRANSACTIONS_BY_USER_ID,
   UPSERT_TRANSACTIONS_FROM_PLAID,
 } from "@/lib/graphql/Transaction";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { CREATE_LINKTOKEN, EXCHANGE_PUB_TOKEN } from "@/lib/graphql/Plaid";
 import { usePlaidLink } from "react-plaid-link";
 import { GET_USER_BY_ID } from "@/lib/graphql/Users";
@@ -20,6 +20,9 @@ import {
 import { Account } from "@/__generated__/graphql";
 import { useAuth } from "@/lib/contexts/authContext";
 import { useRouter } from "next/navigation";
+import { HeaderSkeleton } from "@/components/custom/skeletons/HeaderSkeleton";
+import { Table } from "lucide-react";
+import { TableSkeleton } from "@/components/custom/skeletons/TableSkeleton";
 
 export default function Home() {
   const auth = useAuth();
@@ -45,8 +48,8 @@ export default function Home() {
         router.push(`/home/${auth.userId}`);
         return;
       }
-      
-      setAuthChecked(true)
+
+      setAuthChecked(true);
     }
   }, [auth.loading, auth.userId, userId]);
 
@@ -54,7 +57,7 @@ export default function Home() {
   const [linkToken, setLinkToken] = useState("");
   const [displayName, setDisplayName] = useState("");
 
-  useQuery(GET_USER_BY_ID, {
+  const { loading: userLoading } = useQuery(GET_USER_BY_ID, {
     variables: {
       userId: userId,
     },
@@ -85,11 +88,12 @@ export default function Home() {
     }
   );
 
-  const [createLinkToken] = useMutation(CREATE_LINKTOKEN);
-  const [exchangeToken] = useMutation(EXCHANGE_PUB_TOKEN);
-  const [upsertTransactionsFromPlaid] = useMutation(
-    UPSERT_TRANSACTIONS_FROM_PLAID
-  );
+  const [createLinkToken, { loading: createLinkTokenLoading }] =
+    useMutation(CREATE_LINKTOKEN);
+  const [exchangeToken, { loading: exchangeTokenLoading }] =
+    useMutation(EXCHANGE_PUB_TOKEN);
+  const [upsertTransactionsFromPlaid, { loading: upsertTransactionsLoading }] =
+    useMutation(UPSERT_TRANSACTIONS_FROM_PLAID);
 
   useEffect(() => {
     const fetchTransactionsFromPlaid = async (accounts: Account[]) => {
@@ -128,7 +132,8 @@ export default function Home() {
     }
   });
 
-  const [upsertAccountsFromPlaid] = useMutation(UPSERT_ACCOUNTS_FROM_PLAID);
+  const [upsertAccountsFromPlaid, { loading: upsertAccountsLoading }] =
+    useMutation(UPSERT_ACCOUNTS_FROM_PLAID);
 
   const { open: openPlaidLink, ready: plaidLinkReady } = usePlaidLink({
     token: linkToken,
@@ -158,16 +163,31 @@ export default function Home() {
     },
   });
 
-  const { data: transactionsByUserData } = useQuery(
-    GET_TRANSACTIONS_BY_USER_ID,
-    {
+  const { data: transactionsByUserData, loading: transactionsLoading } =
+    useQuery(GET_TRANSACTIONS_BY_USER_ID, {
       variables: {
         userId: userId,
       },
-    }
-  );
+    });
 
   const transactionData = transactionsByUserData?.getTransactionsByUserId ?? [];
+
+  if (
+    userLoading ||
+    accountsLoading ||
+    createLinkTokenLoading ||
+    exchangeTokenLoading ||
+    upsertTransactionsLoading ||
+    upsertAccountsLoading ||
+    transactionsLoading
+  ) {
+    return (
+      <div className="flex flex-col gap-4 min-h-screen">
+        <HeaderSkeleton />
+        <TableSkeleton />
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
