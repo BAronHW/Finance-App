@@ -12,6 +12,7 @@ import { s3 } from "../config/S3Bucket";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const bucketRegion = process.env.BUCKET_REGION
+const bucketName = process.env.PFP_BUCKET_NAME
 
 export const User = objectType({
   name: "User",
@@ -187,13 +188,13 @@ export const UserMutation = extendType({
         try {
           await s3.send(
             new GetObjectCommand({
-              Bucket: "finapp-pfp",
+              Bucket: bucketName,
               Key: String(args.userId),
             })
           );
           const response = await s3.send(
             new DeleteObjectCommand({
-              Bucket: "finapp-pfp",
+              Bucket: bucketName,
               Key: String(args.userId),
             })
           );
@@ -210,7 +211,7 @@ export const UserMutation = extendType({
             }
           })
           const putCommand = new PutObjectCommand({
-            Bucket: "finapp-pfp",
+            Bucket: bucketName,
             Key: String(args.userId),
           });
           const url = await getSignedUrl(s3, putCommand, { expiresIn: 3600 });
