@@ -16,6 +16,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ProfilePicture } from "@/components/custom/pfp/ProfilePicture";
+import { useQuery } from "@apollo/client";
+import { GET_USER_PFP } from "@/lib/graphql/Users";
+import { useParams } from "next/navigation";
 
 const formSchema = z.object({
   firstName: z.string(),
@@ -23,6 +26,15 @@ const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
+  email: z.string().email({
+    message: "Invalid email address.",
+  }),
+  phone: z
+    .string()
+    .min(10, {
+      message: "Phone number must be at least 10 characters.",
+    })
+    .optional(),
 });
 
 export default function SettingsPage() {
@@ -30,6 +42,10 @@ export default function SettingsPage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
     },
   });
 
@@ -38,11 +54,11 @@ export default function SettingsPage() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="flex gap-6">
-          <ProfilePicture className="flex-1 min-w-0 max-h-36" current={"https://images.unsplash.com/photo-1744148070187-b3815f7a9dbc?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"} />
+    <div className="w-1/2 justify-self-center">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="flex flex-col gap-4 flex-1">
+            <ProfilePicture className="w-40 h-40 rounded-full"/>
             <FormField
               control={form.control}
               name="username"
@@ -56,12 +72,12 @@ export default function SettingsPage() {
                 </FormItem>
               )}
             />
-            <div className="flex items-center justify-between w-full">
+            <div className="flex items-center justify-between w-full gap-4">
               <FormField
                 control={form.control}
                 name="firstName"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="w-full">
                     <FormLabel>
                       First Name<span style={{ color: "red" }}>&nbsp;*</span>
                     </FormLabel>
@@ -76,7 +92,7 @@ export default function SettingsPage() {
                 control={form.control}
                 name="lastName"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="w-full">
                     <FormLabel>
                       Last Name<span style={{ color: "red" }}>&nbsp;*</span>
                     </FormLabel>
@@ -88,10 +104,38 @@ export default function SettingsPage() {
                 )}
               />
             </div>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="shadcn" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone</FormLabel>
+                  <FormControl>
+                    <Input placeholder="shadcn" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button variant="outline" className="mt-4" type="submit">
+              Update Account Details
+            </Button>
           </div>
-        </div>
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+        </form>
+      </Form>
+    </div>
   );
 }

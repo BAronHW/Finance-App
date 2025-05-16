@@ -7,7 +7,7 @@ import { useDropzone } from 'react-dropzone'
 import { auth } from '@/lib/firebase/firebase'
 import { UPLOAD_PDF } from '@/lib/graphql/Documents'
 import { useMutation } from '@apollo/client'
-import { useAuth } from '../../../lib/contexts/authContext'
+import { useAuth } from '@/lib/contexts/authContext'
 import { Upload, UploadCloudIcon, UploadIcon } from 'lucide-react'
 
 export default function PDFDropzone() {

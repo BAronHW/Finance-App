@@ -171,10 +171,10 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="w-full max-w-7xl mx-auto">
+      <div className="w-full max-w-8xl mx-auto">
         <Header
           name={displayName ?? ""}
-          appMoto="Manage your student funds"
+          appMoto="Stay on top of your finances"
           accounts={accountData?.getAccountsByUserId ?? []}
           accountsLoading={accountsLoading}
           userId={userId}

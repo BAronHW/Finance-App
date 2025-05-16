@@ -1,9 +1,17 @@
 import { objectType, extendType, stringArg, nonNull, intArg } from "nexus";
 import bcrypt from "bcrypt";
 import { _coerceToDict } from "@langchain/core/dist/runnables/base";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  GetObjectAclCommand,
+  GetObjectCommand,
+  NoSuchKey,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
 import { s3 } from "../config/S3Bucket";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+
+const bucketRegion = process.env.BUCKET_REGION
 
 export const User = objectType({
   name: "User",
@@ -18,6 +26,7 @@ export const User = objectType({
     t.list.nonNull.field("Transactions", { type: "Transaction" });
     t.list.nonNull.field("Accounts", { type: "Account" });
     t.string("accessToken");
+    t.string("profilePictureUrl");
   },
 });
 
@@ -170,20 +179,44 @@ export const UserMutation = extendType({
         });
       },
     });
-    t.nonNull.string("updateProfilePhoto", {
+    t.nonNull.string("getUploadSignedUrl", {
       args: {
         userId: nonNull(intArg()),
       },
-      resolve: async (_root, args, _ctx) => {
-        const params = {
+      resolve: async (_root, args, ctx) => {
+        try {
+          await s3.send(
+            new GetObjectCommand({
+              Bucket: "finapp-pfp",
+              Key: String(args.userId),
+            })
+          );
+          const response = await s3.send(
+            new DeleteObjectCommand({
+              Bucket: "finapp-pfp",
+              Key: String(args.userId),
+            })
+          );
+          console.log("Deleted object:", { response });
+        } catch (caught) {
+          if (caught instanceof NoSuchKey) {
+            console.log("User has no existing profile picture");
+          }
+        } finally {
+          await ctx.db.user.update({
+            where: { id: args.userId },
+            data: {
+              profilePictureUrl: `https://finapp-pfp.s3.${bucketRegion}.amazonaws.com/${args.userId}?${new Date().getTime()}`,
+            }
+          })
+          const putCommand = new PutObjectCommand({
             Bucket: "finapp-pfp",
             Key: String(args.userId),
-            ContentType: "PDF",
+          });
+          const url = await getSignedUrl(s3, putCommand, { expiresIn: 3600 });
+          return url;
         }
-        const command = new PutObjectCommand(params)
-        const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-        return url;
-      }
+      },
     });
-  }
+  },
 });

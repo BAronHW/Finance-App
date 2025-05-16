@@ -25,6 +25,7 @@ import { PieChartComponent } from "../charts/PiechartComponent";
 import { DatePickerWithRange } from "../datepickers/DatePickerWithRange";
 import { DateRange } from "react-day-picker";
 import { isInDateRange } from "@/lib/utils";
+import { ProfilePicture } from "../pfp/ProfilePicture";
 
 ChartJS.register(ArcElement, ChartTooltip, Legend);
 
@@ -38,7 +39,6 @@ interface Props {
   name: string;
   userId: number;
   appMoto: string;
-  avatarUrl?: string;
   accounts: Account[];
   transactionData: Transaction[];
   accountsLoading: boolean;
@@ -51,7 +51,6 @@ function Header({
   userId,
   appMoto,
   transactionData,
-  avatarUrl,
   accounts = [],
   accountsLoading,
   openPlaidLink,
@@ -151,11 +150,8 @@ function Header({
     <Card className="w-full bg-white/80 backdrop-blur-sm z-50 shadow-lg">
       <CardContent className="p-6">
         <div className="flex justify-between items-center gap-5">
-          <div className="flex items-center space-x-4">
-            <Avatar>
-              <AvatarImage src={avatarUrl} alt={name} />
-              <AvatarFallback>{initials}</AvatarFallback>
-            </Avatar>
+          <div className="flex items-center gap-4">
+            <ProfilePicture className="h-32 w-32 rounded-full" />
             <div>
               <div className="text-xl font-semibold z-10">
                 Welcome,{" "}
@@ -165,7 +161,7 @@ function Header({
                   duration={0.5}
                 />
               </div>
-              <p className="text-sm text-muted-foreground mt-4">{appMoto}</p>
+              <p className="text-sm text-muted-foreground mt-4 text-center">{appMoto}</p>
               <div className="flex flex-col gap-6 my-12">
                 <AccountManagementPopover
                   accounts={accounts}

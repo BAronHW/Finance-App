@@ -31,6 +31,7 @@ export const GET_USER_BY_ID = gql(`
       firstName
       lastName
       username
+      profilePictureUrl
     }
   }
   `) 
@@ -130,5 +131,14 @@ export const FETCH_UID_FROM_USER = gql`
 export const USERNAME_EXISTS = gql`
   query UsernameExists($username: String!) {
     usernameExists(username: $username)
+  }
+`
+
+export const GET_USER_PFP = gql`
+  query getUserById($userId: Int!) {
+    getUserById(userId: $userId) {
+      id
+      profilePictureUrl
+    }
   }
 `

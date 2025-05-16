@@ -108,8 +108,8 @@ type Mutation {
   deleteTransaction(id: Int!): Transaction
   deleteUser(id: Int!): User!
   exchangePublicToken(public_token: String!, userId: Int!): String!
+  getUploadSignedUrl(userId: Int!): String!
   updateCategory(colour: String, description: String, id: Int!, name: String): Category!
-  updateProfilePhoto(userId: Int!): String!
   updateTransaction(categoryId: Int, id: Int!, merchantName: String, name: String): Transaction
   updateTransactions(categoryId: Int, ids: [Int!]!): [Transaction!]!
   updateUserDetails(email: String!, firstName: String, id: Int!, lastName: String, phone: String, uid: String!, username: String!): User!
@@ -186,6 +186,7 @@ type User {
   id: Int!
   lastName: String
   phone: String
+  profilePictureUrl: String
   uid: String!
   username: String!
 }

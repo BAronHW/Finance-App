@@ -150,6 +150,7 @@ export interface NexusGenObjects {
     id: number; // Int!
     lastName?: string | null; // String
     phone?: string | null; // String
+    profilePictureUrl?: string | null; // String
     uid: string; // String!
     username: string; // String!
   }
@@ -262,8 +263,8 @@ export interface NexusGenFieldTypes {
     deleteTransaction: NexusGenRootTypes['Transaction'] | null; // Transaction
     deleteUser: NexusGenRootTypes['User']; // User!
     exchangePublicToken: string; // String!
+    getUploadSignedUrl: string; // String!
     updateCategory: NexusGenRootTypes['Category']; // Category!
-    updateProfilePhoto: string; // String!
     updateTransaction: NexusGenRootTypes['Transaction'] | null; // Transaction
     updateTransactions: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
     updateUserDetails: NexusGenRootTypes['User']; // User!
@@ -334,6 +335,7 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     lastName: string | null; // String
     phone: string | null; // String
+    profilePictureUrl: string | null; // String
     uid: string; // String!
     username: string; // String!
   }
@@ -436,8 +438,8 @@ export interface NexusGenFieldTypeNames {
     deleteTransaction: 'Transaction'
     deleteUser: 'User'
     exchangePublicToken: 'String'
+    getUploadSignedUrl: 'String'
     updateCategory: 'Category'
-    updateProfilePhoto: 'String'
     updateTransaction: 'Transaction'
     updateTransactions: 'Transaction'
     updateUserDetails: 'User'
@@ -508,6 +510,7 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     lastName: 'String'
     phone: 'String'
+    profilePictureUrl: 'String'
     uid: 'String'
     username: 'String'
   }
@@ -589,14 +592,14 @@ export interface NexusGenArgTypes {
       public_token: string; // String!
       userId: number; // Int!
     }
+    getUploadSignedUrl: { // args
+      userId: number; // Int!
+    }
     updateCategory: { // args
       colour?: string | null; // String
       description?: string | null; // String
       id: number; // Int!
       name?: string | null; // String
-    }
-    updateProfilePhoto: { // args
-      userId: number; // Int!
     }
     updateTransaction: { // args
       categoryId?: number | null; // Int
