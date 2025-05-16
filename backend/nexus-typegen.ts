@@ -263,6 +263,7 @@ export interface NexusGenFieldTypes {
     deleteUser: NexusGenRootTypes['User']; // User!
     exchangePublicToken: string; // String!
     updateCategory: NexusGenRootTypes['Category']; // Category!
+    updateProfilePhoto: string; // String!
     updateTransaction: NexusGenRootTypes['Transaction'] | null; // Transaction
     updateTransactions: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
     updateUserDetails: NexusGenRootTypes['User']; // User!
@@ -436,6 +437,7 @@ export interface NexusGenFieldTypeNames {
     deleteUser: 'User'
     exchangePublicToken: 'String'
     updateCategory: 'Category'
+    updateProfilePhoto: 'String'
     updateTransaction: 'Transaction'
     updateTransactions: 'Transaction'
     updateUserDetails: 'User'
@@ -592,6 +594,9 @@ export interface NexusGenArgTypes {
       description?: string | null; // String
       id: number; // Int!
       name?: string | null; // String
+    }
+    updateProfilePhoto: { // args
+      userId: number; // Int!
     }
     updateTransaction: { // args
       categoryId?: number | null; // Int

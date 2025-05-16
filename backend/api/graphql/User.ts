@@ -1,6 +1,9 @@
 import { objectType, extendType, stringArg, nonNull, intArg } from "nexus";
 import bcrypt from "bcrypt";
 import { _coerceToDict } from "@langchain/core/dist/runnables/base";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { s3 } from "../config/S3Bucket";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 export const User = objectType({
   name: "User",
@@ -167,5 +170,20 @@ export const UserMutation = extendType({
         });
       },
     });
-  },
+    t.nonNull.string("updateProfilePhoto", {
+      args: {
+        userId: nonNull(intArg()),
+      },
+      resolve: async (_root, args, _ctx) => {
+        const params = {
+            Bucket: "finapp-pfp",
+            Key: String(args.userId),
+            ContentType: "PDF",
+        }
+        const command = new PutObjectCommand(params)
+        const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+        return url;
+      }
+    });
+  }
 });

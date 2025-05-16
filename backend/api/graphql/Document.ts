@@ -22,7 +22,7 @@ import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 dotenv.config()
 
-const bucketName = process.env.BUCKET_NAME
+const bucketName = process.env.DOCUMENT_BUCKET_NAME
 
 export const Document = objectType({
     name: "Document",
