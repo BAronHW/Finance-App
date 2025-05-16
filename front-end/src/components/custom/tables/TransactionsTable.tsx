@@ -36,6 +36,7 @@ import { AssignCategoryToSelectedDropdown } from "../dropdowns/AssignCategoryToS
 import { DateRange } from "react-day-picker";
 import { Check } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { TableSkeleton } from "../skeletons/TableSkeleton";
 
 interface TransactionsTable {
   columns: ColumnDef<Transaction>[];
@@ -98,7 +99,11 @@ function TransactionsTable({
     .getFilteredSelectedRowModel()
     .rows.map((row) => Number(row.original.id));
 
-  console.log({ categoriesData });
+  if (categoriesLoading || accountsLoading) {
+    return (
+      <TableSkeleton />
+    )
+  }
 
   return (
     <div>

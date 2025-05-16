@@ -22,9 +22,10 @@ import { DARK_GRAY } from "@/lib/constants";
 import { CategoriesDialog } from "../dialogs/CategoriesDialog";
 import { PieChartComponent } from "../charts/PiechartComponent";
 import { DatePickerWithRange } from "../datepickers/DatePickerWithRange";
-import { DateRange } from "react-day-picker";
+import { DateRange, Head } from "react-day-picker";
 import { isInDateRange } from "@/lib/utils";
 import { ProfilePicture } from "../pfp/ProfilePicture";
+import { HeaderSkeleton } from "../skeletons/HeaderSkeleton";
 
 ChartJS.register(ArcElement, ChartTooltip, Legend);
 
@@ -61,12 +62,6 @@ function Header({
   );
 
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
-
-  const initials = name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
 
   const totalBalance = accounts
     .map((account) => account.current ?? 0)
@@ -144,6 +139,14 @@ function Header({
       : 0,
     fill: DARK_GRAY,
   });
+
+  const loading = categoriesLoading || accountsLoading;
+
+  if (loading) {
+    return (
+      <HeaderSkeleton />
+    )
+  }
 
   return (
     <Card className="w-full bg-white/80 backdrop-blur-sm z-50 shadow-lg">

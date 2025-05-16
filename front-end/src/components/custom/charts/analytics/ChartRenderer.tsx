@@ -13,6 +13,7 @@ import NoChartAvailable from "./NoChartAvailable";
 import { useMemo } from "react";
 import { isInDateRange } from "@/lib/utils";
 import { Transaction } from "@/__generated__/graphql";
+import { ChartSkeleton } from "../../skeletons/ChartSkeleton";
 
 type Props = {
   dateRange: DateRange | undefined;
@@ -27,14 +28,12 @@ const ChartRenderer = ({ dateRange, viewType, chartType, dataType }: Props) => {
   const {
     data: transactionsData,
     loading: transactionsLoading,
-    error: transactionsError,
   } = useQuery(GET_TRANSACTIONS_BY_USER_ID, {
     variables: { userId: userId },
   });
   const {
     data: categoriesData,
     loading: categoriesLoading,
-    error: categoriesError,
   } = useQuery(GET_CATEGORIES_BY_USER_ID, {
     variables: { userId: userId },
   });
@@ -48,6 +47,10 @@ const ChartRenderer = ({ dateRange, viewType, chartType, dataType }: Props) => {
       }
     }, [transactionsData, dateRange]);
   const categories = categoriesData?.getCategoriesByUserId || [];
+
+  if (transactionsLoading || categoriesLoading) {
+    return <ChartSkeleton />;
+  }
 
   if (viewType === "SINGLE") {
     if (chartType === "BAR") {
