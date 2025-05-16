@@ -9,6 +9,7 @@ import "@uppy/dashboard/dist/style.min.css";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { GET_USER_PFP } from "@/lib/graphql/Users";
 import { Pencil } from "lucide-react";
+import { fallbackProfilePicturePath } from "@/lib/constants";
 
 type Props = {
   className?: string;
@@ -17,7 +18,7 @@ type Props = {
 
 export const ProfilePicture = ({ className, userId }: Props) => {
 
-  const [url, setUrl] = useState();
+  const [url, setUrl] = useState(null);
 
   const [getUserPfp] = useLazyQuery(GET_USER_PFP, {
     variables: {
@@ -82,7 +83,7 @@ export const ProfilePicture = ({ className, userId }: Props) => {
 
   return (
     <div className="relative max-h-40 group rounded-full self-center">
-      <img src={url} className={className} onClick={openUppy} />
+      <img src={url ?? fallbackProfilePicturePath} className={className} onClick={openUppy} />
       <Pencil
         className="absolute opacity-0 group-hover:opacity-50 top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 pointer-events-none"
         height={42}
