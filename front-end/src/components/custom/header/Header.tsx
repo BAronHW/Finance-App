@@ -1,6 +1,5 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import BlurIn from "@/components/magicui/blur-in";
 import {
