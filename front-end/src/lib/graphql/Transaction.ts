@@ -65,8 +65,8 @@ export const UPDATE_SELECTED_TRANSACTION_CATEGORIES = gql(`
   `)
 
 export const CATEGORISE_TRANSACTIONS_WITH_AI = gql(`
-  mutation CategoriseTransactionsWithAi($ids: [Int!]!) {
-    categoriseTransactionsWithAi(ids: $ids) {
+  mutation CategoriseTransactionsWithAi($ids: [Int!]!, $overwrite: Boolean!) {
+    categoriseTransactionsWithAi(ids: $ids, overwrite: $overwrite) {
       id
       merchantName
       amount

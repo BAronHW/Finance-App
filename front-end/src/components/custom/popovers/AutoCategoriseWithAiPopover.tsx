@@ -28,6 +28,7 @@ export const AutoCategoriseWithAiPopover = ({ onRunAutoCategorise }: Props) => {
             <Checkbox
               id="terms"
               onCheckedChange={(checked: boolean) => {
+                console.log({checked})
                 setOverwrite(checked);
               }}
             />

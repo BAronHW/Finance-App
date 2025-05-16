@@ -95,7 +95,7 @@ type Location {
 
 type Mutation {
   analyseSinglePdfWithAI(pdfKey: String!): Any
-  categoriseTransactionsWithAi(ids: [Int!]!, overwrite: Boolean): [Transaction]!
+  categoriseTransactionsWithAi(ids: [Int!]!, overwrite: Boolean!): [Transaction]!
   createAccount(available: Float!, current: Float!, isoCurrencyCode: String, limit: Float, mask: String, name: String!, officialName: String, plaidId: String!, subtype: String, type: String!, unofficialCurrencyCode: String, userId: Int!): Account!
   createCategory(description: String, name: String!, userId: Int!): Category!
   createLinkToken: LinkToken

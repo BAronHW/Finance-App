@@ -532,7 +532,7 @@ export interface NexusGenArgTypes {
     }
     categoriseTransactionsWithAi: { // args
       ids: number[]; // [Int!]!
-      overwrite?: boolean | null; // Boolean
+      overwrite: boolean; // Boolean!
     }
     createAccount: { // args
       available: number; // Float!
