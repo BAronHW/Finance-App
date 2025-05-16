@@ -1,6 +1,18 @@
 import { objectType, extendType, stringArg, nonNull, intArg } from "nexus";
 import bcrypt from "bcrypt";
 import { _coerceToDict } from "@langchain/core/dist/runnables/base";
+import {
+  DeleteObjectCommand,
+  GetObjectAclCommand,
+  GetObjectCommand,
+  NoSuchKey,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
+import { s3 } from "../config/S3Bucket";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+
+const bucketRegion = process.env.BUCKET_REGION
+const bucketName = process.env.PFP_BUCKET_NAME
 
 export const User = objectType({
   name: "User",
@@ -15,6 +27,7 @@ export const User = objectType({
     t.list.nonNull.field("Transactions", { type: "Transaction" });
     t.list.nonNull.field("Accounts", { type: "Account" });
     t.string("accessToken");
+    t.string("profilePictureUrl");
   },
 });
 
@@ -132,9 +145,9 @@ export const UserMutation = extendType({
         id: nonNull(intArg()),
         firstName: stringArg(),
         lastName: stringArg(),
-        username: nonNull(stringArg()),
-        email: nonNull(stringArg()),
-        uid: nonNull(stringArg()),
+        username: stringArg(),
+        email: stringArg(),
+        uid: stringArg(),
         phone: stringArg(),
       },
       resolve: async (_root, args, ctx) => {
@@ -143,9 +156,9 @@ export const UserMutation = extendType({
           data: {
             firstName: args.firstName,
             lastName: args.lastName,
-            username: args.username,
-            email: args.email,
-            uid: args.uid,
+            username: args.username ?? undefined,
+            email: args.email ?? undefined,
+            uid: args.uid ?? undefined,
           },
           include: {
             Transactions: true,
@@ -165,6 +178,45 @@ export const UserMutation = extendType({
             Transactions: true,
           },
         });
+      },
+    });
+    t.nonNull.string("getUploadSignedUrl", {
+      args: {
+        userId: nonNull(intArg()),
+      },
+      resolve: async (_root, args, ctx) => {
+        try {
+          await s3.send(
+            new GetObjectCommand({
+              Bucket: bucketName,
+              Key: String(args.userId),
+            })
+          );
+          const response = await s3.send(
+            new DeleteObjectCommand({
+              Bucket: bucketName,
+              Key: String(args.userId),
+            })
+          );
+          console.log("Deleted object:", { response });
+        } catch (caught) {
+          if (caught instanceof NoSuchKey) {
+            console.log("User has no existing profile picture");
+          }
+        } finally {
+          await ctx.db.user.update({
+            where: { id: args.userId },
+            data: {
+              profilePictureUrl: `https://finapp-pfp.s3.${bucketRegion}.amazonaws.com/${args.userId}?${new Date().getTime()}`,
+            }
+          })
+          const putCommand = new PutObjectCommand({
+            Bucket: bucketName,
+            Key: String(args.userId),
+          });
+          const url = await getSignedUrl(s3, putCommand, { expiresIn: 3600 });
+          return url;
+        }
       },
     });
   },

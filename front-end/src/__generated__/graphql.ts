@@ -129,6 +129,7 @@ export type Mutation = {
   deleteTransaction?: Maybe<Transaction>;
   deleteUser: User;
   exchangePublicToken: Scalars['String']['output'];
+  getUploadSignedUrl: Scalars['String']['output'];
   updateCategory: Category;
   updateTransaction?: Maybe<Transaction>;
   updateTransactions: Array<Transaction>;
@@ -226,6 +227,11 @@ export type MutationDeleteUserArgs = {
 
 export type MutationExchangePublicTokenArgs = {
   public_token: Scalars['String']['input'];
+  userId: Scalars['Int']['input'];
+};
+
+
+export type MutationGetUploadSignedUrlArgs = {
   userId: Scalars['Int']['input'];
 };
 
@@ -419,6 +425,7 @@ export type User = {
   id: Scalars['Int']['output'];
   lastName?: Maybe<Scalars['String']['output']>;
   phone?: Maybe<Scalars['String']['output']>;
+  profilePictureUrl?: Maybe<Scalars['String']['output']>;
   uid: Scalars['String']['output'];
   username: Scalars['String']['output'];
 };

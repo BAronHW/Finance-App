@@ -9,10 +9,7 @@ import { DatePickerWithRange } from "@/components/custom/datepickers/DatePickerW
 import ChartRenderer from "@/components/custom/charts/analytics/ChartRenderer";
 
 const AnalyticsPage = () => {
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: undefined,
-    to: undefined,
-  });
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [viewType, setViewType] = useState("SINGLE");
   const [chartType, setChartType] = useState("BAR");
   const [dataType, setDataType] = useState("TIME");

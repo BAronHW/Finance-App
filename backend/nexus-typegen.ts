@@ -150,6 +150,7 @@ export interface NexusGenObjects {
     id: number; // Int!
     lastName?: string | null; // String
     phone?: string | null; // String
+    profilePictureUrl?: string | null; // String
     uid: string; // String!
     username: string; // String!
   }
@@ -262,6 +263,7 @@ export interface NexusGenFieldTypes {
     deleteTransaction: NexusGenRootTypes['Transaction'] | null; // Transaction
     deleteUser: NexusGenRootTypes['User']; // User!
     exchangePublicToken: string; // String!
+    getUploadSignedUrl: string; // String!
     updateCategory: NexusGenRootTypes['Category']; // Category!
     updateTransaction: NexusGenRootTypes['Transaction'] | null; // Transaction
     updateTransactions: NexusGenRootTypes['Transaction'][]; // [Transaction!]!
@@ -333,6 +335,7 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     lastName: string | null; // String
     phone: string | null; // String
+    profilePictureUrl: string | null; // String
     uid: string; // String!
     username: string; // String!
   }
@@ -435,6 +438,7 @@ export interface NexusGenFieldTypeNames {
     deleteTransaction: 'Transaction'
     deleteUser: 'User'
     exchangePublicToken: 'String'
+    getUploadSignedUrl: 'String'
     updateCategory: 'Category'
     updateTransaction: 'Transaction'
     updateTransactions: 'Transaction'
@@ -506,6 +510,7 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     lastName: 'String'
     phone: 'String'
+    profilePictureUrl: 'String'
     uid: 'String'
     username: 'String'
   }
@@ -527,7 +532,7 @@ export interface NexusGenArgTypes {
     }
     categoriseTransactionsWithAi: { // args
       ids: number[]; // [Int!]!
-      overwrite?: boolean | null; // Boolean
+      overwrite: boolean; // Boolean!
     }
     createAccount: { // args
       available: number; // Float!
@@ -587,6 +592,9 @@ export interface NexusGenArgTypes {
       public_token: string; // String!
       userId: number; // Int!
     }
+    getUploadSignedUrl: { // args
+      userId: number; // Int!
+    }
     updateCategory: { // args
       colour?: string | null; // String
       description?: string | null; // String
@@ -604,13 +612,13 @@ export interface NexusGenArgTypes {
       ids: number[]; // [Int!]!
     }
     updateUserDetails: { // args
-      email: string; // String!
+      email?: string | null; // String
       firstName?: string | null; // String
       id: number; // Int!
       lastName?: string | null; // String
       phone?: string | null; // String
-      uid: string; // String!
-      username: string; // String!
+      uid?: string | null; // String
+      username?: string | null; // String
     }
     uploadPdf: { // args
       file: string; // String!

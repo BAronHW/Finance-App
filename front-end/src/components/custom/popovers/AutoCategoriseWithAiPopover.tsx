@@ -1,21 +1,19 @@
-import { Transaction } from "@/__generated__/graphql";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Table } from "@tanstack/react-table";
 import { Bot } from "lucide-react";
+import { useState } from "react";
 
 type Props = {
-  onRunAutoCategorise: () => void;
+  onRunAutoCategorise: (overwrite: boolean) => void;
 };
 
 export const AutoCategoriseWithAiPopover = ({ onRunAutoCategorise }: Props) => {
+  const [overwrite, setOverwrite] = useState<boolean>(false);
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -24,16 +22,24 @@ export const AutoCategoriseWithAiPopover = ({ onRunAutoCategorise }: Props) => {
           Auto-Categorise Selected Rows
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80">
-        <div className="flex items-center space-x-2">
-          <Checkbox id="terms" />
-          <label
-            htmlFor="terms"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            overwrite
-          </label>
-          <Button onClick={onRunAutoCategorise}>Run</Button>
+      <PopoverContent>
+        <div className="flex items-center gap-6 justify-center">
+          <div className="flex gap-3">
+            <Checkbox
+              id="terms"
+              onCheckedChange={(checked: boolean) => {
+                console.log({checked})
+                setOverwrite(checked);
+              }}
+            />
+            <label
+              htmlFor="terms"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Enable Overwrite
+            </label>
+          </div>
+          <Button onClick={() => onRunAutoCategorise(overwrite)}>Run</Button>
         </div>
       </PopoverContent>
     </Popover>

@@ -20,6 +20,7 @@ export const categoriseTransactions = async (
     description: string | null;
   }[]
 ): Promise<CategorisedPair[]> => {
+  console.log({ transactions });
   const prompt = `
     Please assign each of the transactions provided one of the following categories. 
     Make the best possible guess based on the information provided. 

@@ -16,3 +16,5 @@ export const monthMapping = {
   10: "November",
   11: "December",
 }
+
+export const fallbackProfilePicturePath = "/userProfile.png"

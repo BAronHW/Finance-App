@@ -34,6 +34,8 @@ import {
 } from "@/lib/graphql/Transaction";
 import { AssignCategoryToSelectedDropdown } from "../dropdowns/AssignCategoryToSelectedDropdown";
 import { DateRange } from "react-day-picker";
+import { Check } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface TransactionsTable {
   columns: ColumnDef<Transaction>[];
@@ -93,33 +95,51 @@ function TransactionsTable({
   );
 
   const selectedTransactionIds = table
-  .getFilteredSelectedRowModel()
-  .rows.map((row) => Number(row.original.id))
+    .getFilteredSelectedRowModel()
+    .rows.map((row) => Number(row.original.id));
 
   console.log({ categoriesData });
 
   return (
     <div>
-      <div className="flex gap-4 justify-center">
-        <AutoCategoriseWithAiPopover
-          onRunAutoCategorise={() => {
-            const selectedIds = table
-              .getFilteredSelectedRowModel()
-              .rows.map((row) => row.original.id);
-            categoriseTransactionsWithAi({
-              variables: {
-                ids: selectedIds,
-              },
-            });
-            table.toggleAllPageRowsSelected(false);
-          }}
-        />
-        <AssignCategoryToSelectedDropdown
-          categories={categoriesData ? categoriesData.getCategoriesByUserId : []}
-          categoriesLoading={categoriesLoading}
-          transactionIds={selectedTransactionIds}
-          disabled={selectedTransactionIds.length === 0}
-        />
+      <div className="flex place-content-between">
+        <div className="align-center flex items-center space-x-2">
+          <Checkbox
+            id="selectAll"
+            onCheckedChange={() => {
+              table.toggleAllRowsSelected();
+            }}
+          />
+          <label
+            htmlFor="selectAll"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            Select All Transactions
+          </label>
+        </div>
+        <div className="flex gap-4 justify-center">
+          <AutoCategoriseWithAiPopover
+            onRunAutoCategorise={(overwrite: boolean) => {
+              const selectedIds = table
+                .getFilteredSelectedRowModel()
+                .rows.map((row) => row.original.id);
+              categoriseTransactionsWithAi({
+                variables: {
+                  ids: selectedIds,
+                  overwrite: overwrite,
+                },
+              });
+            }}
+          />
+          <AssignCategoryToSelectedDropdown
+            categories={
+              categoriesData ? categoriesData.getCategoriesByUserId : []
+            }
+            categoriesLoading={categoriesLoading}
+            transactionIds={selectedTransactionIds}
+            disabled={selectedTransactionIds.length === 0}
+          />
+        </div>
       </div>
       <TransactionTableFilters
         table={table}

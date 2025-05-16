@@ -393,7 +393,7 @@ export const TransactionMutations = extendType({
       type: "Transaction",
       args: {
         ids: nonNull(list(nonNull(intArg()))),
-        overwrite: booleanArg(),
+        overwrite: nonNull(booleanArg()),
       },
       resolve: async (root, args, ctx) => {
         const transactions = await ctx.db.transaction.findMany({
@@ -419,7 +419,7 @@ export const TransactionMutations = extendType({
 
         const transactionCategoryIdPairs = await categoriseTransactions(
           transactions.filter((transaction) =>
-            args.overwrite && !!transaction.categoryId ? false : true
+            args.overwrite || !!!transaction.categoryId ? true : false
           ),
           10,
           categories

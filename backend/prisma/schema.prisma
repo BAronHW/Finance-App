@@ -26,6 +26,7 @@ model User {
   Categories   Category[]
   AccessToken  String?
   Document     Document[]
+  profilePictureUrl String?
 }
 
 model Transaction {
