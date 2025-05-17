@@ -9,7 +9,7 @@ import {
   GET_TRANSACTIONS_BY_USER_ID,
   UPSERT_TRANSACTIONS_FROM_PLAID,
 } from "@/lib/graphql/Transaction";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CREATE_LINKTOKEN, EXCHANGE_PUB_TOKEN } from "@/lib/graphql/Plaid";
 import { usePlaidLink } from "react-plaid-link";
 import { GET_USER_BY_ID } from "@/lib/graphql/Users";
@@ -21,7 +21,6 @@ import { Account } from "@/__generated__/graphql";
 import { useAuth } from "@/lib/contexts/authContext";
 import { useRouter } from "next/navigation";
 import { HeaderSkeleton } from "@/components/custom/skeletons/HeaderSkeleton";
-import { Table } from "lucide-react";
 import { TableSkeleton } from "@/components/custom/skeletons/TableSkeleton";
 
 export default function Home() {

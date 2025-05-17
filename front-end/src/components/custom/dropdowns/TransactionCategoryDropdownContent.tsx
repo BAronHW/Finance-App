@@ -2,7 +2,7 @@ import { Category } from "@/__generated__/graphql";
 import {
   DropdownMenuCheckboxItem,
   DropdownMenuSeparator,
-} from "../../ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import { DEFAULT_COLOUR } from "@/lib/constants";
 
 type Props = {
@@ -24,11 +24,8 @@ const TransactionCategoryDropdownContent = ({
         <div className="flex w-full">
           <DropdownMenuCheckboxItem
             className="w-full"
-            checked={category.id === currentCategoryId}
             onCheckedChange={(checked) => {
-              if (checked) {
-                onUpdate(category.id);
-              }
+              onUpdate(category.id);
             }}
           >
             {category.name}
@@ -42,11 +39,9 @@ const TransactionCategoryDropdownContent = ({
       ))}
       <DropdownMenuSeparator />
       <DropdownMenuCheckboxItem
-        checked={!currentCategoryId}
+        checked={false}
         onCheckedChange={(checked) => {
-          if (checked) {
-            onUpdateUncategorised();
-          }
+          onUpdateUncategorised();
         }}
       >
         Uncategorised
